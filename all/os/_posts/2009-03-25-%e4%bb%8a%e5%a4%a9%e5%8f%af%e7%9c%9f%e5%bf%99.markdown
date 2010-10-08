@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 424
+layout: post
+title: !binary |
+  5LuK5aSp5Y+v55yf5b+Z
+
+wordpress_url: http://maweis.com/?p=424
+---
+今天真忙啊
+
+<a class="flickr-image alignnone" title="2009-03-25-work-lists" href="http://www.flickr.com/photos/maweiba/3384995040/"><img src="http://farm4.static.flickr.com/3656/3384995040_b9af322451_t.jpg" alt="2009-03-25-work-lists" /></a><a class="flickr-image alignnone" title="2009-03-25-work-detail" href="http://www.flickr.com/photos/maweiba/3384989104/"><img src="http://farm4.static.flickr.com/3461/3384989104_ecdf50efbe_t.jpg" alt="2009-03-25-work-detail" /></a><a class="flickr-image alignnone" title="2009-03-25-work" href="http://www.flickr.com/photos/maweiba/3384175239/"><img src="http://farm4.static.flickr.com/3570/3384175239_0ba339cd58_t.jpg" alt="2009-03-25-work" /></a>

@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 59
+layout: post
+title: !binary |
+  5ZyG5ZyG5LiA5Liq55WZ5a6I5Zyo5a625LiN5byA5b+D
+
+wordpress_url: http://maweis.com/?p=59
+---
+<img src="http://maweis.com/m/dog/y05.jpg" />
+<img src="http://maweis.com/m/dog/y06.jpg" />
+

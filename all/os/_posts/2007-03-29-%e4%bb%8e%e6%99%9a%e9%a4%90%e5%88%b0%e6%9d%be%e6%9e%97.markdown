@@ -1,0 +1,18 @@
+--- 
+wordpress_id: 38
+layout: post
+title: !binary |
+  5LuO5pma6aSQ5Yiw5p2+5p6XIA==
+
+wordpress_url: http://maweis.com/?p=38
+---
+<p><img width="668" src="http://maweis.com/m/IMG_0636.jpg" height="487" style="width: 668px; height: 487px" /></p>
+<p><img width="668" src="http://maweis.com/m/IMG_0640.jpg" height="487" style="width: 668px; height: 487px" /></p>
+<p><img width="668" src="http://maweis.com/m/IMG_0642.jpg" height="487" style="width: 668px; height: 487px" /></p>
+<p><img width="668" src="http://maweis.com/m/IMG_0647.jpg" height="487" style="width: 668px; height: 487px" /></p>
+<p><img width="668" src="http://maweis.com/m/IMG_0648.jpg" height="487" style="width: 668px; height: 487px" /></p>
+<p><img width="668" src="http://maweis.com/m/IMG_0649.jpg" height="487" style="width: 668px; height: 487px" /></p>
+<p><img width="668" src="http://maweis.com/m/IMG_0671.jpg" height="487" style="width: 668px; height: 487px" /></p>
+<p><img width="668" src="http://maweis.com/m/IMG_0676.jpg" height="487" style="width: 668px; height: 487px" /></p>
+<p><img width="668" src="http://maweis.com/m/IMG_0677.jpg" height="487" style="width: 668px; height: 487px" /></p>
+<p><img width="668" src="http://maweis.com/m/IMG_0678.jpg" height="487" style="width: 668px; height: 487px" /></p>

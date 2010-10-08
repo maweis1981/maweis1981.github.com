@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 187
+layout: post
+title: !binary |
+  5p+x5a2Q6YCB5oiR55qETVgxMDAw
+
+wordpress_url: http://maweis.com/index.php/archives/187.html
+---
+<p><a href="http://maweis.com/m/MX1000_C17A/_MG_6166.jpg"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="337" alt="_MG_6166" src="http://maweis.com/m/MX1000_C17A/_MG_6166_thumb.jpg" width="504" border="0"></a> </p> <p><a href="http://maweis.com/m/MX1000_C17A/_MG_6167.jpg"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="337" alt="_MG_6167" src="http://maweis.com/m/MX1000_C17A/_MG_6167_thumb.jpg" width="504" border="0"></a></p>

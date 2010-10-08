@@ -1,0 +1,12 @@
+--- 
+wordpress_id: 49
+layout: post
+title: !binary |
+  5LiL5Y2I5ZKM5Y+R5bCP5Zyo5aWl5L2T
+
+wordpress_url: http://maweis.com/?p=49
+---
+<p>好久没有自己的照片了，来一张吧。</p>
+<p><img width="668" src="http://maweis.com/m/021.jpg" height="452" style="width: 678px; height: 452x" /></p>
+<p>发小:</p>
+<p><img width="668" src="http://maweis.com/m/034.jpg" height="452" style="width: 678px; height: 452px" /></p>

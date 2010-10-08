@@ -1,0 +1,12 @@
+--- 
+wordpress_id: 81
+layout: post
+title: !binary |
+  U3F1aWQg5Lit5paH5paH5qGjKOaVtOeQhuW9reWLh+WNjue/u+ivkeeJiOac
+  rCk=
+
+wordpress_url: http://maweis.com/?p=81
+---
+最近配置Squid cluster，把彭勇华翻译的Squid 墨斗鱼一书整理成一个PDF文档，原来是每章一个文件。
+
+<a href="http://maweis.com/wp-content/uploads/2007/06/squid.pdf" title="squid.pdf">squid.pdf</a>

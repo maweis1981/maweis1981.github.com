@@ -1,0 +1,10 @@
+--- 
+wordpress_id: 496
+layout: post
+title: !binary |
+  5aSc6YeMMTLngrnlvIDlp4vlgZzmnLrnu7TmiqTmnI3liqE=
+
+wordpress_url: http://maweis.com/2009/07/07/%e5%a4%9c%e9%87%8c12%e7%82%b9%e5%bc%80%e5%a7%8b%e5%81%9c%e6%9c%ba%e7%bb%b4%e6%8a%a4%e6%9c%8d%e5%8a%a1/
+---
+夜里12点开始停机维护服务。
+好久都没搞通宵了，夜里开始有点犯困了。

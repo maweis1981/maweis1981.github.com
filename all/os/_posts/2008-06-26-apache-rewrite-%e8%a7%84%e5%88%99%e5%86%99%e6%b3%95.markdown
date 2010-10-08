@@ -1,0 +1,32 @@
+--- 
+wordpress_id: 235
+layout: post
+title: !binary |
+  QXBhY2hlIHJld3JpdGUg6KeE5YiZ5YaZ5rOVIA==
+
+wordpress_url: http://maweis.com/?p=235
+---
+<div class="hdwiki_nrtou">
+<div class="hdwiki_nrtoul">Apache rewrite 规则写法</div>
+</div>
+1) R[=code](force redirect) 强制外部重定向
+强制在替代字符串加上<a href="http://thishost/" target="_blank"><span style="text-decoration: underline;">http://thishost</span></a>[:thisport]/前缀重定向到外部的URL.如果code不指定，将用缺省的302 HTTP状态码。
+2) F(force URL to be forbidden)禁用URL,返回403HTTP状态码。
+3) G(force URL to be gone) 强制URL为GONE，返回410HTTP状态码。
+4) P(force proxy) 强制使用代理转发。
+5) L(last rule) 表明当前规则是最后一条规则，停止分析以后规则的重写。
+6) N(next round) 重新从第一条规则开始运行重写过程。
+7) C(chained with next rule) 与下一条规则关联
+如果规则匹配则正常处理，该标志无效，如果不匹配，那么下面所有关联的规则都跳过。
+8) T=MIME-type(force MIME type) 强制MIME类型
+9) NS (used only if no internal sub-request) 只用于不是内部子请求
+10) NC(no case) 不区分大小写
+11) QSA(query string append) 追加请求字符串
+12) NE(no URI escaping of output) 不在输出转义特殊字符
+例如：RewriteRule /foo/(.*) /bar?arg=P1\%3d$1 [R,NE] 将能正确的将/foo/zoo转换成/bar?arg=P1=zed
+13) PT(pass through to next handler) 传递给下一个处理
+例如：
+RewriteRule ^/abc(.*) /def$1 [PT] # 将会交给/def规则处理
+Alias /def /ghi
+14) S=num(skip next rule(s)) 跳过num条规则
+15) E=VAR:VAL(set environment variable) 设置环境变量

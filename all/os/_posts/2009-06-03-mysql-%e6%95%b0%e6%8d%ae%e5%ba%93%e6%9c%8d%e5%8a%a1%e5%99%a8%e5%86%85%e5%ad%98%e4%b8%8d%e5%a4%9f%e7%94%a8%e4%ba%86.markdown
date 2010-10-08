@@ -1,0 +1,23 @@
+--- 
+wordpress_id: 478
+layout: post
+title: !binary |
+  TXlzcWwg5pWw5o2u5bqT5pyN5Yqh5Zmo5YaF5a2Y5LiN5aSf55So5LqG
+
+wordpress_url: http://maweis.com/?p=478
+---
+原来我以为是8G的，原来是4G内存的机器，准备加内存先，
+buffersize开到2G就吃不消了，还是因为单表量太大了。
+<pre lang="log">
+090603 22:11:36  InnoDB: Error: cannot allocate 704512 bytes of
+InnoDB: memory with malloc! Total allocated memory
+InnoDB: by InnoDB 2258750820 bytes. Operating system errno: 12
+InnoDB: Check if you should increase the swap file or
+InnoDB: ulimits of your operating system.
+InnoDB: On FreeBSD check you have compiled the OS with
+InnoDB: a big enough maximum process size.
+InnoDB: Note that in most 32-bit computers the process
+InnoDB: memory space is limited to 2 GB or 4 GB.
+InnoDB: We keep retrying the allocation for 60 seconds...
+090603 22:15:07  InnoDB: Error: cannot allocate 1064960 bytes of
+</pre>

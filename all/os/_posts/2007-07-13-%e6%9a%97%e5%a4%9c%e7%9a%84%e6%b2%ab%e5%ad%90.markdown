@@ -1,0 +1,10 @@
+--- 
+wordpress_id: 89
+layout: post
+title: !binary |
+  5pqX5aSc55qE5rKr5a2Q
+
+wordpress_url: http://maweis.com/?p=89
+---
+<img src="http://www.maweis.com/m/AO_MG_3871.jpg" />
+<img src="http://www.maweis.com/m/AY_MG_3871.jpg" />

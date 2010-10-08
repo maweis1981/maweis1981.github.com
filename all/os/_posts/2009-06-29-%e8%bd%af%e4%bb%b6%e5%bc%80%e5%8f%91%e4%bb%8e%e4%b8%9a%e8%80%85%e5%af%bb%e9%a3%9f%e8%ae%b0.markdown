@@ -1,0 +1,185 @@
+--- 
+wordpress_id: 490
+layout: post
+title: !binary |
+  6L2v5Lu25byA5Y+R5LuO5Lia6ICF5a+76aOf6K6w
+
+wordpress_url: http://maweis.com/?p=490
+---
+关键字：软件开发 python google appengine 好吃 便宜 打折 信用卡
+
+每天到了晚上就在想去哪儿吃饭呢？能打折，便宜。
+每次坐电梯和收到信用卡账单的时候都能看到一大批打折饭店的信息。折扣力度还很大，都是5折，可就是每家饭店都有固定的打折日期，每周轮一回，譬如周一哪家店，周二哪家店。
+
+信息来源好多地方都有，电梯里分众的广告，信用卡DM的广告，网站。可是忽然要用的时候却很难找到，不知道分类信息网站现在活的怎么样，要是能够查到就好了。
+
+等别人做还不如自己做呢，google appengine那么敏捷。
+
+<a href="http://alpha.wheredinner.com">http://alpha.wheredinner.com</a>
+
+域名是在google domain里申请的，绑定了appengine
+
+<pre lang="python" line="1" file="main.py" colla="+">
+#!/usr/bin/env python
+#
+# Copyright 2007 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+import wsgiref.handlers
+import os
+import datetime
+
+from google.appengine.api import users
+ 
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp import template
+from google.appengine.ext.webapp.util import run_wsgi_app
+
+from google.appengine.ext import db
+
+class Restaurant(db.Model):
+	name = db.StringProperty()
+	content = db.TextProperty()
+	map_url = db.LinkProperty()
+	telephone = db.PhoneNumberProperty()
+	address = db.StringProperty()
+	geo_location = db.GeoPtProperty()
+	category = db.CategoryProperty()
+	place = db.StringProperty('JiangSu','SiChuang')
+
+class CreditCard(db.Model):
+	name = db.StringProperty()
+	description = db.TextProperty()
+
+class DiscountRelative(db.Model):
+	restaurant = db.ReferenceProperty(Restaurant,collection_name='discount_credit_cards')
+	discount_card = db.ReferenceProperty(CreditCard,collection_name='restaurants')
+	discount_weekday = db.StringProperty(choices=('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'))
+	
+class MyCreditCard(db.Model):
+	user = db.UserProperty()
+	creditCard = db.ReferenceProperty(CreditCard,collection_name='myCards')
+
+class MainHandler(webapp.RequestHandler):
+  def get(self):
+    self.redirect("/restaurant/list")
+
+# Save your credit card information
+class SaveMyCreditCards(webapp.RequestHandler):
+	def post(self):
+		tUser = users.get_current_user()
+		if not tUser:
+			self.redirect(users.create_login_url('/'))
+		else:
+			rCreditCard = self.request.get("creditCard")
+			dCreditCard = CreditCard.gql("where name=:1",rCreditCard)
+			if not dCreditCard:
+				CreditCard(name=rCreditCard,description='no value now').put()
+			tC = MyCreditCard(user = tUser,creditCard = rCreditCard)
+			tC.put()
+			self.response.out.write("success add your creditCard")
+		
+
+class SaveRestaurantHandler(webapp.RequestHandler):
+	def post(self):
+		rCreditCard = self.request.get("creditCard")
+		rDiscountWeekDay = self.request.get("discountWeekDay")
+		
+		rName = self.request.get("r_name")
+		rMapUrl = self.request.get("r_mapurl")
+		rTelephone = self.request.get("r_telephone")
+		rAddress = self.request.get("r_address")
+		rGeoLocation = self.request.get("r_geolocation")
+		rCategory = self.request.get("r_category")
+		rPlace = self.request.get("r_kind")
+		rContent = self.request.get("r_content")
+		
+		tempRestaurant = Restaurant(
+						name = rName,
+						content = rContent,
+						map_url = rMapUrl,
+						telephone = rTelephone,
+						address = rAddress,
+						geo_location = rGeoLocation,
+						category = rCategory,
+						kind = rPlace)
+		tempCreditCard = CreditCard(
+								    name = rCreditCard,
+								    description = 'test credit card description')
+		tempRestaurant.put()
+		tempCreditCard.put()
+		tempRelative = DiscountRelative(restaurant = tempRestaurant,
+						 discount_card = tempCreditCard,
+						 discount_weekday = rDiscountWeekDay)
+		tempRelative.put()
+		 		
+		self.redirect("/restaurant/list")
+
+
+class AddDiscountInfoForRestaurant(webapp.RequestHandler):
+	def  get(self):
+		self.response.out.write('add temp')
+
+#	myRestaurant = Restaurant.gql("name=''").get()
+#	myCreditCard = CreditCard.gql("name=''").get()
+#	DiscountRelative(restaurant = myRestaurant,
+#			discount_card = myCreditCard,
+#			discount_week = '').put()
+
+class ListRestaurantHandler(webapp.RequestHandler):
+	def  get(self):
+		rWeekday = datetime.date.today().strftime('%a')
+		discountRestaurants = DiscountRelative.all()
+		template_values = {
+						   'restaurants': discountRestaurants,
+							'weekday':rWeekday
+						   }			
+		path = os.path.join(os.path.dirname(__file__), 'templates/restaurants.html')
+		self.response.out.write(template.render(path,template_values))
+		
+class TableListRestaurantHandler(webapp.RequestHandler):
+	def  get(self):
+		rWeekday = datetime.date.today().strftime('%a')
+		discountRestaurants = DiscountRelative.all()
+		template_values = {
+						   'restaurants': discountRestaurants,
+							'weekday':rWeekday
+						   }			
+		path = os.path.join(os.path.dirname(__file__), 'templates/restaurantTable.html')
+		self.response.out.write(template.render(path,template_values))
+		
+class ListTodayRestaurantHandler(webapp.RequestHandler):
+	def get(self):
+		a = datetime.date.today()
+		a.strftime('%a')
+
+
+application = webapp.WSGIApplication(
+					[('/', MainHandler),
+					('/restaurant/save', SaveRestaurantHandler),
+					('/my/saveCard', SaveMyCreditCards),
+					('/restaurant/list', ListRestaurantHandler),
+					('/restaurant/tablelist', TableListRestaurantHandler)],
+                                       debug=True)
+
+def main():
+	run_wsgi_app(application)
+
+if __name__ == '__main__':
+  main()
+</pre>
+
+很简单的，需要补充好多信息，希望大家提提意见，一起来补充。
+

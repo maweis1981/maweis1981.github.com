@@ -1,0 +1,7 @@
+--- 
+wordpress_id: 386
+layout: post
+title: Flickr
+wordpress_url: http://maweis.com/2009/02/22/flickr/
+---
+This is a test post from <a href="http://www.flickr.com/r/testpost"><img alt="flickr" src="http://www.flickr.com/images/flickr_logo_blog.gif" width="41" height="18" border="0" align="absmiddle" /></a>, a fancy photo sharing thing.

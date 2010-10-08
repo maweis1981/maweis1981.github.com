@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 92
+layout: post
+title: !binary |
+  5Y6G5Y+y5LiK55qE5aaC55qL
+
+wordpress_url: http://maweis.com/?p=92
+---
+<img src="http://maweis.com/m/suwan.jpg" />
+
+<img src="http://maweis.com/m/28RG.jpg" height="693" width="884" />

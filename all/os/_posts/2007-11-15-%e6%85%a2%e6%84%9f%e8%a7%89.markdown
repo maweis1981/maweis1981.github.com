@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 154
+layout: post
+title: !binary |
+  5oWi5oSf6KeJ
+
+wordpress_url: http://maweis.com/index.php/archives/154.html
+---
+<p>我需要慢感觉</p> <p><a href="http://maweis.com/m/e77635c6a4a5_7DCB/5983.jpg"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="340" alt="5983" src="http://maweis.com/m/e77635c6a4a5_7DCB/5983_thumb.jpg" width="500" border="0"></a></p>

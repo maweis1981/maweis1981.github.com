@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 71
+layout: post
+title: !binary |
+  6LWk5aOB5oCA5Y+k
+
+wordpress_url: http://maweis.com/?p=71
+---
+赤壁怀古

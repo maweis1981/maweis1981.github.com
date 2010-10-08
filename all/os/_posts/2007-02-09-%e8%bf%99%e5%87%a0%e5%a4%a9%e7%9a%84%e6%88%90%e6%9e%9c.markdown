@@ -1,0 +1,13 @@
+--- 
+wordpress_id: 21
+layout: post
+title: !binary |
+  6L+Z5Yeg5aSp55qE5oiQ5p6c
+
+wordpress_url: http://maweis.com/?p=21
+---
+<a class="tt-flickr" href="http://www.flickr.com/photos/maweiba/385073587/"><img width="400" height="300" border="0" alt="Image(021)" src="http://farm1.static.flickr.com/132/385073587_a56ece26c1_o.jpg" /></a>
+
+厨房就算这样子了,sigh。
+
+看到边城的宣传片，下面就该有方向继续努力奋斗了。

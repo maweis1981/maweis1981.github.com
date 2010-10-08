@@ -1,0 +1,12 @@
+--- 
+wordpress_id: 121
+layout: post
+title: Photoes
+wordpress_url: http://maweis.com/index.php/archives/121.html
+---
+<img src="http://maweis.com/m/_MG_5109.jpg" />
+<img src="http://maweis.com/m/_MG_5118.jpg" />
+<img src="http://maweis.com/m/_MG_5119.jpg" />
+<img src="http://maweis.com/m/_MG_5131.jpg" />
+<img src="http://maweis.com/m/01.jpg" />
+<img src="http://maweis.com/m/02.jpg" />

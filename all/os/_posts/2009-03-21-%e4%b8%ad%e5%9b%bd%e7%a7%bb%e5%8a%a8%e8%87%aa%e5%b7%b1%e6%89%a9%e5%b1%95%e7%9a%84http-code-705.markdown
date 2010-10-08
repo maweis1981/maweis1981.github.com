@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 421
+layout: post
+title: !binary |
+  5Lit5Zu956e75Yqo6Ieq5bex5omp5bGV55qEaHR0cCBjb2RlIDcwNQ==
+
+wordpress_url: http://maweis.com/2009/03/21/%e4%b8%ad%e5%9b%bd%e7%a7%bb%e5%8a%a8%e8%87%aa%e5%b7%b1%e6%89%a9%e5%b1%95%e7%9a%84http-code-705/
+---
+不清楚是哪家给移动和联通提供网关产品的，我想了解一下返回代码705是根据什么情况处理的？
+是根据url规则来处理的还是什么。
+好几台服务器走cmwap就是705，cmnet就ok，移动真是脑子有问题。

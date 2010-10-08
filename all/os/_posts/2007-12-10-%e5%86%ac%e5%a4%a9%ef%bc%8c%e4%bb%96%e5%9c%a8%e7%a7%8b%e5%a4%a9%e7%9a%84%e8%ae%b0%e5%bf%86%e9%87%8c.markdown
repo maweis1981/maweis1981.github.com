@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 200
+layout: post
+title: !binary |
+  5Yas5aSp77yM5LuW5Zyo56eL5aSp55qE6K6w5b+G6YeM
+
+wordpress_url: http://maweis.com/index.php/archives/200.html
+---
+<a href="http://maweis.com/m/44f6491bdd14_D3E4/_MG_6353.jpg"><a href="http://maweis.com/m/44f6491bdd14_D3E4/morning.jpg"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="504" alt="morning" src="http://maweis.com/m/44f6491bdd14_D3E4/morning_thumb.jpg" width="504" border="0"></a><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="337" alt="_MG_6353" src="http://maweis.com/m/44f6491bdd14_D3E4/_MG_6353_thumb.jpg" width="504" border="0"></a>

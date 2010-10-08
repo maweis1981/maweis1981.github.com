@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 372
+layout: post
+title: !binary |
+  5beo5YK755qE5rC05bmz5YiH5YiG
+
+wordpress_url: http://www.maweis.com/?p=372
+---
+当mysql的单表达到3k万记录的时候，我们想到了做水平切分，由于使用了hibernate，于是developer手工增加了9个Class，还好用了annotation，然后在service中的多个方法进行了调整，因为我们的水平切分是由原来的两张表拆成十张，也就是将id的奇偶扩展成尾数识别
+
+这样做真是个使蛮力的活儿

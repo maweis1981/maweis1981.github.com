@@ -1,0 +1,13 @@
+--- 
+wordpress_id: 98
+layout: post
+title: nutch
+wordpress_url: http://maweis.com/?p=98
+---
+Nutch
+
+crawl-urlfilter.txt
+
+nutch-site.xml
+
+url should be directory

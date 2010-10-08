@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 153
+layout: post
+title: !binary |
+  5oiR5Lus55qE5LqU5bm0
+
+wordpress_url: http://maweis.com/index.php/archives/153.html
+---
+<p>仿佛就在昨天，却告诉我们已经是5年以前</p> <p><a href="http://maweis.com/m/ec7f28de806b_7830/my5years_3.jpg"><img style="border-top-width: 0px; border-left-width: 0px; border-bottom-width: 0px; border-right-width: 0px" height="360" alt="my5years" src="http://maweis.com/m/ec7f28de806b_7830/my5years_thumb_3.jpg" width="500" border="0"></a></p> <p>&nbsp;<a href="http://maweis.com/m/ec7f28de806b_7830/my5years2_3.jpg"><img style="border-top-width: 0px; border-left-width: 0px; border-bottom-width: 0px; border-right-width: 0px" height="368" alt="my5years2" src="http://maweis.com/m/ec7f28de806b_7830/my5years2_thumb5c7f10a2c3f24723ac6dbbb2948561e3.jpg" width="500" border="0"></a></p>

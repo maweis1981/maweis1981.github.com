@@ -1,0 +1,13 @@
+--- 
+wordpress_id: 295
+layout: post
+title: !binary |
+  5pmT5bqE6ICB5byg6IWw5a2Q5bqX
+
+wordpress_url: http://maweis.com/?p=295
+---
+老张腰子店，城北晓庄第一家，竟然还是2008北京奥运会庆贺单位。真不知道这个怎么来的。
+
+老张腰子店老板姓卞，不知道为啥叫老张腰子店。
+
+<a title="Flickr 上 Peter_Ma(China) 的 晓庄老张腰子店" href="http://www.flickr.com/photos/maweiba/3061522750/"><img src="http://farm4.static.flickr.com/3217/3061522750_ae7f1b39c1_o.jpg" alt="晓庄老张腰子店" width="640" height="480" /></a>

@@ -1,0 +1,22 @@
+--- 
+wordpress_id: 23
+layout: post
+title: !binary |
+  NzA05pep5pel5Yiw5p2l
+
+wordpress_url: http://maweis.com/?p=23
+---
+自打我把系统从edgy升级到feisty，就开始了我这段在服务器上工作的time。
+
+在edgy 上可以用的ATI官方驱动，现在一直都告诉我glxinfo|grep render 一个NO，Beryl也迟迟的在等待。
+
+Fcitx就别提了，谁搭上他谁就Crash
+
+Gaim也是，
+
+幸好Oneleaf帮我搞定了 。
+不爽，下午的时候都把Fvwm拿出来 玩了。
+
+上个图看看吧。
+
+<a href="http://maweis.com/wp-content/uploads/2007/02/screenshot-20070228_1644.png" title="screenshot-20070228_1644.png"><img src="http://maweis.com/wp-content/uploads/2007/02/screenshot-20070228_1644.png" alt="screenshot-20070228_1644.png" height="458" width="607" /></a>

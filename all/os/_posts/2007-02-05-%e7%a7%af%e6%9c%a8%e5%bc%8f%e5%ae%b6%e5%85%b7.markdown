@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 7
+layout: post
+title: !binary |
+  56ev5pyo5byP5a625YW3
+
+wordpress_url: http://maweis.com/?p=7
+---
+<img alt="c8544fc2e77f8e37e5dd3b47.jpg" id="image6" src="http://maweis.com/wp-content/uploads/2007/02/c8544fc2e77f8e37e5dd3b47.jpg" />
+
+很有创意吧

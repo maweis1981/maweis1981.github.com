@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 393
+layout: post
+title: !binary |
+  5YiH5Zub5bed6IWK6IKJ55qE5pe25YCZ5Lyk5LqG5omL5oyH5aS0
+
+wordpress_url: http://maweis.com/?p=393
+---
+切四川腊肉的时候伤了手指头，左手的中指，暂停码字几天。

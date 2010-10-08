@@ -1,0 +1,8 @@
+--- 
+wordpress_id: 105
+layout: post
+title: Army
+wordpress_url: http://maweis.com/index.php/archives/105.html
+---
+<img src="http://maweis.com/m/S_IMG_4319.jpg" alt="" />
+<img src="http://maweis.com/m/S_IMG_4330.jpg" alt="" />

@@ -1,0 +1,13 @@
+--- 
+wordpress_id: 357
+layout: post
+title: !binary |
+  5pm66ICF5LmQ5rC077yM5LuB6ICF5LmQ5bGx
+
+wordpress_url: http://www.maweis.com/?p=357
+---
+知者达于事理而周流无滞，有似于水，故乐水；仁者安于义理而厚重不迁，有似于山，故乐山。
+
+ 
+
+青山行不尽，绿水去何长。

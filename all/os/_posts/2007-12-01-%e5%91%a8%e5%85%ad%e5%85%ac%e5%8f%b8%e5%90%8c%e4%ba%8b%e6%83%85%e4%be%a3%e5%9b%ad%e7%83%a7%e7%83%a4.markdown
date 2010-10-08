@@ -1,0 +1,27 @@
+--- 
+wordpress_id: 192
+layout: post
+title: !binary |
+  5ZGo5YWt5YWs5Y+45ZCM5LqL5oOF5L6j5Zut54On54OkKOivt+ebuOWFs+WQ
+  jOWtpuWujOaIkOeci+WbvuivtOivnSk=
+
+wordpress_url: http://maweis.com/index.php/archives/192.html
+---
+<img src="http://maweis.com:81/m/071201/_MG_6178.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6180.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6181.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6182.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6183.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6186.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6188.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6189.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6191.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6192.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6193.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6199.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6201.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6206.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6209.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6217-2.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6225.jpg" />
+<img src="http://maweis.com:81/m/071201/_MG_6227.jpg" />

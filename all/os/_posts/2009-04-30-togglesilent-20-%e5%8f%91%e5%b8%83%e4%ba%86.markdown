@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 450
+layout: post
+title: !binary |
+  VG9nZ2xlU2lsZW50IDIuMCDlj5HluIPkuoY=
+
+wordpress_url: http://maweis.com/?p=450
+---
+ToggleSilent 是一款运营在Android平台上的小工具，当你在需要手机无声状态的时候，只需将手机屏幕朝下放置在桌面或任何物体上即可自动切换至无声模式。
+
+目前已经发布在Android Market，名字叫做ToggleSilent，喜欢的朋友可以下载下来使用。[flickrset id="72157617515641370" thumbnail="square"]

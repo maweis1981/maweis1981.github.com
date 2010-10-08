@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 46
+layout: post
+title: !binary |
+  6YeR5q+b5a+75Zue54yO54qs
+
+wordpress_url: http://maweis.com/?p=46
+---
+即使在最阴霾的天气，也能拥有金子般灿烂的日子；即使在什么都打折的郁闷年代，也能得到永远不会打折的爱，你要享受这样的特权，最好的办法就是成为一只金毛寻回猎犬的主人。

@@ -1,0 +1,8 @@
+--- 
+wordpress_id: 96
+layout: post
+title: Life is Lomo Style
+wordpress_url: http://maweis.com/?p=96
+---
+<img src="http://maweis.com/m/S_MG_4140.jpg"/><br/>
+<img src="http://maweis.com/m/S_MG_4142.jpg"/><br/>

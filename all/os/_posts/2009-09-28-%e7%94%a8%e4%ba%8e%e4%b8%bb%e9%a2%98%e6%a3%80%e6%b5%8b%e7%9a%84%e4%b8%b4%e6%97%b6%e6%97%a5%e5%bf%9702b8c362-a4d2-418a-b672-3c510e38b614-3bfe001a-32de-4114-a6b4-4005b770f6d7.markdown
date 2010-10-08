@@ -1,0 +1,7 @@
+--- 
+wordpress_id: 531
+layout: post
+title: "\xE7\x94\xA8\xE4\xBA\x8E\xE4\xB8\xBB\xE9\xA2\x98\xE6\xA3\x80\xE6\xB5\x8B\xE7\x9A\x84\xE4\xB8\xB4\xE6\x97\xB6\xE6\x97\xA5\xE5\xBF\x97(02b8c362-a4d2-418a-b672-3c510e38b614 - 3bfe001a-32de-4114-a6b4-4005b770f6d7)"
+wordpress_url: http://maweis.com/index.php/2009/09/28/%e7%94%a8%e4%ba%8e%e4%b8%bb%e9%a2%98%e6%a3%80%e6%b5%8b%e7%9a%84%e4%b8%b4%e6%97%b6%e6%97%a5%e5%bf%9702b8c362-a4d2-418a-b672-3c510e38b614-3bfe001a-32de-4114-a6b4-4005b770f6d7/
+---
+<p>这是一个未删除的临时日志。请手动删除它。(18def76d-6e9f-4e06-9af5-e490a8b5dcf1 - 3bfe001a-32de-4114-a6b4-4005b770f6d7)</p>

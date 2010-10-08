@@ -1,0 +1,58 @@
+--- 
+wordpress_id: 380
+layout: post
+title: !binary |
+  QXJpYmF3ZWIgKyBJREVBIOaWsOS4gOS7o+eahOW/q+mAn+W8gOWPkXdlYuW6
+  lOeUqOe7hOWQiA==
+
+wordpress_url: http://maweis.com/?p=380
+---
+今天无意发现了<a href="http://aribaweb.org/">ARIBAWEB</a>，做了一点小小的试验，发现很好用，官方博客说开发一个简单应用，就是类似于ROR的helloworld，竟然比ror技术还要少100行代码，不知道有多大能耐，于是就准备试试，时间不多，下午还要开会，上午还有几个棘手的问题要解决，抓紧时间试试。
+
+第一步先去<a href="http://sourceforge.net/project/showfiles.php?group_id=227584&amp;package_id=275548">download</a>回来，然后也给<a href="http://www.jetbrains.com">IDEA</a> install一个ARIBAWEB的plugins，用过IDEA的人应该都知道的
+
+ <a class="flickr-image alignnone" title="ariba-1" href="http://www.flickr.com/photos/maweiba/3295040356/"><img src="http://farm4.static.flickr.com/3565/3295040356_3724fdab3e.jpg" alt="ariba-1" /></a>
+
+第二步就开始使用了，因为我这个博客属于事后补的，所以安装的几个截图就没有了，都是用default值就可以了
+
+<a class="flickr-image alignnone" title="ariba-2" href="http://www.flickr.com/photos/maweiba/3295040390/"><img src="http://farm4.static.flickr.com/3557/3295040390_9e937fa5e2.jpg" alt="ariba-2" /></a>
+
+第三步就是create project，然后按照提示输入一些我们大家都知道的内容
+
+<a class="flickr-image alignnone" title="ariba-3" href="http://www.flickr.com/photos/maweiba/3295040426/"><img src="http://farm4.static.flickr.com/3658/3295040426_d12ba74fc1.jpg" alt="ariba-3" /></a>
+
+<a class="flickr-image alignnone" title="ariba-4" href="http://www.flickr.com/photos/maweiba/3294215715/"><img src="http://farm4.static.flickr.com/3465/3294215715_ff68cd72c8.jpg" alt="ariba-4" /></a>
+
+<a class="flickr-image alignnone" title="a5" href="http://www.flickr.com/photos/maweiba/3294215753/"><img src="http://farm4.static.flickr.com/3004/3294215753_0859496367.jpg" alt="a5" /></a>
+
+<a class="flickr-image alignnone" title="6" href="http://www.flickr.com/photos/maweiba/3294215801/"><img src="http://farm4.static.flickr.com/3315/3294215801_e4c83ebea1.jpg" alt="6" /></a>
+
+<a class="flickr-image alignnone" title="7" href="http://www.flickr.com/photos/maweiba/3294215841/"><img src="http://farm4.static.flickr.com/3348/3294215841_d805e4bfdf.jpg" alt="7" /></a>
+
+<a class="flickr-image alignnone" title="8" href="http://www.flickr.com/photos/maweiba/3294215917/"><img src="http://farm4.static.flickr.com/3489/3294215917_ce4cd62634.jpg" alt="8" /></a>
+
+ 
+
+下一步就是最happy的事了，因为aribaweb可以让你，至少我是，非常舒服的用我最爱的IDE 也就是IDEA打开。直接open 你的project吧
+
+<a class="flickr-image alignnone" title="9" href="http://www.flickr.com/photos/maweiba/3295040742/"><img src="http://farm4.static.flickr.com/3550/3295040742_a7b2a60414.jpg" alt="9" /></a>
+
+ 
+
+ 
+
+第五步了，开始编辑代码吧，我们这个helloworld也不需要编辑了，直接ant吧，这里要是能够支持maven就好了，毕竟ant已经很久不用了，使用ant的事后要注意几个，一个就是要设置一下这个project的ant版本，这个要看各人的IDEA的配置了
+
+ 
+
+<a class="flickr-image alignnone" title="11" href="http://www.flickr.com/photos/maweiba/3295040800/"><img src="http://farm4.static.flickr.com/3375/3295040800_42ba3a31a8.jpg" alt="11" /></a>
+
+<a class="flickr-image alignnone" title="12" href="http://www.flickr.com/photos/maweiba/3294216047/"><img src="http://farm4.static.flickr.com/3545/3294216047_1fa6e1cb19.jpg" alt="12" /></a>
+
+第六步就是用浏览器来爽一把你刚刚用了几分钟创建的project。
+<div></div>
+ 
+
+<a class="flickr-image alignnone" title="14" href="http://www.flickr.com/photos/maweiba/3295040904/"><img src="http://farm4.static.flickr.com/3500/3295040904_7b23fc9b21.jpg" alt="14" /></a>
+
+<a class="flickr-image alignnone" title="16" href="http://www.flickr.com/photos/maweiba/3295041004/"><img src="http://farm4.static.flickr.com/3439/3295041004_ddee470798.jpg" alt="16" /></a>

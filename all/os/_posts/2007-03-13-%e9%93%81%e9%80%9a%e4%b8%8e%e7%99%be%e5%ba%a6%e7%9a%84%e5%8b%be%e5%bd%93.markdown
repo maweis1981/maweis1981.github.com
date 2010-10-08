@@ -1,0 +1,23 @@
+--- 
+wordpress_id: 26
+layout: post
+title: !binary |
+  6ZOB6YCa5LiO55m+5bqm55qE5Yu+5b2T
+
+wordpress_url: http://maweis.com/?p=26
+---
+搬到我的新家后，图了一个方便，就装了铁通2M。因为觉得电信和铁通也就是半斤八两吧。
+
+刚开始用骡子down东西的时候根本就没有反应，几K几K的蹦，一天下来也没有几M，恼得我放弃使用了，改用xunlei  down。要看片子也都在铁通的tiantianvod上看。
+
+最近又迷上高清了，想想办法把家里的网络好好整顿一下，白天上班的时候不用路由器，改用机器直接接ADSL，把XP端口限制去掉。嘿嘿，没想到下载速度能达到200K以上了。
+
+整了几部1080P的片子下个几天也就差不多了。
+
+<a href="http://maweis.com/wp-content/uploads/2007/03/360b1f52-628a-48d5-a048-582fad47a9850.jpg" title="360b1f52-628a-48d5-a048-582fad47a9850.jpg"><img src="http://maweis.com/wp-content/uploads/2007/03/360b1f52-628a-48d5-a048-582fad47a9850.jpg" alt="360b1f52-628a-48d5-a048-582fad47a9850.jpg" /></a>
+
+ 说了半天好的，忘了说主题了。
+
+也不知道百度怎么跟这些电信运营商勾搭的，凡是遇到生僻些的网站就统一给俺一个baidu的页面。真是受不了，我不得不在我的hosts文件里写死那么些个映射。
+
+<a href="http://maweis.com/wp-content/uploads/2007/03/baidu-dt.JPG" title="baidu-dt.JPG"><img src="http://maweis.com/wp-content/uploads/2007/03/baidu-dt.JPG" alt="baidu-dt.JPG" /></a>

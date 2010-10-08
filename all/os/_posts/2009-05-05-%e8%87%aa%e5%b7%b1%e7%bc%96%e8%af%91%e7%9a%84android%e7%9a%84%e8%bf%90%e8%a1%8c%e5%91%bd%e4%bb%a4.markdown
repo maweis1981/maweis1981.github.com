@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 461
+layout: post
+title: !binary |
+  6Ieq5bex57yW6K+R55qEYW5kcm9pZOeahOi/kOihjOWRveS7pA==
+
+wordpress_url: http://maweis.com/2009/05/05/%e8%87%aa%e5%b7%b1%e7%bc%96%e8%af%91%e7%9a%84android%e7%9a%84%e8%bf%90%e8%a1%8c%e5%91%bd%e4%bb%a4/
+---
+根据http://source.android.com上的get source 下来然后编译好， 运行以下的命令启动可以预览。
+
+peter-mavens-macintosh:myandroid peter$ out/host/darwin-x86/bin/emulator -sysdir out/target/product/generic -kernel prebuilt/android-arm/kernel/kernel-qemu -data out/target/product/generic/userdata.img 

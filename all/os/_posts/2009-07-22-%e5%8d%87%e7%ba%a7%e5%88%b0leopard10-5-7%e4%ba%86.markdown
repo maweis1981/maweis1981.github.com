@@ -1,0 +1,18 @@
+--- 
+wordpress_id: 500
+layout: post
+title: !binary |
+  5Y2H57qn5YiwbGVvcGFyZDEwLjUuN+S6hg==
+
+wordpress_url: http://maweis.com/2009/07/22/%e5%8d%87%e7%ba%a7%e5%88%b0leopard10-5-7%e4%ba%86/
+---
+
+<div style="text-align: left; padding: 3px;">
+<a href="http://www.flickr.com/photos/maweiba/3744980487/" title="photo sharing"><img src="http://farm4.static.flickr.com/3468/3744980487_bf36e0cae2.jpg" style="border: solid 2px #000000;" alt="" /></a>
+<br />
+<span style="font-size: 0.8em; margin-top: 0px;"><a href="http://www.flickr.com/photos/maweiba/3744980487/">leopard10-5-7</a>，原由 <a href="http://www.flickr.com/people/maweiba/">Maven@China</a> 上載。</span>
+</div>
+<p>
+只为了 用 keynote<br />
+然后顺便升级了safari 4
+</p>

@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 45
+layout: post
+title: !binary |
+  5biD5aW9572R77yM562J5L2g5p2l
+
+wordpress_url: http://maweis.com/?p=45
+---
+<img src="http://maweis.com/m/1328.jpg" style="width: 668px; height: 487px" height="487" width="668" />

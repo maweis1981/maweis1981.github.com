@@ -1,0 +1,22 @@
+--- 
+wordpress_id: 427
+layout: post
+title: !binary |
+  5Zyo5a625bel5L2c5aW95YOP5pu05LiT5rOo
+
+wordpress_url: http://maweis.com/2009/03/28/%e5%9c%a8%e5%ae%b6%e5%b7%a5%e4%bd%9c%e5%a5%bd%e5%83%8f%e6%9b%b4%e4%b8%93%e6%b3%a8/
+---
+今天是周六，昨晚用投影看了全民超人，爽，60-70寸的样子吧，因为没有幕布(从公司拿的投影)，大概2米长
+早上迷迷糊糊的还是6点多就醒了，傻傻的让老婆起来备课，被骂了一顿后愤愤不平的起床检查服务器状况，发现应用又挂了，nnd，这帮小崽子真是让我不消停啊，维护一下吧。
+
+完事继续睡觉，一觉到中午，起来吃饭上网，写程序，研究fbreader，android，就这么点爱好，还有就是给柱子哥折腾他的centos服务器，一折腾到四点了，给老婆当司机去了一下银行。路上又怪老婆自己不开车，她驾照早就拿了，04年我和柱子哥出差山东的时候看她闲着没事让她考的，还是柱子哥给出的学费，哈哈。她就不停的哄我啊，说我的老公是司机，是厨师，是门童，是什么什么的，我嘴上不说，心里也暖呵呵的
+
+后来去了银行一会儿就回家了，然后就准备吃晚饭了，晚上再看一部电影，明天还要陪她出去，希望明天服务器都稳定吧。
+
+准备publish的时候看到title发现又偏题了。
+检查今天的rescuetime的时候发现今天的整块时间比在公司多多了，基本都能达到90%的整块时间，在公司都是零碎时间，大概跟我老往Jason屋子里跑了抽烟有关，或者是被叉开的事情多，也不知道是哪种好。
+上图
+
+<a class="flickr-image alignnone" title="2009-03-28-work" href="http://www.flickr.com/photos/maweiba/3391261479/"><img src="http://farm4.static.flickr.com/3444/3391261479_59bbd868e9_o.jpg" alt="2009-03-28-work" /></a>
+
+<a class="flickr-image alignnone" title="2009-03-28-work-detail" href="http://www.flickr.com/photos/maweiba/3392072914/"><img src="http://farm4.static.flickr.com/3451/3392072914_b195ff2caf_o.jpg" alt="2009-03-28-work-detail" width="500" /></a>

@@ -1,0 +1,14 @@
+--- 
+wordpress_id: 419
+layout: post
+title: !binary |
+  bXlzcWxkdW1wIOaIkCBjc3bmlofku7Y=
+
+wordpress_url: http://maweis.com/2009/03/19/mysqldump-%e6%88%90-csv%e6%96%87%e4%bb%b6/
+---
+ /usr/local/mysql/bin/mysqldump -u root -p sampledata --tab=/Users/peter/mysqldump --no-create-info --fields-terminated-by=, CUSTOMERS
+
+--tab : 备份文件存放目录， 此目录owner必须为mysql:mysql
+--fields-terminated-by :  数据分隔符，一般用逗号
+
+后面跟上表名，中间还可以加where条件用来按日备份做增量备份

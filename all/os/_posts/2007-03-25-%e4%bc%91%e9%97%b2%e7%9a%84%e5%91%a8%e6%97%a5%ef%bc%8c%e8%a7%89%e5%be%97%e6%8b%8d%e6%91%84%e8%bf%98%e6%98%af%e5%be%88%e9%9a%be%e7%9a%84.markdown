@@ -1,0 +1,23 @@
+--- 
+wordpress_id: 34
+layout: post
+title: !binary |
+  5LyR6Zey55qE5ZGo5pel77yM6KeJ5b6X5ouN5pGE6L+Y5piv5b6I6Zq+55qE
+
+wordpress_url: http://maweis.com/?p=34
+---
+小区的花：
+
+<a href="http://www.flickr.com/photos/maweiba/433573217/" class="tt-flickr"><img border="0" width="500" src="http://farm1.static.flickr.com/147/433573217_0831df80dc.jpg" alt="IMG_0225" height="333" /></a> 
+
+小区的灯：
+
+<a href="http://www.flickr.com/photos/maweiba/433574044/" class="tt-flickr"><img border="0" width="500" src="http://farm1.static.flickr.com/154/433574044_a960f4bb9b.jpg" alt="IMG_0197" height="333" /></a>
+
+到邻居家做客的美食：
+
+<a href="http://www.flickr.com/photos/maweiba/433576421/" class="tt-flickr"><img border="0" width="500" src="http://farm1.static.flickr.com/185/433576421_51d23974f3.jpg" alt="IMG_0442" height="333" /></a> <a href="http://www.flickr.com/photos/maweiba/433573198/" class="tt-flickr"><img border="0" width="500" src="http://farm1.static.flickr.com/184/433573198_60129e5408.jpg" alt="IMG_0428" height="333" /></a> <a href="http://www.flickr.com/photos/maweiba/433572994/" class="tt-flickr"><img border="0" width="500" src="http://farm1.static.flickr.com/186/433572994_9b6b83f56f.jpg" alt="IMG_0416" height="333" /></a>
+
+老婆向我奔跑
+
+<a href="http://www.flickr.com/photos/maweiba/433574125/" class="tt-flickr"><img border="0" width="75" src="http://farm1.static.flickr.com/157/433574125_9afbbe021a_s.jpg" alt="IMG_0336" height="75" /></a> <a href="http://www.flickr.com/photos/maweiba/433571554/" class="tt-flickr"><img border="0" width="75" src="http://farm1.static.flickr.com/165/433571554_3239c64055_s.jpg" alt="IMG_0337" height="75" /></a> <a href="http://www.flickr.com/photos/maweiba/433571718/" class="tt-flickr"><img border="0" width="75" src="http://farm1.static.flickr.com/148/433571718_b19cf3a3eb_s.jpg" alt="IMG_0338" height="75" /></a> <a href="http://www.flickr.com/photos/maweiba/433571886/" class="tt-flickr"><img border="0" width="75" src="http://farm1.static.flickr.com/162/433571886_e8c33c232f_s.jpg" alt="IMG_0339" height="75" /></a> <a href="http://www.flickr.com/photos/maweiba/433572062/" class="tt-flickr"><img border="0" width="75" src="http://farm1.static.flickr.com/151/433572062_8af70c226d_s.jpg" alt="IMG_0340" height="75" /></a> <a href="http://www.flickr.com/photos/maweiba/433574815/" class="tt-flickr"><img border="0" width="75" src="http://farm1.static.flickr.com/87/433574815_45ae5571e1_s.jpg" alt="IMG_0341" height="75" /></a>

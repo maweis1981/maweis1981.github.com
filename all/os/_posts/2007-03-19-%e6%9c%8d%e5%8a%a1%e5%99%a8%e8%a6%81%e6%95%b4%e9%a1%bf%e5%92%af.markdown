@@ -1,0 +1,34 @@
+--- 
+wordpress_id: 29
+layout: post
+title: !binary |
+  5pyN5Yqh5Zmo6KaB5pW06aG/5ZKv
+
+wordpress_url: http://maweis.com/?p=29
+---
+[49159314.710000] end_request: I/O error, dev sda, sector 137500416
+[49159314.710000] Buffer I/O error on device dm-2, logical block 9
+[49159355.700000] sd 1:0:0:0: SCSI error: return code = 0x8000002
+[49159355.700000] sda: Current: sense key: Medium Error
+[49159355.700000]     Additional sense: Read retries exhausted
+[49159355.700000] Info fld=0x8321723
+[49159355.700000] end_request: I/O error, dev sda, sector 137500450
+[49159355.700000] Buffer I/O error on device dm-2, logical block 26
+[49159405.580000] sd 1:0:0:0: SCSI error: return code = 0x8000002
+[49159405.580000] sda: Current: sense key: Medium Error
+[49159405.580000]     Additional sense: Read retries exhausted
+[49159405.580000] Info fld=0x8321709
+[49159405.580000] end_request: I/O error, dev sda, sector 137500424
+[49159405.580000] Buffer I/O error on device dm-2, logical block 13
+[49644460.240000] TCP: Treason uncloaked! Peer 222.82.245.242:2122/80 shrinks window 1232315739:1232317199. Repaired.
+[49644507.280000] TCP: Treason uncloaked! Peer 222.82.245.242:2122/80 shrinks window 1232315739:1232317199. Repaired.
+[49644601.360000] TCP: Treason uncloaked! Peer 222.82.245.242:2122/80 shrinks window 1232315739:1232317199. Repaired.
+[49687975.650000] TCP: Treason uncloaked! Peer 222.91.79.58:43761/80 shrinks window 4268995845:4269007365. Repaired.
+[49687976.210000] TCP: Treason uncloaked! Peer 222.91.79.58:43761/80 shrinks window 4268995845:4269007365. Repaired.
+[49687977.330000] TCP: Treason uncloaked! Peer 222.91.79.58:43761/80 shrinks window 4268995845:4269007365. Repaired.
+[49687979.570000] TCP: Treason uncloaked! Peer 222.91.79.58:43761/80 shrinks window 4268995845:4269007365. Repaired.
+[49687984.050000] TCP: Treason uncloaked! Peer 222.91.79.58:43761/80 shrinks window 4268995845:4269007365. Repaired.
+[50247375.850000] TCP: Treason uncloaked! Peer 221.239.20.223:33281/80 shrinks window 2248459993:2248463078. Repaired.
+[50247376.450000] TCP: Treason uncloaked! Peer 221.239.20.223:33281/80 shrinks window 2248459993:2248463078. Repaired.
+
+该怎么解决呢？

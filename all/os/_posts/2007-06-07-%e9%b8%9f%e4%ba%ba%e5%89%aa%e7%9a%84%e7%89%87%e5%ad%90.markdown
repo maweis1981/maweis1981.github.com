@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 68
+layout: post
+title: !binary |
+  6bif5Lq65Ymq55qE54mH5a2Q
+
+wordpress_url: http://maweis.com/?p=68
+---
+<object width="480" height="395"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="http://tv.mofile.com/cn/xplayer.swf"><param name="FlashVars" value="v=1FGDFHZA&p=http://cache.mofile.com/tv/static/picture/u8/Disk1/ctc/2007/6/7/1F/GD/1FGDFHZA.jpg&autoplay=0"><param name="wmode" value="transparent"><embed src="http://tv.mofile.com/cn/xplayer.swf" FlashVars="v=1FGDFHZA&p=http://cache.mofile.com/tv/static/picture/u8/Disk1/ctc/2007/6/7/1F/GD/1FGDFHZA.jpg&autoplay=0" width="480" height="395" allowScriptAccess="sameDomain" wmode="transparent" type="application/x-shockwave-flash"/></object>

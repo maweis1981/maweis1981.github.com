@@ -1,0 +1,8 @@
+--- 
+wordpress_id: 112
+layout: post
+title: ME
+wordpress_url: http://maweis.com/index.php/archives/112.html
+---
+<img src="http://maweis.com/m/4555.jpg" alt="" />
+<img src="http://maweis.com/m/4526.jpg" alt="" />

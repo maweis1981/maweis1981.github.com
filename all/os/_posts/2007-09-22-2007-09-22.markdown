@@ -1,0 +1,7 @@
+--- 
+wordpress_id: 116
+layout: post
+title: "2007-09-22"
+wordpress_url: http://maweis.com/index.php/archives/116.html
+---
+<img src="http://maweis.com/m/new_hair.jpg" alt="new hair" />

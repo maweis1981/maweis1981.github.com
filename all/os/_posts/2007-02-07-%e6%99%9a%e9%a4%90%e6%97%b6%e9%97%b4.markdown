@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 20
+layout: post
+title: !binary |
+  5pma6aSQ5pe26Ze0
+
+wordpress_url: http://maweis.com/?p=20
+---
+<a class="tt-flickr" href="http://www.flickr.com/photos/maweiba/241944665/"><img width="240" height="180" border="0" alt="Image(688)" src="http://farm1.static.flickr.com/94/241944665_a8236f3687_m.jpg" /></a>
+
+晚餐时间快到咯，食谱确定了没呢。

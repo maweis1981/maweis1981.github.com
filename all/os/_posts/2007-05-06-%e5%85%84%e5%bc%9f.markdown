@@ -1,0 +1,15 @@
+--- 
+wordpress_id: 57
+layout: post
+title: !binary |
+  5pGH6ams6Lev
+
+wordpress_url: http://maweis.com/?p=57
+---
+摇(姚)马路(陆)
+
+上学的时候老是一起旷课出去玩，老师就给我们仨一个外号。摇马路，却也恰好和我们仨的姓不谋而合。呵呵。
+
+<img src="http://maweis.com/m/104.jpg" />
+
+<img src="http://maweis.com/m/105.jpg" />

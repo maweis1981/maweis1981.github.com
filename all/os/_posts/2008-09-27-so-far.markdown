@@ -1,0 +1,7 @@
+--- 
+wordpress_id: 253
+layout: post
+title: so far...
+wordpress_url: http://maweis.com/?p=253
+---
+almost forgot.

@@ -1,0 +1,24 @@
+--- 
+wordpress_id: 481
+layout: post
+title: MS-MEMO
+wordpress_url: http://maweis.com/?p=481
+---
+<pre lang="sql">
+GRANT REPLICATION SLAVE ON *.* TO '${user}'@'${host}' IDENTIFIED BY '${password}';
+FLUSH PRIVILEGES;
+</pre>
+
+<pre lang="conf">
+server-id	= ${id}
+master-host=${host}
+master-port=${port}
+master-user=${user}
+master-password=${password}
+master-connect-retry=10
+replicate-do-db=${database_name}
+</pre>
+
+Need to config multi-master on Slave server
+
+How???

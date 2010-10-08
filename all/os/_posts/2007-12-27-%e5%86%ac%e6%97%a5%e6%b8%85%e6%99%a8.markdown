@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 208
+layout: post
+title: !binary |
+  5Yas5pel5riF5pmo
+
+wordpress_url: http://maweis.com/index.php/archives/208.html
+---
+<p>&nbsp;</p> <p>几乎无语</p> <p><a href="http://maweis.com/m/1d4cff1067ec_88A7/_MG_6414.jpg"><img style="border-top-width: 0px; border-left-width: 0px; border-bottom-width: 0px; border-right-width: 0px" height="504" alt="_MG_6414" src="http://maweis.com/m/1d4cff1067ec_88A7/_MG_6414_thumb.jpg" width="504" border="0"></a></p>

@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 209
+layout: post
+title: !binary |
+  5oOF57yY
+
+wordpress_url: http://maweis.com/index.php/archives/209.html
+---
+<p>似乎已经很久没有写博客也没有拍博客了。</p> <p>最近我一直在看书，看亦舒，看张小娴。</p> <p>老婆拿着我看的书翻了几页，便道，以为你看什么高深的书呢，不过就是言情小说罢了。</p> <p>是呀，世间还有什么比情更大呢。</p> <p>经历的爱情太少了，便略微看些来补充一下。</p>

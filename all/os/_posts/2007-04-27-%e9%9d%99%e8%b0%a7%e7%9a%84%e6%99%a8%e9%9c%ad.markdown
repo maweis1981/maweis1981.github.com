@@ -1,0 +1,13 @@
+--- 
+wordpress_id: 55
+layout: post
+title: !binary |
+  6Z2Z6LCn55qE5pmo6ZytIA==
+
+wordpress_url: http://maweis.com/?p=55
+---
+ 因为娶了这个媳妇儿的缘故，我每天早上都要到陶先生这边来一回，虽然我与陶君素未谋面，但却深得他的教诲。因此而惴惴不安。
+
+<img src="http://maweis.com/m/1971.jpg" />
+
+<img src="http://maweis.com/m/1991.jpg" />

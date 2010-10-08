@@ -1,0 +1,266 @@
+--- 
+wordpress_id: 69
+layout: post
+title: !binary |
+  5rOV6K+t6Z+z57Sg5LiO5ZC06K+t5a+554Wn
+
+wordpress_url: http://maweis.com/?p=69
+---
+    上海话是苏州话、宁波话等吴方言的混合体，兼具苏州话的软，宁波话的硬，是代表性的吴语。吴语使用人口在国内有七千万以上，是仅次于官话的第二大汉语方言。
+
+南宋开始，中国的主要文学创作是在吴方言区完成的。以四大名著三言两拍为代表的大量名著是江浙人写的，<u>施耐庵</u>、<u>罗贯中</u>等人本是说书艺人，大量名著原是苏州评书和昆曲的脚本；另外大量北方籍文人也有长期江浙生活的背景。他们的作品中有大量的吴语词汇。
+
+宋、辽前，北方游牧民族未入侵前的北方话，和吴语一样是有浊音、短音(入声)的。被<u>章太炎</u>先生称为金元虏语的今日北方话实是满蒙 人学习的汉语。如：语音史上，“微、维”等字和吴语一样读“[vi]”，因满洲人发不出[vi]而转读为[wei]，好像北方人常将英文字母V读做 [wei]。因上述原因，大量古诗词曲用普通话读不出韵脚（仅《唐诗三百首》的前十首中就有五首），也不能讲解词曲格律。因浊音声低，入声音短，语音的音 乐面貌不同。弹词、昆曲之词曲既是“词曲”之词曲。
+
+河南籍的<u>唐玄奘</u>就是用吴音译佛经的，因为唯有吴语译音准确。吴语是汉语诸方言中音素最全者，上海话音素50个，绝大多数在常见的外语中得到使用；普通话音素32个，包括不实用的翘舌音。所以，现在常见的外语的音素，吴语对得上号的普遍比其它方言多。比如法语。
+<p align="center">辅音</p>
+
+<table border="1" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" width="42">
+<p align="center">法语</p>
+</td>
+<td valign="top" width="122">
+<p align="center">相当上海话音素</p>
+</td>
+<td valign="top" width="39">
+<p align="center">法语</p>
+</td>
+<td valign="top" width="125">
+<p align="center">相当上海话音素</p>
+</td>
+<td valign="top" width="43">
+<p align="center">法语</p>
+</td>
+<td valign="top" width="121">
+<p align="center">相当上海话音素</p>
+</td>
+<td valign="top" width="40">
+<p align="center">法语</p>
+</td>
+<td valign="top" width="124">
+<p align="center">相当上海话音素</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[p]</p>
+</td>
+<td valign="top" width="122">拨[pə]</td>
+<td valign="top" width="39">
+<p align="center">[k]</p>
+</td>
+<td valign="top" width="125">革[kə]</td>
+<td valign="top" width="43">
+<p align="center">[s]</p>
+</td>
+<td valign="top" width="121">司[sɿ]</td>
+<td valign="top" width="40">
+<p align="center">[m]</p>
+</td>
+<td valign="top" width="124">没[ə]</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[b]</p>
+</td>
+<td valign="top" width="122">勃、孛(相)[bə]</td>
+<td valign="top" width="39">
+<p align="center">[g]</p>
+</td>
+<td valign="top" width="125">搿(这)[gə]</td>
+<td valign="top" width="43">
+<p align="center">[z]</p>
+</td>
+<td valign="top" width="121">市、如[zɿ]</td>
+<td valign="top" width="40">
+<p align="center">[n]</p>
+</td>
+<td valign="top" width="124">讷[ə]</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[t]</p>
+</td>
+<td valign="top" width="122">德[tə]</td>
+<td valign="top" width="39">
+<p align="center">[f]</p>
+</td>
+<td valign="top" width="125">夫[fɯ]</td>
+<td valign="top" width="43">
+<p align="center">[l]</p>
+</td>
+<td valign="top" width="121">勒(在)[ɺə]</td>
+<td valign="top" width="40">
+<p align="center">[ɲ]</p>
+</td>
+<td valign="top" width="124">日、热[ɲɪ]</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[d]</p>
+</td>
+<td valign="top" width="122">凸[də]</td>
+<td valign="top" width="39">
+<p align="center">[v]</p>
+</td>
+<td valign="top" width="125">扶[vɯ]</td>
+<td valign="top" width="43">
+<p align="center">[ʤ]</p>
+</td>
+<td valign="top" width="121">及[ʤɪ]</td>
+<td valign="top" width="40">
+<p align="center">[ʦ]</p>
+</td>
+<td valign="top" width="124">支[ʦɿ]</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[ʃ]</p>
+<p align="center">[ʒ]</p>
+</td>
+<td colspan="7" valign="top" width="614">相当上海话“削[ʃjɪ]、习[ʒjɪ]”，且需拢圆嘴唇，舌缘上卷。普通话的前舌面音(x)[ɕ]前舌面隆起，舌叶音[ʃ]前舌面平展，其差别好似平翘之别。吴语的舌叶音和日语较一致。</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[r]</p>
+</td>
+<td colspan="7" valign="top" width="614">法语[r]是小舌颤音[R]。发音时，舌根略抬高，接触小舌，让气流通过舌根和软腭的空隙，小舌颤动，震动声带。但一般读作小舌擦音，感觉介于吴语浊喉擦音[ɦ]和国语清舌根擦音(h)[x]间</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[j]</p>
+</td>
+<td colspan="7" valign="top" width="614">普通话(y-i)，上海话“一[jɪ]”中的半元音。[j]在音节末时相当上海话“叶[jɦɪ]”。法语半元音通常情况相当汉语的介音。半元音 在法语和普通话中是亲元音的一组，英语中是亲辅音的一组，吴语中分为亲辅音和亲元音的两组。如：吴语“夷[jɦi]”相当英语[j]。</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[ɥ]</p>
+</td>
+<td colspan="3" valign="top" width="286"> “抈(折)[jɪ]”中的半元音。普通话(y-u)。</td>
+<td valign="top" width="43">
+<p align="center">[w]</p>
+</td>
+<td colspan="3" valign="top" width="285">“殁[wə](塞)”中的半元音。普通话(w)。</td>
+</tr>
+</table>
+法语清塞音多为不送气清音，但在[r]之前和音节末时送气；此时“[p],[t],[k]”分别相当于上海话的 “泼[p‘]，忒（太）[t‘]，克[k‘]”声母。
+
+法语辅音不同于英语，常带些简单元音，如[ə]、[jɪ]。
+<p align="center">元音</p>
+
+<table border="1" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" width="42">
+<p align="center">法语</p>
+</td>
+<td valign="top" width="122">
+<p align="center">相当上海话音素</p>
+</td>
+<td valign="top" width="39">
+<p align="center">法语</p>
+</td>
+<td valign="top" width="125">
+<p align="center">相当上海话音素</p>
+</td>
+<td valign="top" width="43">
+<p align="center">法语</p>
+</td>
+<td valign="top" width="121">
+<p align="center">相当上海话音素</p>
+</td>
+<td valign="top" width="40">
+<p align="center">法语</p>
+</td>
+<td valign="top" width="124">
+<p align="center">相当上海话音素</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[I]</p>
+</td>
+<td valign="top" width="122">衣[i]</td>
+<td valign="top" width="39">
+<p align="center">[ɛ]</p>
+</td>
+<td valign="top" width="125">哀[ɛ]</td>
+<td valign="top" width="43">
+<p align="center">[ø]</p>
+</td>
+<td valign="top" width="121">安[ø]</td>
+<td valign="top" width="40">
+<p align="center">[ɑ̃]</p>
+</td>
+<td valign="top" width="124">盎[ɑ̃]</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[y]</p>
+</td>
+<td valign="top" width="122">迂[y]</td>
+<td valign="top" width="39">
+<p align="center">[ɔ]</p>
+</td>
+<td valign="top" width="125">凹[ɔ]</td>
+<td valign="top" width="43">
+<p align="center">[o]</p>
+</td>
+<td colspan="3" valign="top" width="285">丫、桠[ʊ]。介于普通话(o)[o]、(u)[u]间。</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[ə]</p>
+</td>
+<td colspan="3" valign="top" width="286">促音“遏、褐[əʔ]”延长。不同于普通话(e)[ɤ]。</td>
+<td valign="top" width="43">
+<p align="center">[õ]</p>
+</td>
+<td colspan="3" valign="top" width="285">翁[ǫ̃]。该音主韵或标为[ɔ]，实介于两者间。</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[ɑ]</p>
+</td>
+<td colspan="3" valign="top" width="286">现前[a]和后[ɑ]不分，相当上海话“啊[ɑ]”。</td>
+<td valign="top" width="43">
+<p align="center">[œ̃]</p>
+</td>
+<td colspan="3" valign="top" width="285">比上海话“恩[əɲ]”开口大些，并将嘴拢圆。</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[u]</p>
+</td>
+<td colspan="7" valign="top" width="614">比普通话(u)[u]的嘴唇略扁些，比上海话“乌[ɯ]” 的嘴唇略圆些。</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[e]</p>
+</td>
+<td colspan="7" valign="top" width="614">[e]在法语中要与[ɛ]对应，故开口较小，接近[ɪ]；比如：j’ai[ʒe]接近上海话“习[ʒiɪ]”，但上海话和英语的[ɪ]一般带有 [j]/[i]，所以上海话“力[ɺiɪ]”接近英语“[l(i)ɪ]”，但和法语les[le]差异较大。总之，[e],[ɛ]分别相当江浙腔普通话的 (ei)和(ai)。</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[œ]</p>
+</td>
+<td colspan="7" valign="top" width="614">上海话“欧[ɘ⁻]”嘴巴开足，并将嘴拢圆。或上海话“压[ɐʔ]”嘴唇收圆，并拖长音。</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[ɛ ̃]</p>
+</td>
+<td colspan="7" valign="top" width="614">接近江浙腔普通话的(an)。上海话“哎[ɛ]、五[ŋ]”快读也可以得到该音。</td>
+</tr>
+<tr>
+<td valign="top" width="42">
+<p align="center">[iŋ]</p>
+</td>
+<td colspan="7" valign="top" width="614"> 英、音[iɲ]。法语和吴语一样，没分清前后鼻音的习惯。用于外来语。</td>
+</tr>
+</table>
+法语和吴语一样，没分清前后鼻音的习惯。
+
+法语和吴语一样，没有双元音，单元音丰富。
+
+法语和吴语一样，都是高语速的语言。

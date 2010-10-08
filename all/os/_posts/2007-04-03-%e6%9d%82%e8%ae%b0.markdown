@@ -1,0 +1,21 @@
+--- 
+wordpress_id: 41
+layout: post
+title: !binary |
+  5p2C6K6w
+
+wordpress_url: http://maweis.com/?p=41
+---
+<img src="http://maweis.com/m/IMG_0931.jpg" style="width: 668px; height: 487px" height="487" width="668" />
+
+<img src="http://maweis.com/m/IMG_0936.jpg" style="width: 668px; height: 487px" height="487" width="668" />
+
+<img src="http://maweis.com/m/IMG_0941.jpg" style="width: 447px; height: 680px" height="447" width="680" />
+
+<img src="http://maweis.com/m/IMG_0943.jpg" style="width: 668px; height: 487px" height="487" width="668" />
+
+<img src="http://maweis.com/m/IMG_0951.jpg" style="width: 668px; height: 487px" height="487" width="668" />
+
+<img src="http://maweis.com/m/IMG_0961.jpg" style="width: 668px; height: 487px" height="487" width="668" />
+
+<img src="http://maweis.com/m/IMG_0963.jpg" style="width: 668px; height: 487px" height="487" width="668" />

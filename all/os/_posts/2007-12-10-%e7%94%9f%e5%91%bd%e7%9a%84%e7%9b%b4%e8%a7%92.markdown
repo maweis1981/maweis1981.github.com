@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 199
+layout: post
+title: !binary |
+  55Sf5ZG955qE55u06KeS
+
+wordpress_url: http://maweis.com/index.php/archives/199.html
+---
+<p><a href="http://maweis.com/m/9497e7869b26_CD8D/001.jpg"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="346" alt="001" src="http://maweis.com/m/9497e7869b26_CD8D/001_thumb.jpg" width="504" border="0"></a>&nbsp; <a href="http://maweis.com/m/9497e7869b26_CD8D/004.jpg"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="357" alt="004" src="http://maweis.com/m/9497e7869b26_CD8D/004_thumb.jpg" width="504" border="0"><a href="http://maweis.com/m/9497e7869b26_CD8D/002.jpg"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="335" alt="002" src="http://maweis.com/m/9497e7869b26_CD8D/002_thumb.jpg" width="504" border="0"></a></a>&nbsp; <a href="http://maweis.com/m/9497e7869b26_CD8D/006.jpg"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="337" alt="006" src="http://maweis.com/m/9497e7869b26_CD8D/006_thumb.jpg" width="504" border="0"><a href="http://maweis.com/m/9497e7869b26_CD8D/005.jpg"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="360" alt="005" src="http://maweis.com/m/9497e7869b26_CD8D/005_thumb.jpg" width="504" border="0"></a></a></p>

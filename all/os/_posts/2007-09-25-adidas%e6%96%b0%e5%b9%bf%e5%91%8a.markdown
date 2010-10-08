@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 118
+layout: post
+title: !binary |
+  QWRpZGFz5paw5bm/5ZGK
+
+wordpress_url: http://maweis.com/index.php/archives/118.html
+---
+<p>我是马晓旭，这是我的故事：刚一开始拍广告的时候，我觉得我很酷，第一次打世界杯还不到21岁，踢了360分钟，一球没进，最后被淘汰了！那是很丢脸的事情，但是幸好我脸皮厚！要想再踢奥运会的主力前锋，最好的办法就是坚决不要脸，让自己的脸皮更厚，没有什么不可能！</p>

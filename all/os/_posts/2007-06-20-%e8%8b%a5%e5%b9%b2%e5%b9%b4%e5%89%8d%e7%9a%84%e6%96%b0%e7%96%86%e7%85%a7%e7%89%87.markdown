@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 73
+layout: post
+title: !binary |
+  6Iul5bmy5bm05YmN55qE5paw55aG54Wn54mH
+
+wordpress_url: http://maweis.com/?p=73
+---
+<img src="http://maweis.com/m/10000.jpg" />
+<img src="http://maweis.com/m/100001.jpg" />
+<img src="http://maweis.com/m/100002.jpg" />

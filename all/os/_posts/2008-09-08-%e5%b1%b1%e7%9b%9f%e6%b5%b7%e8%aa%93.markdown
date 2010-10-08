@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 240
+layout: post
+title: !binary |
+  5bGx55uf5rW36KqT
+
+wordpress_url: http://maweis.com/?p=240
+---
+<a class="flickr-image" title="山盟海誓" href="http://www.flickr.com/photos/98673103@N00/2807220421/"><img src="http://farm4.static.flickr.com/3205/2807220421_6eea64aa44_t.jpg" alt="山盟海誓" /></a>
+
+山盟海誓的图

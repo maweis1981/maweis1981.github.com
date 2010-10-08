@@ -1,0 +1,14 @@
+--- 
+wordpress_id: 446
+layout: post
+title: !binary |
+  6L+R5pel5oiY5p6c
+
+wordpress_url: http://maweis.com/2009/04/22/%e8%bf%91%e6%97%a5%e6%88%98%e6%9e%9c/
+---
+成功编译了android，可以准备个性化定制编译然后就是刷机。
+提交了几行代码到coolreader
+
+面试了两个人
+
+定义了架构通信规则

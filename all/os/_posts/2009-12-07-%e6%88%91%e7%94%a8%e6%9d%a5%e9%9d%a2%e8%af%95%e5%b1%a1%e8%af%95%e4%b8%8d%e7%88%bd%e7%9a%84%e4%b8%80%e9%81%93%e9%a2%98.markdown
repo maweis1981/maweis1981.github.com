@@ -1,0 +1,82 @@
+--- 
+wordpress_id: 562
+layout: post
+title: !binary |
+  5oiR55So5p2l6Z2i6K+V5bGh6K+V5LiN54i955qE5LiA6YGT6aKY
+
+wordpress_url: http://maweis.com/index.php/2009/12/07/%e6%88%91%e7%94%a8%e6%9d%a5%e9%9d%a2%e8%af%95%e5%b1%a1%e8%af%95%e4%b8%8d%e7%88%bd%e7%9a%84%e4%b8%80%e9%81%93%e9%a2%98/
+---
+<p style="font: 20.0px Helvetica">The Problem</p>
+<p style="font: 20.0px Helvetica">Definition. Given the real vector x[n], compute the maximum sum found in any contiguous subvector.</p>
+<p style="font: 20.0px Helvetica">An Example. If the input vector is</p>
+<p style="font: 20.0px Helvetica">26 then the program returns the sum of x[2..6], or 187.</p>
+<p style="font: 20.0px Helvetica">31</p>
+<p style="font: 20.0px Helvetica">-41</p>
+<p style="font: 20.0px Helvetica">59</p>
+<p style="font: 20.0px Helvetica">26</p>
+<p style="font: 20.0px Helvetica">-53</p>
+<p style="font: 20.0px Helvetica">58</p>
+<p style="font: 20.0px Helvetica">97</p>
+<p style="font: 20.0px Helvetica">-93</p>
+<p style="font: 20.0px Helvetica">-23</p>
+<p style="font: 20.0px Helvetica">84</p>
+<p style="font: 6.0px Times"><span style="font: 6.0px Helvetica">From</span> <i>Programming Pearls</i>, Copyright <span style="font: 6.0px Symbol"></span> 2000, Lucent Technologies Pearls-8-2<span style="font: 20.0px Helvetica">A Cubic Algorithm</span></p>
+<p style="font: 20.0px Helvetica">Idea. For all pairs of integers i and j satisfying 0<span style="font: 20.0px Symbol">≤</span>i<span style="font: 20.0px Symbol">≤</span> j <span style="font: 20.0px Symbol">&lt;</span> n, check whether the sum of x[i.. j] is greater than the maximum sum so far.</p>
+<p style="font: 20.0px Helvetica">Code.</p>
+<p style="font: 20.0px Courier">maxsofar = 0 for i = [0, n)</p>
+<p style="font: 20.0px Courier">for j = [i, n) sum = 0</p>
+<p style="font: 20.0px Courier">for k = [i, j] sum += x[k]</p>
+<p style="font: 20.0px Courier">/* sum is sum of x[i..j] */ maxsofar = max(maxsofar, sum)</p>
+<p style="font: 20.0px Helvetica">Run Time. O(n<span style="font: 17.0px Helvetica">3</span>).</p>
+<p style="font: 6.0px Times"><span style="font: 6.0px Helvetica">From</span> <i>Programming Pearls</i>, Copyright <span style="font: 6.0px Symbol"></span> 2000, Lucent Technologies Pearls-8-3</p>
+<p style="font: 20.0px Helvetica">A Quadratic Algorithm Idea. The sum of x[i..j] is close to the previous</p>
+<p style="font: 20.0px Helvetica">sum, x [ i.. j <span style="font: 20.0px Symbol">−</span>1 ]. Code.</p>
+<p style="font: 20.0px Courier">maxsofar = 0 for i = [0, n)</p>
+<p style="font: 20.0px Courier">sum = 0 for j = [i, n)</p>
+<p style="font: 20.0px Courier">sum += x[j] /* sum is sum of x[i..j] */ maxsofar = max(maxsofar, sum)</p>
+<p style="font: 20.0px Helvetica">Run Time. O(n<span style="font: 17.0px Helvetica">2</span>). Other Quadratic Algorithms?</p>
+<p style="font: 6.0px Times"><span style="font: 6.0px Helvetica">From</span> <i>Programming Pearls</i>, Copyright <span style="font: 6.0px Symbol"></span> 2000, Lucent Technologies Pearls-8-4</p>
+<p style="font: 20.0px Helvetica">Another Quadratic Algorithm</p>
+<p style="font: 20.0px Helvetica">Idea. A ‘‘cumulative array’’ allows sums to be com- puted quickly. If ytd[i] contains year-to-date sales through month i, then sales from March through September are given by ytd[sep] <span style="font: 20.0px Symbol">−</span> ytd[ feb].</p>
+<p style="font: 20.0px Helvetica">Implementation. Use the cumulative array cumarr. Initialize cumarr [ i ] <span style="font: 20.0px Symbol">=</span> x [ 0 ] <span style="font: 20.0px Symbol">+</span> . . . <span style="font: 20.0px Symbol">+</span> x [ i ]. The sum of the values in x [ i.. j ] is cumarr [ j ] <span style="font: 20.0px Symbol">−</span> cumarr [ i <span style="font: 20.0px Symbol">−</span> 1 ].</p>
+<p style="font: 20.0px Helvetica">Code for Algorithm 2b.</p>
+<p style="font: 20.0px Courier">cumarr[-1] = 0 for i = [0, n)</p>
+<p style="font: 20.0px Courier">cumarr[i] = cumarr[i-1] + x[i] maxsofar = 0</p>
+<p style="font: 20.0px Courier">for i = [0, n) for j = [i, n)</p>
+<p style="font: 20.0px Courier">sum = cumarr[j] - cumarr[i-1] /* sum is sum of x[i..j] */ maxsofar = max(maxsofar, sum)</p>
+<p style="font: 6.0px Times"><span style="font: 20.0px Helvetica">Run Time. O(n</span><span style="font: 17.0px Helvetica">2</span><span style="font: 20.0px Helvetica">).</span> <span style="font: 6.0px Helvetica">From</span> <i>Programming Pearls</i>, Copyright <span style="font: 6.0px Symbol"></span> 2000, Lucent Technologies Pearls-8-5</p>
+<p style="font: 20.0px Helvetica">An O(n log n) Algorithm</p>
+<p style="font: 20.0px Helvetica">The Divide-and-Conquer Schema. To solve a prob- lem of size n, recursively solve two subproblems of size n / 2 and combine their solutions.</p>
+<p style="font: 20.0px Helvetica">The Idea. Divide into two subproblems.</p>
+<p style="font: 20.0px Helvetica">Recursively find maximum in subvectors.</p>
+<p style="font: 20.0px Helvetica">Find maximum crossing subvector.</p>
+<p style="font: 20.0px Helvetica">Return max of m<span style="font: 17.0px Helvetica">a</span>, m<span style="font: 17.0px Helvetica">b</span> and m<span style="font: 17.0px Helvetica">c</span>. Run Time. O(n log n).</p>
+<p style="font: 20.0px Helvetica">a</p>
+<p style="font: 20.0px Helvetica">b</p>
+<p style="font: 17.0px Helvetica"><span style="font: 20.0px Helvetica">m</span>a</p>
+<p style="font: 17.0px Helvetica"><span style="font: 20.0px Helvetica">m</span>b</p>
+<p style="font: 17.0px Helvetica"><span style="font: 20.0px Helvetica">m</span>c</p>
+<p style="font: 6.0px Times"><span style="font: 6.0px Helvetica">From</span> <i>Programming Pearls</i>, Copyright <span style="font: 6.0px Symbol"></span> 2000, Lucent Technologies</p>
+<p style="font: 6.0px Times">Pearls-8-6</p>
+<p style="font: 20.0px Helvetica">Code for the O(N log N) Algorithm</p>
+<p style="font: 20.0px Courier">float maxsum3(l, u) if (l &gt; u) /* zero elements */</p>
+<p style="font: 20.0px Courier">return 0 if (l == u) /* one element */</p>
+<p style="font: 20.0px Courier">return max(0, x[l])</p>
+<p style="font: 20.0px Courier">m = (l + u) / 2 /* find max crossing to left */ lmax = sum = 0 for (i = m; i &gt;= l; i--)</p>
+<p style="font: 20.0px Courier">sum += x[i]</p>
+<p style="font: 20.0px Courier">lmax = max(lmax, sum) /* find max crossing to right */ rmax = sum = 0 for i = (m, u]</p>
+<p style="font: 20.0px Courier">sum += x[i] rmax = max(rmax, sum)</p>
+<p style="font: 20.0px Courier">return max(lmax+rmax, maxsum3(l, m),</p>
+<p style="font: 20.0px Courier">maxsum3(m+1, u))</p>
+<p style="font: 6.0px Times"><span style="font: 6.0px Helvetica">From</span> <i>Programming Pearls</i>, Copyright <span style="font: 6.0px Symbol"></span> 2000, Lucent Technologies</p>
+<p style="font: 6.0px Times">Pearls-8-7</p>
+<p style="font: 20.0px Helvetica">A Linear Algorithm</p>
+<p style="font: 20.0px Helvetica">Idea. How can we extend a solution for x [ 0 .. i <span style="font: 20.0px Symbol">−</span> 1 ] into a solution for x [ 0 .. i ]? Key variables:</p>
+<p style="font: 20.0px Helvetica">maxsofar</p>
+<p style="font: 20.0px Helvetica">maxhere</p>
+<p style="font: 20.0px Helvetica">I</p>
+<p style="font: 20.0px Helvetica">Code.</p>
+<p style="font: 20.0px Courier">maxsofar = 0 maxhere = 0 for i = [0, n)</p>
+<p style="font: 20.0px Courier">/* invariant: maxhere and maxsofar are accurate for x[0..i-1] */ maxhere = max(maxhere + x[i], 0)</p>
+<p style="font: 20.0px Courier">maxsofar = max(maxsofar, maxhere)</p>
+<p><span style="font-size: 20px;">Run Time. O(n).</span></p>

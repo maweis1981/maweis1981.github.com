@@ -1,0 +1,19 @@
+--- 
+wordpress_id: 77
+layout: post
+title: !binary |
+  55yL55yL5oiRNDUwMOi9rOiDveWIsOWkmuWwkeaXtumAnw==
+
+wordpress_url: http://maweis.com/?p=77
+---
+测试时间：2007年6月16日
+
+测试人员：Peter Ma, <a href="http://maweis.com/?p=58" title="YuanYuan">YuanYuan</a>
+
+测试地点：宁通高速泰州段
+
+测试主体：凯越HRV 1.6
+
+<img src="http://maweis.com/m/116.jpg" />
+<img src="http://maweis.com/m/117.jpg" />
+<img src="http://maweis.com/m/118.jpg" />

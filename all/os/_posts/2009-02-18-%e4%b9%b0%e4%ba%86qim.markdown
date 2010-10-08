@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 375
+layout: post
+title: !binary |
+  5Lmw5LqGUUlN
+
+wordpress_url: http://maweis.com/?p=375
+---
+去年过年前趁着QIM打折的机会买的正版的，36块，超值了
+
+<a class="flickr-image alignnone" title="買了QIM" rel="flickr-mgr" href="http://www.flickr.com/photos/maweiba/3165870936/"><img class="flickr-medium" src="http://farm2.static.flickr.com/1061/3165870936_ff28b4670d.jpg" alt="買了QIM" /></a>

@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 152
+layout: post
+title: !binary |
+  5p+v6KW/5Lit5YC85a6a55CG
+
+wordpress_url: http://maweis.com/index.php/archives/152.html
+---
+<h5>中值定理：柯西中值定理</h5> <p>设函数f(x)和g(x)满足下列条件：<br>1）在闭区间[a,b]上连续；<br>2）在开区间（a,b)上可导,且g'(x)不等于0，则在开区间(a,b)内至少存在一点x'使得[f(b)-f(a)]/[g(b)-g(a)]=f'(x)/g'(x)</p>

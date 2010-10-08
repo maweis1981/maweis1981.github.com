@@ -1,0 +1,26 @@
+--- 
+wordpress_id: 549
+layout: post
+title: !binary |
+  c2NhbGEg55qEIOWHoOenjSBpbXBvcnQg
+
+wordpress_url: http://maweis.com/index.php/2009/11/16/scala-%e7%9a%84-%e5%87%a0%e7%a7%8d-import/
+---
+<pre lang="scala">
+scala中的import用法：
+一，引用某包
+import scala.xml._
+二，引用某包，省略前缀，
+import net.liftweb._
+//以下省略前缀
+import http._
+import js._
+import SHtml._
+import JsCmds._
+三，引用单个类
+import scala.collection.mutable.HashMap 
+四，引用多个类
+import scala.collection.immutable.{TreeMap, TreeSet} 
+五，引用单个类并修改成你所希望的类名去调用
+import scala.util.parsing.json.{JSON => JsonParser} 
+</pre>

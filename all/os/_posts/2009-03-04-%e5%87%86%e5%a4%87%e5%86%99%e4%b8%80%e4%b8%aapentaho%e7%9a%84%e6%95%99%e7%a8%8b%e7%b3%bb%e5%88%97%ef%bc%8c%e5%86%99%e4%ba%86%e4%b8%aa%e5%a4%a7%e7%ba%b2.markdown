@@ -1,0 +1,42 @@
+--- 
+wordpress_id: 395
+layout: post
+title: !binary |
+  5YeG5aSH5YaZ5LiA5LiqcGVudGFob+eahOaVmeeoi+ezu+WIl++8jOWGmeS6
+  huS4quWkp+e6sg==
+
+wordpress_url: http://maweis.com/?p=395
+---
+Pentaho 开发指南计划
+
+1，本地化pentaho 平台，介绍如何搭建pentaho平台，并将原来的hypersonic数据库迁移到mysql或oracle，postgresql
+
+2，使用administrator console进行管理
+
+3，开发你的第一张报表
+
+4，开发你的第一个OLAP
+
+5，开发你的第一个仪表盘
+
+6，开发你的第一个Business Model，使用Pentaho Metadata editor
+
+7，使用pentaho designer开发ActionSequence
+
+8，开发dashboard
+
+9，开发Adhoc Report
+
+10，开发你的ETL程序
+
+11，开发你的调度应用
+
+12，开发你的工作流
+
+13，定义BI平台权限策略
+
+14，部署应用并跟原有系统集成，LDAP等
+
+15，最佳实践
+
+16，总结

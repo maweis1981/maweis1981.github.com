@@ -1,0 +1,17 @@
+--- 
+wordpress_id: 33
+layout: post
+title: !binary |
+  5pma6aSQ57uE5Zu+
+
+wordpress_url: http://maweis.com/?p=33
+---
+米饭，蒜薹咸肉，炒油菜，百叶结烧肉
+
+老婆做的
+
+<img src="http://farm1.static.flickr.com/145/432271668_bdeaccbe78.jpg" alt="IMG_0056" border="0" height="365" width="500" /><br/>
+<img src="http://farm1.static.flickr.com/184/432271935_3d4de7e223.jpg" alt="IMG_0055" border="0" height="365" width="500" /><br/>
+<img src="http://farm1.static.flickr.com/172/432271841_59ff74639d.jpg" alt="IMG_0054" border="0" height="365" width="500" /><br/>
+<img src="http://farm1.static.flickr.com/168/432271296_78985314a1.jpg" alt="200703241904 026" border="0" height="365" width="500" /><br/>
+<img src="http://farm1.static.flickr.com/173/432270940_94911b1d56.jpg" alt="200703241904 024" border="0" height="365" width="500" /><br/>

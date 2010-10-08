@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 232
+layout: post
+title: !binary |
+  MTTml7YyOOWIhiDor7fkuI7miJHkuIDotbfpu5jlk4A=
+
+wordpress_url: http://maweis.com/index.php/archives/232.html
+---
+我亲爱的同胞们，请一路走好。

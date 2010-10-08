@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 238
+layout: post
+title: !binary |
+  5aWl6L+Q6K6p5oiR5pyJ5Lqb5r+A5Yqo
+
+wordpress_url: http://maweis.com/?p=238
+---
+奥运开幕式的焰火脚印让我很激动，真壮观。那一刻我就觉得祖国是伟大的。

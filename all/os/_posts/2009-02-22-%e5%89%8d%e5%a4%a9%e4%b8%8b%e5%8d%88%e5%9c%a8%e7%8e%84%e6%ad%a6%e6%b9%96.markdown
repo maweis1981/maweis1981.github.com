@@ -1,0 +1,19 @@
+--- 
+wordpress_id: 387
+layout: post
+title: !binary |
+  5YmN5aSp5LiL5Y2I5Zyo546E5q2m5rmW
+
+wordpress_url: http://maweis.com/2009/02/22/%e5%89%8d%e5%a4%a9%e4%b8%8b%e5%8d%88%e5%9c%a8%e7%8e%84%e6%ad%a6%e6%b9%96/
+---
+
+<div style="text-align: left; padding: 3px;">
+<a href="http://www.flickr.com/photos/maweiba/3298857965/" title="photo sharing"><img src="http://farm4.static.flickr.com/3639/3298857965_52f0775aed.jpg" style="border: solid 2px #000000;" alt="" /></a>
+<br />
+<span style="font-size: 0.8em; margin-top: 0px;"><a href="http://www.flickr.com/photos/maweiba/3298857965/">_MG_1115</a>，原由 <a href="http://www.flickr.com/people/maweiba/">Maven@China</a> 上載。</span>
+</div>
+<p>
+前天下午在玄武湖公园，带小宝宝玩的。<br />
+<br />
+两人坐在长凳着，感觉多和谐啊。哈哈
+</p>

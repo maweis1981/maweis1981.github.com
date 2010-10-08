@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 447
+layout: post
+title: !binary |
+  5Yi35py66IezZmlybXdhcmUgMS41
+
+wordpress_url: http://maweis.com/2009/04/27/%e5%88%b7%e6%9c%ba%e8%87%b3firmware-15/
+---
+参见 htc 官方网站链接
+
+http://www.htc.com/www/support/android/adp.html

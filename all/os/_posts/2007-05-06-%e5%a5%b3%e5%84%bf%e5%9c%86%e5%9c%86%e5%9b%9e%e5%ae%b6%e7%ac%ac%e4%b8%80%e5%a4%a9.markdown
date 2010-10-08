@@ -1,0 +1,16 @@
+--- 
+wordpress_id: 58
+layout: post
+title: !binary |
+  5aWz5YS/5ZyG5ZyG5Zue5a6256ys5LiA5aSp
+
+wordpress_url: http://maweis.com/?p=58
+---
+<p>我家闺女圆圆第一天回家 </p>
+<p><img src="http://maweis.com/m/018.jpg" /></p>
+<p>一路高速过来也没在车上瞎闹，真乖，就是在仪征留下了一泡。哈哈。</p>
+<p>回来之后还有点害羞，她还很凶呢。</p>
+
+<p><img src="http://maweis.com/m/106.jpg" /></p>
+<p><img src="http://maweis.com/m/107.jpg" /></p>
+<p><img src="http://maweis.com/m/108.jpg" /></p>

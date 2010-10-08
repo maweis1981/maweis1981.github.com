@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 276
+layout: post
+title: !binary |
+  c3F1aWQg6ZmQ5Yi25ZCM5LiASVDlnLDlnYDlkIzml7blj5Hotbfor7fmsYLm
+  lbA=
+
+wordpress_url: http://maweis.com/?p=276
+---
+acl OverConnLimit maxconn 8
+http_access deny OverConnLimit

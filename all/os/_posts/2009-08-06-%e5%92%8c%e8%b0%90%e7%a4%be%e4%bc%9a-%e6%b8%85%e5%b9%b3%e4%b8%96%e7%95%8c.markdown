@@ -1,0 +1,13 @@
+--- 
+wordpress_id: 505
+layout: post
+title: !binary |
+  5ZKM6LCQ56S+5LyaIOa4heW5s+S4lueVjA==
+
+wordpress_url: http://maweis.com/2009/08/06/%e5%92%8c%e8%b0%90%e7%a4%be%e4%bc%9a-%e6%b8%85%e5%b9%b3%e4%b8%96%e7%95%8c/
+---
+今天的和谐社会，哪里和谐了。
+
+大宋的清平世界，何曾有过清平。
+
+真是可笑
