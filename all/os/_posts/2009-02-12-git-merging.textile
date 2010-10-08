@@ -1,0 +1,36 @@
+---
+layout: post
+title: "Git Merging"
+---
+
+h2. {{ page.title }}
+
+p(publish_date). 12 Feb 2009
+
+<p>Note to self: Below is how you merge an experimental branch back into master.</p>
+
+<pre name="code" class="terminal">
+$ git checkout master
+$ git pull . experimental_branch
+</pre>
+Output will look something like this:
+<pre name="code" class="terminal">
+From .
+ * branch            experimental_branch -> FETCH_HEAD
+Removed app/controllers/scheduled_rules_controller.rb
+Auto-merged app/models/action.rb
+Auto-merged app/models/rule.rb
+Removed app/views/field_mappings/_new.html.erb
+Auto-merged app/views/layouts/application.html.erb
+CONFLICT (content): Merge conflict in app/views/layouts/application.html.erb
+Removed app/views/scheduled_rules/destroy.html.erb
+Removed app/views/schedules/_list.html.erb
+Removed app/views/schedules/_new_rule_schedule.html.erb
+Auto-merged config/routes.rb
+Auto-merged public/stylesheets/style.css
+CONFLICT (content): Merge conflict in public/stylesheets/style.css
+Automatic merge failed; fix conflicts and then commit the result.
+
+</pre>
+
+<p>Fix the conflicts and you are done, hooray!</p>
