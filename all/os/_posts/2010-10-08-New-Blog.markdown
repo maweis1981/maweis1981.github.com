@@ -1,1 +1,6 @@
-Hello World.
+--- 
+layout: post
+---
+<p>
+Hello World!
+</p>
