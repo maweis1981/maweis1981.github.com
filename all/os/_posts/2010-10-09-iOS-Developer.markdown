@@ -1,5 +1,5 @@
 ---
-layout:post
+layout: post
 title: iOS Developer Should be know.
 ---
 *this is a markdown syntax test blog*
