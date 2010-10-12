@@ -1,5 +1,5 @@
 ---
-layout : post.html
+layout : post
 title: Developer Could not update the origin app to support game center
 ---
 
