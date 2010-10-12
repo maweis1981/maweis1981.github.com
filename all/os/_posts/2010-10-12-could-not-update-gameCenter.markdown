@@ -17,7 +17,7 @@ you can test the game center in GameCenter(Sandbox) what is apple support.
 
 now, the work is done . I was ready to uploading the new version game app with game center support.
 
-![ApplicationLoader ScreenShot](http://flic.kr/p/8JpcGt)
+![ApplicationLoader ScreenShot](http://farm5.static.flickr.com/4028/5074317135_11ca819a73.jpg)
 
 Because you could not add new feature in Info.plist for your application, that's mean:
 you could not add gamekit=True in your UIRequiredCapabilities in Info.plist. the application
