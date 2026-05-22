@@ -1,0 +1,148 @@
+# The Site Configuration
+
+# Import the theme
+theme: jekyll-theme-chirpy
+
+# Site language; affects the layout/UI language. Posts themselves can mix languages.
+lang: zh-CN
+
+timezone: Asia/Singapore
+
+# jekyll-seo-tag settings
+# ↓ --------------------------
+
+title: Ma's Tech Blog
+
+tagline: code · software · life
+
+description: >-
+  Ma Wei（Max）的个人博客，自 2007 年开始的随手记录 ——
+  软件、代码、摄影、生活，以及现在的 AI-Native Engineering。
+
+url: "https://maweis1981.github.io"
+
+github:
+  username: maweis1981
+
+social:
+  name: Max (Ma Wei)
+  email:
+  links:
+    - https://github.com/maweis1981
+    - https://ngmob.com
+
+webmaster_verifications:
+  google:
+  bing:
+
+# ↑ --------------------------
+
+analytics:
+  google:
+    id:
+
+pageviews:
+  provider:
+
+# theme_mode 留空 = 跟随系统；侧栏左下角可手动切换 light/dark
+theme_mode:
+
+cdn:
+
+avatar:
+
+social_preview_image:
+
+toc: true
+
+comments:
+  provider:
+
+assets:
+  self_host:
+    enabled:
+    env:
+
+# 暂时关闭 PWA，避免 service worker 缓存导致前端旧版本卡住
+pwa:
+  enabled: false
+  cache:
+    enabled: false
+
+paginate: 10
+
+# This is a user site (maweis1981.github.io), served from the domain root.
+baseurl: ""
+
+# ------------ The following options are not recommended to be modified ------------------
+
+kramdown:
+  footnote_backlink: "&#8617;&#xfe0e;"
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: highlight
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
+
+collections:
+  tabs:
+    output: true
+    sort_by: order
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      comments: false
+      toc: true
+      permalink: /posts/:title/
+  - scope:
+      path: _drafts
+    values:
+      comments: false
+  - scope:
+      path: ""
+      type: tabs
+    values:
+      layout: page
+      permalink: /:title/
+
+sass:
+  style: compressed
+
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  profile: false
+  blanklines: false
+  ignore:
+    envs: [development]
+
+exclude:
+  - "*.gem"
+  - "*.gemspec"
+  - docs
+  - tools
+  - README.md
+  - README.textile
+  - readme.txt
+  - publish
+  - LICENSE
+  - purgecss.js
+  - "*.config.js"
+  - "package*.json"
+
+jekyll-archives:
+  enabled: [categories, tags]
+  layouts:
+    category: category
+    tag: tag
+  permalinks:
+    tag: /tags/:name/
+    category: /categories/:name/

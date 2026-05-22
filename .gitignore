@@ -1,0 +1,14 @@
+# Bundler / RubyGems
+.bundle/
+vendor/
+Gemfile.lock
+*.gem
+
+# Jekyll
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# OS / editor
+.DS_Store

@@ -1,0 +1,8 @@
+#  The contact options.
+
+- type: github
+  icon: "fab fa-github"
+
+- type: rss
+  icon: "fas fa-rss"
+  noblank: true
