@@ -14,4 +14,3 @@ order: 4
 ## Elsewhere
 
 - GitHub: [@maweis1981](https://github.com/maweis1981)
-- 另一个博客: [Daily Feeds Blog](https://maweis1981.github.io/dailyfeeds-blog/)
