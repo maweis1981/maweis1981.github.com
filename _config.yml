@@ -49,7 +49,7 @@ theme_mode:
 
 cdn:
 
-avatar:
+avatar: /assets/img/avatar.webp
 
 social_preview_image:
 
