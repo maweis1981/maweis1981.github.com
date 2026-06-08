@@ -47,6 +47,20 @@ jobs:
         env:
           JEKYLL_ENV: "production"
 
+      - name: Verify build output
+        run: |
+          echo "=== _site root entries ==="
+          ls -la "_site${{ steps.pages.outputs.base_path }}" | head -25
+          echo
+          echo "=== _site/index.html stats ==="
+          wc -c "_site${{ steps.pages.outputs.base_path }}/index.html"
+          echo "=== first 200 bytes of _site/index.html ==="
+          head -c 200 "_site${{ steps.pages.outputs.base_path }}/index.html"
+          echo
+          echo
+          echo "=== sample post page exists? ==="
+          ls -la "_site${{ steps.pages.outputs.base_path }}/posts/ai-daily-2026-06-07/" 2>&1 | head -3
+
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v4
         with:
