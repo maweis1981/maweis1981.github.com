@@ -1,128 +1,63 @@
-# WeChat 公众号 Auto-Publish
+# WeChat 公众号 Auto-Publish (via 云开发 cloud function)
 
-Markdown → WeChat 草稿 → optional freepublish, in one Node script. Wired into a
-`workflow_dispatch` GitHub Action so you can publish any post on demand from the
-Actions tab; later switch to `on: push` once you trust it.
+End-to-end auto-publish from `_posts/*.md` to 公众号 (草稿 + optional
+`freepublish`), running entirely from this static repo + GitHub Actions.
+
+The reason it works without local infra: there's a tiny **HTTP-triggered cloud
+function** deployed inside the 公众号's own **云开发** environment. The function
+calls 公众号 APIs from inside Tencent's network, so the WeChat IP whitelist
+constraint is sidestepped. See `tools/wechat-cloudfunction/README.md` for that
+deployment.
+
+The two pieces:
+
+```
+┌──────────────────────────────────────────────────────┐
+│  GitHub Action  (this repo's _posts/* → rendered HTML)│
+│  tools/wechat-publish.mjs                            │
+│  - Read post, parse front matter                     │
+│  - Convert Markdown → WeChat HTML (inline styles)    │
+│  - POST { title, content_html, cover_url, … } to →   │
+└──────────────────────────────────────────────────────┘
+                            ↓ (HTTPS + Bearer secret)
+┌──────────────────────────────────────────────────────┐
+│  公众号 云开发 cloud function                          │
+│  tools/wechat-cloudfunction/index.js                 │
+│  - Verify bearer                                     │
+│  - Fetch cover_url → upload as permanent material    │
+│  - cloud.openapi.draft.add(...)                      │
+│  - cloud.openapi.freepublish.submit(...) [optional]  │
+│  - Return { cover_media_id, draft_media_id, … }      │
+└──────────────────────────────────────────────────────┘
+```
 
 ## What this does
 
-Given a markdown post under `_posts/`:
+Given a post under `_posts/`:
 
 1. Parses YAML front matter (`title`, `author`, `description`, …).
-2. Renders the body to **WeChat-compatible HTML** with inline styles only — no
+2. Renders the body to WeChat-compatible HTML with inline styles only — no
    classes, no `<style>` blocks (WeChat strips them).
-3. Detects Chirpy's `{: .prompt-info|tip|warning|danger }` markers and rewrites
-   the preceding `<blockquote>` as a colored box.
-4. Uploads any inline images (`<img src="/assets/...">` or relative paths) to
-   WeChat via `/cgi-bin/media/uploadimg` and rewrites the `src`.
-5. Uses a **shared cover image** (single permanent material reused across posts)
-   so you don't fill up your 5000-slot permanent material library.
-6. Creates a draft via `/cgi-bin/draft/add`.
-7. Optionally submits the draft via `/cgi-bin/freepublish/submit`.
+3. Detects Chirpy's `{: .prompt-info | tip | warning | danger }` markers and
+   rewrites the preceding `<blockquote>` as a colored box.
+4. Constructs the **raw GitHub URL** of the cover image (the image must
+   already be committed to a branch — typically `master`).
+5. POSTs the payload to the cloud function.
+6. The cloud function does cover upload + draft.add (+ optional publish) and
+   returns the resulting media IDs.
 
 ## One-time setup
 
-### 1. Get AppID + AppSecret from 公众号 后台
+The detailed runbook is **`tools/wechat-cloudfunction/README.md`**. Short version:
 
-公众号 后台 → **设置 → 公众号设置 → 开发者ID(AppID)** and **开发者密码(AppSecret)**.
-The AppSecret only shows once when reset — copy it immediately.
-
-> **Note**: If you're on a personal 订阅号 registered after 2018, AppSecret access
-> may be restricted. Verify it's available before continuing.
-
-### 2. Solve the IP-whitelist problem
-
-`/cgi-bin/stable_token` (and `/cgi-bin/token`) refuse calls from any IP not in
-your account's IP whitelist. GitHub Actions runners use thousands of dynamic
-IPs across many CIDRs, so you can't just add them all.
-
-Pick one:
-
-#### Option A (simplest) — run locally first
-
-For your first run, clone the repo, set env vars, and run from your home machine.
-Add your home IP to the whitelist:
-
-  公众号 后台 → 设置 → 公众号设置 → **IP白名单** → 添加 (your public IP).
-
-This proves the script works. Useful for testing the conversion + draft creation.
-
-#### Option B (recommended for automation) — a tiny proxy on a fixed IP
-
-The script honours a `WECHAT_API_PROXY` env var: if set, all requests go to
-`${WECHAT_API_PROXY}/cgi-bin/...` instead of `https://api.weixin.qq.com/cgi-bin/...`.
-
-Stand up a tiny passthrough on something whose outbound IP you control —
-e.g. a Vercel function in your existing Vercel project, a Cloudflare Worker
-(with a Workers Paid plan + dedicated IP), a Fly.io machine, or a $4/mo VPS.
-Add **that** IP to the WeChat whitelist. Then:
-
-```
-WECHAT_API_PROXY=https://your-proxy.example.com
-```
-
-Minimal proxy (Node/Express, ~25 lines):
-
-```js
-import express from 'express';
-const app = express();
-app.use(express.raw({ type: '*/*', limit: '10mb' }));
-app.all('/cgi-bin/*', async (req, res) => {
-  const url = 'https://api.weixin.qq.com' + req.url;
-  const r = await fetch(url, {
-    method: req.method,
-    headers: { 'content-type': req.headers['content-type'] || 'application/json' },
-    body: ['GET','HEAD'].includes(req.method) ? undefined : req.body,
-  });
-  res.status(r.status);
-  r.headers.forEach((v, k) => res.setHeader(k, v));
-  res.send(Buffer.from(await r.arrayBuffer()));
-});
-app.listen(process.env.PORT || 3000);
-```
-
-(Auth that proxy with a shared secret in real production — left out for brevity.)
-
-#### Option C — self-hosted GitHub Actions runner
-
-Run the workflow on a runner with a fixed IP. Most engineering for the
-cleanest result. Documented at
-<https://docs.github.com/actions/hosting-your-own-runners>.
-
-### 3. Upload a cover image once, save its media_id
-
-Every WeChat article requires `thumb_media_id`. Run locally once with `--cover`
-to upload the image you want to reuse and grab the media_id:
-
-```bash
-cd /path/to/maweis1981.github.com
-export WECHAT_APP_ID=...
-export WECHAT_APP_SECRET=...
-node tools/wechat-publish.mjs \
-  --file _posts/2026-06-14-ai-daily-2026-06-14.md \
-  --cover path/to/cover.jpg
-# log will print:  [cover] new media_id: <SOMETHING_LONG>
-```
-
-Then store `<SOMETHING_LONG>` as the **`WECHAT_COVER_MEDIA_ID`** secret. After
-that, future runs reuse it without re-uploading.
-
-WeChat cover requirements:
-
-- Format: JPG / JPEG / PNG (not WebP)
-- Recommended ratio: 2.35:1 (e.g. 900 × 383) — what shows in the article header
-
-### 4. Add GitHub repo secrets
-
-`Settings → Secrets and variables → Actions → New repository secret`:
-
-| Secret | Required? | Value |
-|---|---|---|
-| `WECHAT_APP_ID` | yes | from 公众号 后台 |
-| `WECHAT_APP_SECRET` | yes | from 公众号 后台 |
-| `WECHAT_API_PROXY` | only if you went with Option B | e.g. `https://your-proxy.example.com` |
-
-(Cover image is **per-run** via the workflow `cover` input or `--cover` CLI flag — not a secret.)
+1. 公众号 后台 → 开发 → **云开发** → 开通 (free tier)
+2. `cd tools/wechat-cloudfunction && npm install && zip -r ../wechat-cloudfunction.zip .`
+3. 云开发 → 云函数 → 新建函数 → 上传 zip → entry `index.main` → Node 18 → timeout 30 s
+4. Function env var: `WECHAT_PROXY_SECRET=<random string>`
+5. Function 触发器 → HTTP 触发器, get the trigger URL
+6. Repo secrets (Settings → Secrets and variables → Actions):
+   - `WECHAT_PROXY_URL` = the trigger URL from step 5
+   - `WECHAT_PROXY_SECRET` = the same secret from step 4
 
 ## Running it
 
@@ -133,55 +68,59 @@ WeChat cover requirements:
 Inputs:
 
 - **post** — `_posts/2026-06-14-ai-daily-2026-06-14.md`
-- **publish** — leave **false** the first few times; review in 公众号 后台 →
-  草稿箱 first. Flip to **true** once the format looks right.
-- **dry_run** — set **true** to just render HTML and exit, useful when tuning
-  the converter.
+- **cover** — `assets/img/posts/harness-is-the-product/cover.png` (or any
+  committed JPG/PNG; aspect ratio 2.35:1 recommended)
+- **publish** — leave **false** the first few times so you can review in
+  公众号 后台 → 草稿箱. Flip to **true** once the format is right.
+- **dry_run** — set **true** to just render HTML and exit. Useful when
+  tuning the Markdown → HTML converter without touching the function.
 
-### From the command line
+### Locally (for converter tweaks only)
+
+Local runs hit the cloud function the same way — set the same env vars:
 
 ```bash
 cd /path/to/maweis1981.github.com
-export WECHAT_APP_ID=...  WECHAT_APP_SECRET=...  WECHAT_COVER_MEDIA_ID=...
-# (optional) export WECHAT_API_PROXY=https://your-proxy.example.com
+export WECHAT_PROXY_URL=https://cloud1-….service.tcloudbase.com/wechat-publish
+export WECHAT_PROXY_SECRET=…
+export GITHUB_REPOSITORY=maweis1981/maweis1981.github.com
+export GITHUB_REF_NAME=master
 
-# Dry run — just see the HTML
+# Dry run — render only
 node tools/wechat-publish.mjs \
   --file _posts/2026-06-14-ai-daily-2026-06-14.md --dry-run
 
 # Real run — creates a draft
 node tools/wechat-publish.mjs \
-  --file _posts/2026-06-14-ai-daily-2026-06-14.md
+  --file _posts/2026-06-14-ai-daily-2026-06-14.md \
+  --cover assets/img/posts/harness-is-the-product/cover.png
 
-# Real run — creates a draft AND submits it for publication
+# With auto-publish after draft
 node tools/wechat-publish.mjs \
-  --file _posts/2026-06-14-ai-daily-2026-06-14.md --publish
+  --file _posts/2026-06-14-ai-daily-2026-06-14.md \
+  --cover assets/img/posts/harness-is-the-product/cover.png \
+  --publish
 ```
 
 ## What this does *not* do (yet)
 
-- **Auto-trigger on push to master.** This is `workflow_dispatch` only for now.
-  Once you've published a few drafts manually and trust the format, switch to
-  `on: push` with a paths filter + diff detection.
-- **Per-post cover images.** Uses a single shared cover (`WECHAT_COVER_MEDIA_ID`).
-  Per-post would mean reading `image.path` from front matter and uploading the
-  file every run, which burns permanent material slots.
-- **Code highlighting.** WeChat strips Prism / Rouge / etc. CSS. Code blocks
-  render with a uniform dark background, no syntax colors. AI Daily posts have
-  no code blocks so this is mostly academic.
-- **KaTeX / math.** Not handled. Add a markdown-it plugin if needed.
-- **Polling freepublish status.** `--publish` returns the `publish_id` and
-  exits; you can poll `/cgi-bin/freepublish/get` from your own script if you
-  want strict success confirmation.
+- **Auto-trigger on push to master.** Still `workflow_dispatch` only — once
+  you've validated a few drafts, switching to `on: push` with a paths filter
+  is a one-line follow-up.
+- **Per-post cover from front matter.** The cover is a workflow input
+  (or `--cover` flag). If you add `image: { path: … }` to front matter for
+  Chirpy, this script could be extended to read it.
+- **freepublish status polling.** `--publish` returns the `publish_id` and
+  exits; poll `/cgi-bin/freepublish/get` separately if you want strict
+  success confirmation.
 
-## Failure modes
+## Why this design
 
-- `errcode=40164 invalid ip 1.2.3.4 not in whitelist` — IP whitelist isn't set
-  for the caller (you, or your proxy, or the runner). See **Setup step 2**.
-- `errcode=89503` / `89506` / `89507` — API call from web UI is being throttled
-  by 公众号's auto risk-control. Wait 30 minutes and retry; if it persists,
-  check 公众号 后台 → **接口分析** for the alert.
-- `errcode=53400 image format not support` on cover upload — convert to JPG/PNG.
-- `errcode=45009 reach max api daily quota limit` — exceeded freepublish per-day
-  cap. 个人订阅号 caps `freepublish` at 1/day historically; verify your account's
-  current quota in 公众号 后台 → 数据分析 → 接口分析.
+- **No IP whitelist gymnastics** — cloud function runs inside Tencent's
+  network with implicit 公众号 authorization
+- **No `access_token` management** — `cloud.openapi.*` handles it
+- **No new infra outside the 公众号 ecosystem** — the function lives in 公众号
+  后台 → 云开发, not on Vercel / Fly / VPS
+- **Single shared bearer secret** between Action and function — easy to rotate
+- **Cover by URL** — Action passes `raw.githubusercontent.com/…` URL; function
+  fetches on Tencent's side. No base64 in the JSON payload.

@@ -1,0 +1,10 @@
+{
+  "name": "wechat-cloudfunction",
+  "version": "1.0.0",
+  "description": "公众号云开发 cloud function — HTTP-triggered draft + freepublish proxy.",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3",
+    "node-fetch": "^2.7.0"
+  }
+}

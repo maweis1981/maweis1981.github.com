@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       cover:
-        description: "Path to a per-article cover image (jpg/png in repo). Each run uploads fresh — no shared media_id."
+        description: "Path to a per-article cover image (jpg/png in repo). Required unless dry_run."
         required: false
         type: string
       publish:
@@ -43,15 +43,14 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install tooling deps
+      - name: Install client deps
         working-directory: tools
         run: npm install --no-audit --no-fund --omit=dev
 
-      - name: Publish to WeChat
+      - name: Publish to WeChat (via 云开发 cloud function)
         env:
-          WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
-          WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
-          WECHAT_API_PROXY: ${{ secrets.WECHAT_API_PROXY }}
+          WECHAT_PROXY_URL: ${{ secrets.WECHAT_PROXY_URL }}
+          WECHAT_PROXY_SECRET: ${{ secrets.WECHAT_PROXY_SECRET }}
         run: |
           set -e
           ARGS="--file ${{ inputs.post }}"
