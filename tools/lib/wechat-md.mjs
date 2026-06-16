@@ -113,6 +113,32 @@ export function convertMarkdown(markdownBody) {
     return `<pre><code>${escaped}</code></pre>\n`;
   };
 
+  // WeChat's editor renders native <ul>/<li> bullets unreliably — it injects a
+  // stray empty bullet before each item (see IMG_5628). The robust fix used by
+  // md->WeChat tools (Mdnice etc.): don't emit <ul>/<li> at all. Render each
+  // item as a <section> with a manual "• " (or "N. ") marker and a hanging
+  // indent. We override the list renderer rules with a per-render marker stack
+  // so ordered lists number correctly and nesting indents.
+  const listStack = [];
+  md.renderer.rules.bullet_list_open = () => { listStack.push({ type: 'ul' }); return ''; };
+  md.renderer.rules.bullet_list_close = () => { listStack.pop(); return ''; };
+  md.renderer.rules.ordered_list_open = (tokens, idx) => {
+    const start = Number(tokens[idx].attrGet('start') || 1);
+    listStack.push({ type: 'ol', n: start });
+    return '';
+  };
+  md.renderer.rules.ordered_list_close = () => { listStack.pop(); return ''; };
+  md.renderer.rules.list_item_open = () => {
+    const ctx = listStack[listStack.length - 1] || { type: 'ul' };
+    const marker = ctx.type === 'ol' ? `${ctx.n++}. ` : '• ';
+    const depth = Math.max(1, listStack.length);
+    const padLeft = (0.4 + 1.1 * depth).toFixed(2);
+    // <section> (not <p>) so a loose-list inner <p> stays valid markup;
+    // text-indent gives the hanging-bullet effect for the common tight list.
+    return `<section style="margin:0.3em 0;padding-left:${padLeft}em;text-indent:-1.1em;line-height:1.75;font-size:15px;color:#3f3f3f"><span style="color:#9a9a9a">${marker}</span>`;
+  };
+  md.renderer.rules.list_item_close = () => '</section>\n';
+
   const rendered = md.render(markdownBody);
   return injectInlineStyles(stripStaleAttrMarkers(rewritePromptBoxes(rendered)));
 }
