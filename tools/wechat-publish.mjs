@@ -1,25 +1,33 @@
 #!/usr/bin/env node
-// Markdown post -> rendered WeChat HTML -> POST to 公众号 云开发 HTTP trigger.
+// Convert a single Jekyll post into a WeChat 公众号 draft (and optionally publish).
 //
-// All WeChat-side work (cover upload, draft.add, freepublish.submit) is done
-// inside the 公众号 云开发 cloud function (see tools/wechat-cloudfunction/),
-// which runs inside Tencent's network and doesn't need IP whitelisting.
+// Calls WeChat APIs through the proxy at WECHAT_API_PROXY (a tiny Vercel
+// function in tools/wechat-vercel-proxy/, whose outbound IP is added to the
+// 公众号 IP whitelist). The proxy is a passthrough; auth between Action and
+// proxy uses a shared bearer secret.
 //
 // Usage:
 //   node tools/wechat-publish.mjs --file _posts/<post>.md --cover assets/img/<cover>.png
 //   node tools/wechat-publish.mjs --file <post> --cover <img> --publish
-//   node tools/wechat-publish.mjs --file <post> --dry-run         # render only, no POST
+//   node tools/wechat-publish.mjs --file <post> --dry-run        # render only
 //
 // Env (required unless --dry-run):
-//   WECHAT_PROXY_URL      HTTP trigger URL of the deployed cloud function
-//   WECHAT_PROXY_SECRET   Shared secret (must match cloud function's env)
-//   GITHUB_REPOSITORY     owner/repo (auto-set by GitHub Actions)
-//   GITHUB_REF_NAME       branch (auto-set by GitHub Actions)
+//   WECHAT_APP_ID
+//   WECHAT_APP_SECRET
+//   WECHAT_API_PROXY            recommended: https://your-proxy.vercel.app
+//   WECHAT_API_PROXY_SECRET     bearer secret matching the proxy's env
 
 import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
 import { convertMarkdown } from './lib/wechat-md.mjs';
+import {
+  getAccessToken,
+  uploadBodyImage,
+  uploadPermanentImage,
+  createDraft,
+  publishDraft,
+} from './lib/wechat-api.mjs';
 
 function parseArgs(argv) {
   const out = { file: null, cover: null, publish: false, dryRun: false };
@@ -44,35 +52,54 @@ function buildDigest(description, fallback) {
   return raw.length > 120 ? raw.slice(0, 117) + '…' : raw;
 }
 
-function buildRawUrl(coverPath) {
-  const repo = process.env.GITHUB_REPOSITORY;
-  const ref = process.env.GITHUB_REF_NAME || process.env.GITHUB_HEAD_REF || 'master';
-  if (!repo) {
-    throw new Error('GITHUB_REPOSITORY env var not set — this script is intended to run inside GitHub Actions so the cloud function can fetch the cover via raw.githubusercontent.com');
+async function uploadInlineImages(token, html, postDir, repoRoot) {
+  const re = /<img([^>]*?)\ssrc="([^"]+)"([^>]*)>/g;
+  const tasks = [];
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    const [match, pre, src, post] = m;
+    if (/^https?:\/\//i.test(src)) continue;
+    const abs = src.startsWith('/')
+      ? path.join(repoRoot, src.replace(/^\/+/, ''))
+      : path.join(postDir, src);
+    if (!fs.existsSync(abs)) {
+      console.warn(`[warn] inline image not found, leaving src untouched: ${abs}`);
+      continue;
+    }
+    tasks.push({ match, pre, src, post, abs });
   }
-  return `https://raw.githubusercontent.com/${repo}/${ref}/${coverPath.replace(/^\/+/, '')}`;
+  let out = html;
+  for (const t of tasks) {
+    const buf = fs.readFileSync(t.abs);
+    const url = await uploadBodyImage(token, buf, path.basename(t.abs));
+    out = out.replace(t.match, `<img${t.pre} src="${url}"${t.post}>`);
+    console.log(`[image] ${t.src} -> ${url}`);
+  }
+  return out;
 }
 
 async function main() {
   const args = parseArgs(process.argv);
-  if (!args.file) { console.error('Missing --file'); process.exit(1); }
-  if (!args.cover && !args.dryRun) {
-    console.error('Missing --cover (required unless --dry-run)');
+  if (!args.file) {
+    console.error('Missing --file');
     process.exit(1);
   }
 
+  const repoRoot = process.cwd();
   const filePath = path.resolve(args.file);
-  if (!fs.existsSync(filePath)) { console.error(`File not found: ${filePath}`); process.exit(1); }
+  if (!fs.existsSync(filePath)) {
+    console.error(`File not found: ${filePath}`);
+    process.exit(1);
+  }
 
   const raw = fs.readFileSync(filePath, 'utf-8');
   const { fm, body } = parseFrontMatter(raw);
   const title = fm.title;
   if (!title) { console.error('Front matter has no `title`'); process.exit(1); }
-
   const author = fm.author || 'Max (Ma Wei)';
   const digest = buildDigest(fm.description, title);
-  const html = convertMarkdown(body);
 
+  const html = convertMarkdown(body);
   console.log(`[parse] title: ${title}`);
   console.log(`[parse] digest: ${digest.slice(0, 80)}${digest.length > 80 ? '…' : ''}`);
   console.log(`[render] HTML length: ${html.length}`);
@@ -84,46 +111,58 @@ async function main() {
     return;
   }
 
-  const proxyUrl = process.env.WECHAT_PROXY_URL;
-  const proxySecret = process.env.WECHAT_PROXY_SECRET;
-  if (!proxyUrl || !proxySecret) {
-    console.error('WECHAT_PROXY_URL and WECHAT_PROXY_SECRET env vars are required');
+  if (!args.cover) {
+    console.error('Missing --cover (path to jpg/png in repo). Required unless --dry-run.');
+    process.exit(1);
+  }
+  const coverAbs = path.resolve(args.cover);
+  if (!fs.existsSync(coverAbs)) {
+    console.error(`Cover not found: ${coverAbs}`);
     process.exit(1);
   }
 
-  const coverUrl = buildRawUrl(args.cover);
-  console.log(`[cover] raw URL: ${coverUrl}`);
+  const appid = process.env.WECHAT_APP_ID;
+  const secret = process.env.WECHAT_APP_SECRET;
+  if (!appid || !secret) {
+    console.error('WECHAT_APP_ID / WECHAT_APP_SECRET env vars are required');
+    process.exit(1);
+  }
+  if (!process.env.WECHAT_API_PROXY) {
+    console.warn('[warn] WECHAT_API_PROXY not set — calling api.weixin.qq.com directly. This works only from a whitelisted IP.');
+  }
 
-  const payload = {
-    action: 'createDraft',
+  console.log('[auth] requesting stable_token…');
+  const token = await getAccessToken(appid, secret);
+  console.log('[auth] ok');
+
+  const postDir = path.dirname(filePath);
+  const finalHtml = await uploadInlineImages(token, html, postDir, repoRoot);
+
+  console.log(`[cover] uploading ${coverAbs} to permanent material…`);
+  const cover = await uploadPermanentImage(token, fs.readFileSync(coverAbs), path.basename(coverAbs));
+  console.log(`[cover] media_id: ${cover.media_id}`);
+
+  const article = {
     title,
     author,
     digest,
-    content_html: html,
-    cover_url: coverUrl,
-    publish: args.publish,
+    content: finalHtml,
+    thumb_media_id: cover.media_id,
+    need_open_comment: 0,
+    only_fans_can_comment: 0,
   };
 
-  console.log(`[post] -> ${proxyUrl}`);
-  const res = await fetch(proxyUrl, {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${proxySecret}`,
-      'content-type': 'application/json; charset=utf-8',
-    },
-    body: JSON.stringify(payload),
-  });
+  console.log('[draft] creating…');
+  const draftMediaId = await createDraft(token, [article]);
+  console.log(`[draft] media_id: ${draftMediaId}`);
 
-  const resText = await res.text();
-  let resJson = null;
-  try { resJson = JSON.parse(resText); } catch { /* keep null */ }
-
-  if (!res.ok || (resJson && resJson.ok === false)) {
-    console.error(`[error] status ${res.status}: ${resText.slice(0, 800)}`);
-    process.exit(1);
+  if (args.publish) {
+    console.log('[publish] submitting freepublish…');
+    const publishId = await publishDraft(token, draftMediaId);
+    console.log(`[publish] publish_id: ${publishId}`);
+  } else {
+    console.log('Draft created. Review in 公众号 后台 → 草稿箱, or re-run with --publish.');
   }
-
-  console.log('[ok]', JSON.stringify(resJson || resText, null, 2));
 }
 
 main().catch(err => {

@@ -1,0 +1,7 @@
+{
+  "name": "wechat-vercel-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Passthrough proxy to api.weixin.qq.com for the blog's WeChat publish Action.",
+  "engines": { "node": ">=18" }
+}

@@ -47,10 +47,12 @@ jobs:
         working-directory: tools
         run: npm install --no-audit --no-fund --omit=dev
 
-      - name: Publish to WeChat (via 云开发 cloud function)
+      - name: Publish to WeChat (via Vercel proxy)
         env:
-          WECHAT_PROXY_URL: ${{ secrets.WECHAT_PROXY_URL }}
-          WECHAT_PROXY_SECRET: ${{ secrets.WECHAT_PROXY_SECRET }}
+          WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
+          WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
+          WECHAT_API_PROXY: ${{ secrets.WECHAT_API_PROXY }}
+          WECHAT_API_PROXY_SECRET: ${{ secrets.WECHAT_API_PROXY_SECRET }}
         run: |
           set -e
           ARGS="--file ${{ inputs.post }}"
