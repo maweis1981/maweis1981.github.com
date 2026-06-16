@@ -29,11 +29,19 @@ on:
   repository_dispatch:
     types: [wechat-publish]
 
+  # Auto-trigger: when a new AI Daily post lands on master, publish it as
+  # a draft to 公众号 (publish: false — review in 草稿箱 before sending).
+  # The job script handles batching when a single push adds multiple posts.
+  push:
+    branches: [master]
+    paths:
+      - '_posts/*ai-daily*.md'
+
 permissions:
   contents: read
 
 concurrency:
-  group: "wechat-publish-${{ inputs.post || github.event.client_payload.post }}"
+  group: "wechat-publish-${{ inputs.post || github.event.client_payload.post || github.sha }}"
   cancel-in-progress: false
 
 jobs:
@@ -43,7 +51,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          fetch-depth: 1
+          # Need at least 2 commits so we can diff event.before..event.after
+          # on push events to find newly added AI Daily files.
+          fetch-depth: 2
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -60,15 +70,45 @@ jobs:
           WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
           WECHAT_API_PROXY: ${{ secrets.WECHAT_API_PROXY }}
           WECHAT_API_PROXY_SECRET: ${{ secrets.WECHAT_API_PROXY_SECRET }}
-          # Unify inputs from workflow_dispatch + repository_dispatch:
+          # Default cover for auto-triggered runs (push event). Replace this
+          # with a series-specific cover image whenever you have one.
+          DEFAULT_COVER: "assets/img/posts/harness-is-the-product/cover.png"
+          # Unify dispatch inputs:
           POST_PATH:  ${{ inputs.post    || github.event.client_payload.post }}
           COVER_PATH: ${{ inputs.cover   || github.event.client_payload.cover }}
           PUBLISH:    ${{ inputs.publish || github.event.client_payload.publish }}
           DRY_RUN:    ${{ inputs.dry_run || github.event.client_payload.dry_run }}
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA:  ${{ github.event.after }}
         run: |
           set -e
+
+          if [ "${{ github.event_name }}" = "push" ]; then
+            # Auto-trigger: find newly added AI Daily posts in this push and
+            # create a draft for each. publish=false always — human reviews
+            # in 公众号 后台 → 草稿箱 before sending.
+            echo "::group::Find newly added AI Daily posts in $BEFORE_SHA..$AFTER_SHA"
+            ADDED=$(git diff --name-only --diff-filter=A "$BEFORE_SHA" "$AFTER_SHA" -- '_posts/*ai-daily*.md' 2>/dev/null || true)
+            if [ -z "$ADDED" ]; then
+              echo "No newly added AI Daily posts in this push — nothing to do."
+              exit 0
+            fi
+            echo "Added:"
+            echo "$ADDED"
+            echo "::endgroup::"
+
+            COVER="${COVER_PATH:-$DEFAULT_COVER}"
+            for POST in $ADDED; do
+              echo "::group::Publish $POST (cover=$COVER, publish=false)"
+              node tools/wechat-publish.mjs --file "$POST" --cover "$COVER"
+              echo "::endgroup::"
+            done
+            exit 0
+          fi
+
+          # Manual dispatch path (workflow_dispatch | repository_dispatch).
           if [ -z "$POST_PATH" ]; then
-            echo "::error::post path is required"; exit 1
+            echo "::error::post path is required for manual dispatch"; exit 1
           fi
           ARGS="--file $POST_PATH"
           if [ -n "$COVER_PATH" ]; then
