@@ -57,16 +57,33 @@ Keep this value — the user pastes the SAME value into GitHub later.
 ```bash
 fly secrets set WECHAT_PROXY_SECRET="$WX_SECRET" --app <APP_NAME>
 ```
+- The Fly env name MUST be exactly `WECHAT_PROXY_SECRET` — that's what
+  `server.mjs` reads. A wrong name (e.g. `WX_SECRET`) makes `/api/wx` return
+  `500 "WECHAT_PROXY_SECRET not configured"`. The GitHub side uses a different
+  name, `WECHAT_API_PROXY_SECRET`, holding the SAME value.
 
-## Step 5 — Allocate a dedicated IPv4 (this is the ~$2/mo line item)
+## Step 5 — Allocate a dedicated EGRESS IP (this is the ~$2/mo line item)
+
+WeChat whitelists the **source IP of outbound calls** to `api.weixin.qq.com` —
+i.e. the machine's *egress* IP, NOT the app's ingress IP. On Fly these are two
+different addresses, and a dedicated *ingress* IPv4 (`fly ips allocate-v4`) does
+**not** stabilize egress — outbound traffic still source-NATs through the host's
+shared address. Allocate an app-scoped dedicated **egress** IP instead:
 
 ```bash
-fly ips allocate-v4 --app <APP_NAME> --yes
+fly ips allocate-egress --region <REGION> --app <APP_NAME> --yes
 ```
-- A shared IPv4 is free but rotates — do NOT use `--shared`. We need a
-  dedicated address so the egress IP is stable.
-- If the command prompts for billing confirmation and `--yes` didn't suppress
-  it, answer yes.
+- This prints an IPv4 + IPv6 pair; the **IPv4** is what goes in the WeChat
+  whitelist (Step 8). New egress IPs take 5–10 min to take effect on existing
+  machines — or force it: `fly machine restart <id> --app <APP_NAME>`.
+- For *ingress* (so GitHub Actions can reach the app over HTTPS) a FREE shared
+  IPv4 is enough — do NOT pay for a dedicated ingress IPv4:
+
+```bash
+fly ips allocate-v4 --shared --app <APP_NAME> --yes
+```
+- Verify both with `fly ips list` — expect one `public ingress (shared)` v4 and
+  an `egress` v4/v6 pair.
 
 ## Step 6 — Deploy
 
@@ -80,7 +97,11 @@ Wait for `successfully deployed`.
 ```bash
 curl -s https://<APP_NAME>.fly.dev/api/outbound-ip
 ```
-Expect `{"ok":true,"outbound_ip":"X.X.X.X", ...}`.
+Expect `{"ok":true,"outbound_ip":"X.X.X.X", ...}`. This `outbound_ip` should
+match the egress IPv4 from Step 5 — that's the value to whitelist.
+- If the dev machine routes `.fly.dev` through a VPN/proxy with fake-IP DNS
+  (resolves to a `198.18.x.x` address) and curl hangs/returns empty, bypass it:
+  `curl -s --resolve <APP_NAME>.fly.dev:443:<shared-ingress-ip> https://<APP_NAME>.fly.dev/api/outbound-ip`.
 
 ## Step 8 — Report to the user (do NOT try to do these yourself)
 
