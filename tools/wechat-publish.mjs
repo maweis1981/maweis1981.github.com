@@ -52,6 +52,21 @@ function buildDigest(description, fallback) {
   return raw.length > 120 ? raw.slice(0, 117) + '…' : raw;
 }
 
+async function resolveCoverBuffer(coverArg, fm) {
+  // Priority: --cover CLI arg > post front matter image.path > DEFAULT_COVER env
+  const src = coverArg || fm?.image?.path || process.env.DEFAULT_COVER;
+  if (!src) throw new Error('No cover: pass --cover, set image.path in front matter, or set DEFAULT_COVER env');
+  if (/^https?:\/\//i.test(src)) {
+    console.log(`[cover] fetching from URL: ${src}`);
+    const res = await fetch(src);
+    if (!res.ok) throw new Error(`Cover URL fetch failed: HTTP ${res.status} ${src}`);
+    return { buf: Buffer.from(await res.arrayBuffer()), name: path.basename(src) || 'cover.png', src };
+  }
+  const abs = path.resolve(src);
+  if (!fs.existsSync(abs)) throw new Error(`Cover not found: ${abs}`);
+  return { buf: fs.readFileSync(abs), name: path.basename(abs), src: abs };
+}
+
 async function uploadInlineImages(token, html, postDir, repoRoot) {
   const re = /<img([^>]*?)\ssrc="([^"]+)"([^>]*)>/g;
   const tasks = [];
@@ -111,16 +126,6 @@ async function main() {
     return;
   }
 
-  if (!args.cover) {
-    console.error('Missing --cover (path to jpg/png in repo). Required unless --dry-run.');
-    process.exit(1);
-  }
-  const coverAbs = path.resolve(args.cover);
-  if (!fs.existsSync(coverAbs)) {
-    console.error(`Cover not found: ${coverAbs}`);
-    process.exit(1);
-  }
-
   const appid = process.env.WECHAT_APP_ID;
   const secret = process.env.WECHAT_APP_SECRET;
   if (!appid || !secret) {
@@ -138,8 +143,9 @@ async function main() {
   const postDir = path.dirname(filePath);
   const finalHtml = await uploadInlineImages(token, html, postDir, repoRoot);
 
-  console.log(`[cover] uploading ${coverAbs} to permanent material…`);
-  const cover = await uploadPermanentImage(token, fs.readFileSync(coverAbs), path.basename(coverAbs));
+  const { buf: coverBuf, name: coverName, src: coverSrc } = await resolveCoverBuffer(args.cover, fm);
+  console.log(`[cover] uploading ${coverSrc} to permanent material…`);
+  const cover = await uploadPermanentImage(token, coverBuf, coverName);
   console.log(`[cover] media_id: ${cover.media_id}`);
 
   const article = {
