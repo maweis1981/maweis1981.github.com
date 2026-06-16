@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/wx/[...path].js": {
+    "api/wx.js": {
       "maxDuration": 30
     }
   }

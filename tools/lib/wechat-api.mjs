@@ -23,11 +23,17 @@ function wechatUrl(pathWithCgiBin) {
   if (!PROXY) {
     return `${DIRECT_BASE}${pathWithCgiBin}`;
   }
-  // Strip the leading "/cgi-bin" since the proxy adds it back; this keeps
-  // the substring out of the client URL so the Vercel Firewall rule that
-  // blocks any path containing "cgi-bin" doesn't fire.
-  const withoutPrefix = pathWithCgiBin.replace(/^\/cgi-bin/, '');
-  return `${PROXY}/api/wx${withoutPrefix}`;
+  // Proxy mode: hit a single flat route ${PROXY}/api/wx and pass the WeChat
+  // path (minus the /cgi-bin/ prefix) in the __p query param. The proxy adds
+  // /cgi-bin/ back server-side. Two reasons for this shape:
+  //   1. "cgi-bin" never appears in the client URL -> dodges Vercel Firewall.
+  //   2. A flat /api/wx route avoids Vercel's unreliable [...path] catchall
+  //      routing for multi-segment WeChat paths (e.g. material/add_material).
+  const [path, query = ''] = pathWithCgiBin.split('?');
+  const wxRel = path.replace(/^\/cgi-bin\//, '');
+  const params = new URLSearchParams(query);
+  params.set('__p', wxRel);
+  return `${PROXY}/api/wx?${params.toString()}`;
 }
 
 function proxyHeaders(extra = {}) {
