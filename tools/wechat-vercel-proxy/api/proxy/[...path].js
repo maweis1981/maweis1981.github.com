@@ -18,6 +18,8 @@ export const config = {
 const PROXY_SECRET = process.env.WECHAT_PROXY_SECRET;
 
 export default async function handler(req, res) {
+  console.log(`[proxy] entry url=${req.url} query=${JSON.stringify(req.query)}`);
+
   const got = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
   if (!PROXY_SECRET) {
     return res.status(500).json({ ok: false, error: 'WECHAT_PROXY_SECRET not configured on the proxy' });
@@ -26,11 +28,16 @@ export default async function handler(req, res) {
     return res.status(401).json({ ok: false, error: 'unauthorized' });
   }
 
-  const segments = Array.isArray(req.query.path) ? req.query.path : [req.query.path].filter(Boolean);
-  if (segments.length === 0) {
-    return res.status(400).json({ ok: false, error: 'no path' });
+  // Client URL pattern: ${PROXY}/api/proxy/cgi-bin/<rest>
+  // Catchall captures everything after /api/proxy/ as req.query.path (array
+  // for multi-segment, string for single-segment in some Vercel runtimes).
+  const segments = Array.isArray(req.query.path)
+    ? req.query.path
+    : (req.query.path ? [req.query.path] : []);
+  if (segments.length === 0 || segments[0] !== 'cgi-bin') {
+    return res.status(400).json({ ok: false, error: `expected path to start with cgi-bin, got: ${segments.join('/')}` });
   }
-  const wechatPath = '/cgi-bin/' + segments.join('/');
+  const wechatPath = '/' + segments.join('/');
 
   const passthrough = new URLSearchParams();
   for (const [k, v] of Object.entries(req.query)) {

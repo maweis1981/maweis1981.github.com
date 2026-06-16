@@ -22,11 +22,18 @@ on:
         type: boolean
         default: false
 
+  # Also triggerable from the GitHub API via `POST /repos/.../dispatches`,
+  # which only needs Contents:Write (a permission the Claude Code App
+  # already has, unlike Actions:Write which gates workflow_dispatch).
+  # client_payload mirrors the workflow_dispatch.inputs shape.
+  repository_dispatch:
+    types: [wechat-publish]
+
 permissions:
   contents: read
 
 concurrency:
-  group: "wechat-publish-${{ inputs.post }}"
+  group: "wechat-publish-${{ inputs.post || github.event.client_payload.post }}"
   cancel-in-progress: false
 
 jobs:
@@ -53,16 +60,24 @@ jobs:
           WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
           WECHAT_API_PROXY: ${{ secrets.WECHAT_API_PROXY }}
           WECHAT_API_PROXY_SECRET: ${{ secrets.WECHAT_API_PROXY_SECRET }}
+          # Unify inputs from workflow_dispatch + repository_dispatch:
+          POST_PATH:  ${{ inputs.post    || github.event.client_payload.post }}
+          COVER_PATH: ${{ inputs.cover   || github.event.client_payload.cover }}
+          PUBLISH:    ${{ inputs.publish || github.event.client_payload.publish }}
+          DRY_RUN:    ${{ inputs.dry_run || github.event.client_payload.dry_run }}
         run: |
           set -e
-          ARGS="--file ${{ inputs.post }}"
-          if [ -n "${{ inputs.cover }}" ]; then
-            ARGS="$ARGS --cover ${{ inputs.cover }}"
+          if [ -z "$POST_PATH" ]; then
+            echo "::error::post path is required"; exit 1
           fi
-          if [ "${{ inputs.publish }}" = "true" ]; then
+          ARGS="--file $POST_PATH"
+          if [ -n "$COVER_PATH" ]; then
+            ARGS="$ARGS --cover $COVER_PATH"
+          fi
+          if [ "$PUBLISH" = "true" ]; then
             ARGS="$ARGS --publish"
           fi
-          if [ "${{ inputs.dry_run }}" = "true" ]; then
+          if [ "$DRY_RUN" = "true" ]; then
             ARGS="$ARGS --dry-run"
           fi
           node tools/wechat-publish.mjs $ARGS
