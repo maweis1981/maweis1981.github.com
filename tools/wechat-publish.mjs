@@ -1,20 +1,27 @@
 #!/usr/bin/env node
 // Convert a single Jekyll post into a WeChat 公众号 draft (and optionally publish).
 //
-// Calls WeChat APIs through the proxy at WECHAT_API_PROXY (a tiny Vercel
-// function in tools/wechat-vercel-proxy/, whose outbound IP is added to the
+// Calls WeChat APIs through the proxy at WECHAT_API_PROXY (a tiny Fly.io
+// app in tools/wechat-fly-proxy/, whose outbound IP is added to the
 // 公众号 IP whitelist). The proxy is a passthrough; auth between Action and
 // proxy uses a shared bearer secret.
 //
 // Usage:
 //   node tools/wechat-publish.mjs --file _posts/<post>.md --cover assets/img/<cover>.png
+//   node tools/wechat-publish.mjs --file _posts/<post>.md --cover https://example.com/cover.png
+//   node tools/wechat-publish.mjs --file <post>            # cover from image.path front matter
 //   node tools/wechat-publish.mjs --file <post> --cover <img> --publish
 //   node tools/wechat-publish.mjs --file <post> --dry-run        # render only
+//
+// Cover resolution order:
+//   1. --cover CLI arg (local path or https:// URL)
+//   2. image.path in post front matter (local path or https:// URL)
+//   3. DEFAULT_COVER env var (local path)
 //
 // Env (required unless --dry-run):
 //   WECHAT_APP_ID
 //   WECHAT_APP_SECRET
-//   WECHAT_API_PROXY            recommended: https://your-proxy.vercel.app
+//   WECHAT_API_PROXY            recommended: https://your-proxy.fly.dev
 //   WECHAT_API_PROXY_SECRET     bearer secret matching the proxy's env
 
 import fs from 'node:fs';
@@ -50,6 +57,25 @@ function parseFrontMatter(content) {
 function buildDigest(description, fallback) {
   const raw = (description || fallback || '').replace(/\s+/g, ' ').trim();
   return raw.length > 120 ? raw.slice(0, 117) + '…' : raw;
+}
+
+/**
+ * Resolve the cover image buffer from CLI arg, post front matter, or DEFAULT_COVER env.
+ * Accepts local file paths and https:// URLs.
+ */
+async function resolveCoverBuffer(coverArg, fm) {
+  // Priority: --cover CLI arg > post front matter image.path > DEFAULT_COVER env
+  const src = coverArg || fm?.image?.path || process.env.DEFAULT_COVER;
+  if (!src) throw new Error('No cover: pass --cover, set image.path in front matter, or set DEFAULT_COVER env');
+  if (/^https?:\/\//i.test(src)) {
+    console.log(`[cover] fetching from URL: ${src}`);
+    const res = await fetch(src);
+    if (!res.ok) throw new Error(`Cover URL fetch failed: HTTP ${res.status} ${src}`);
+    return { buf: Buffer.from(await res.arrayBuffer()), name: path.basename(src) || 'cover.png', src };
+  }
+  const abs = path.resolve(src);
+  if (!fs.existsSync(abs)) throw new Error(`Cover not found: ${abs}`);
+  return { buf: fs.readFileSync(abs), name: path.basename(abs), src: abs };
 }
 
 async function uploadInlineImages(token, html, postDir, repoRoot) {
@@ -111,16 +137,6 @@ async function main() {
     return;
   }
 
-  if (!args.cover) {
-    console.error('Missing --cover (path to jpg/png in repo). Required unless --dry-run.');
-    process.exit(1);
-  }
-  const coverAbs = path.resolve(args.cover);
-  if (!fs.existsSync(coverAbs)) {
-    console.error(`Cover not found: ${coverAbs}`);
-    process.exit(1);
-  }
-
   const appid = process.env.WECHAT_APP_ID;
   const secret = process.env.WECHAT_APP_SECRET;
   if (!appid || !secret) {
@@ -138,8 +154,9 @@ async function main() {
   const postDir = path.dirname(filePath);
   const finalHtml = await uploadInlineImages(token, html, postDir, repoRoot);
 
-  console.log(`[cover] uploading ${coverAbs} to permanent material…`);
-  const cover = await uploadPermanentImage(token, fs.readFileSync(coverAbs), path.basename(coverAbs));
+  const { buf: coverBuf, name: coverName, src: coverSrc } = await resolveCoverBuffer(args.cover, fm);
+  console.log(`[cover] uploading ${coverSrc} to permanent material…`);
+  const cover = await uploadPermanentImage(token, coverBuf, coverName);
   console.log(`[cover] media_id: ${cover.media_id}`);
 
   const article = {
@@ -161,7 +178,7 @@ async function main() {
     const publishId = await publishDraft(token, draftMediaId);
     console.log(`[publish] publish_id: ${publishId}`);
   } else {
-    console.log('Draft created. Review in 公众号 后台 → 草稿箱, or re-run with --publish.');
+    console.log('Draft created. Review in 公众号 后台 → 草稿筐, or re-run with --publish.');
   }
 }
 

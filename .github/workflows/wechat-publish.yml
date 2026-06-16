@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       cover:
-        description: "Path to a per-article cover image (jpg/png in repo). Required unless dry_run."
+        description: "Cover image: local path (jpg/png in repo) or https:// URL. Falls back to post image.path then DEFAULT_COVER."
         required: false
         type: string
       publish:
@@ -29,9 +29,10 @@ on:
   repository_dispatch:
     types: [wechat-publish]
 
-  # Auto-trigger: when a new AI Daily post lands on master, publish it as
-  # a draft to 公众号 (publish: false — review in 草稿箱 before sending).
-  # The job script handles batching when a single push adds multiple posts.
+  # Auto-trigger: when a new or updated AI Daily post lands on master,
+  # publish it as a draft to 公众号 (publish: false — review in 草稿箱
+  # before sending). Cover is read from the post's image.path front
+  # matter (supports https:// URLs), falling back to DEFAULT_COVER.
   push:
     branches: [master]
     paths:
@@ -56,7 +57,7 @@ jobs:
           fetch-depth: 2
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
 
@@ -64,14 +65,13 @@ jobs:
         working-directory: tools
         run: npm install --no-audit --no-fund --omit=dev
 
-      - name: Publish to WeChat (via Vercel proxy)
+      - name: Publish to WeChat (via Fly.io proxy)
         env:
           WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
           WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
           WECHAT_API_PROXY: ${{ secrets.WECHAT_API_PROXY }}
           WECHAT_API_PROXY_SECRET: ${{ secrets.WECHAT_API_PROXY_SECRET }}
-          # Default cover for auto-triggered runs (push event). Replace this
-          # with a series-specific cover image whenever you have one.
+          # Fallback cover when the post has no image.path in front matter.
           DEFAULT_COVER: "assets/img/posts/harness-is-the-product/cover.png"
           # Unify dispatch inputs:
           POST_PATH:  ${{ inputs.post    || github.event.client_payload.post }}
@@ -84,23 +84,27 @@ jobs:
           set -e
 
           if [ "${{ github.event_name }}" = "push" ]; then
-            # Auto-trigger: find newly added AI Daily posts in this push and
-            # create a draft for each. publish=false always — human reviews
-            # in 公众号 后台 → 草稿箱 before sending.
-            echo "::group::Find newly added AI Daily posts in $BEFORE_SHA..$AFTER_SHA"
-            ADDED=$(git diff --name-only --diff-filter=A "$BEFORE_SHA" "$AFTER_SHA" -- '_posts/*ai-daily*.md' 2>/dev/null || true)
+            # Auto-trigger: find newly added or modified AI Daily posts in this
+            # push and create a draft for each. publish=false always — human
+            # reviews in 公众号 后台 → 草稿箱 before sending.
+            # Cover priority: COVER_PATH env > post front matter image.path > DEFAULT_COVER env.
+            echo "::group::Find added/modified AI Daily posts in $BEFORE_SHA..$AFTER_SHA"
+            ADDED=$(git diff --name-only --diff-filter=AM "$BEFORE_SHA" "$AFTER_SHA" -- '_posts/*ai-daily*.md' 2>/dev/null || true)
             if [ -z "$ADDED" ]; then
-              echo "No newly added AI Daily posts in this push — nothing to do."
+              echo "No added/modified AI Daily posts in this push — nothing to do."
               exit 0
             fi
-            echo "Added:"
+            echo "Posts:"
             echo "$ADDED"
             echo "::endgroup::"
 
-            COVER="${COVER_PATH:-$DEFAULT_COVER}"
             for POST in $ADDED; do
-              echo "::group::Publish $POST (cover=$COVER, publish=false)"
-              node tools/wechat-publish.mjs --file "$POST" --cover "$COVER"
+              COVER_ARG=""
+              if [ -n "$COVER_PATH" ]; then
+                COVER_ARG="--cover $COVER_PATH"
+              fi
+              echo "::group::Publish $POST (cover=${COVER_PATH:-<from-frontmatter-or-default>}, publish=false)"
+              node tools/wechat-publish.mjs --file "$POST" $COVER_ARG
               echo "::endgroup::"
             done
             exit 0
