@@ -120,8 +120,9 @@ WeChat cover requirements:
 |---|---|---|
 | `WECHAT_APP_ID` | yes | from 公众号 后台 |
 | `WECHAT_APP_SECRET` | yes | from 公众号 后台 |
-| `WECHAT_COVER_MEDIA_ID` | yes | from step 3 |
 | `WECHAT_API_PROXY` | only if you went with Option B | e.g. `https://your-proxy.example.com` |
+
+(Cover image is **per-run** via the workflow `cover` input or `--cover` CLI flag — not a secret.)
 
 ## Running it
 
