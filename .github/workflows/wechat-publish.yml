@@ -1,0 +1,68 @@
+name: "WeChat Publish"
+
+on:
+  workflow_dispatch:
+    inputs:
+      post:
+        description: "Path to the markdown post (e.g. _posts/2026-06-14-ai-daily-2026-06-14.md)"
+        required: true
+        type: string
+      cover:
+        description: "Path to a per-article cover image (jpg/png in repo). Required unless dry_run."
+        required: false
+        type: string
+      publish:
+        description: "Submit to freepublish after creating the draft"
+        required: false
+        type: boolean
+        default: false
+      dry_run:
+        description: "Render HTML only, no API calls (for testing the converter)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "wechat-publish-${{ inputs.post }}"
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install client deps
+        working-directory: tools
+        run: npm install --no-audit --no-fund --omit=dev
+
+      - name: Publish to WeChat (via Vercel proxy)
+        env:
+          WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
+          WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
+          WECHAT_API_PROXY: ${{ secrets.WECHAT_API_PROXY }}
+          WECHAT_API_PROXY_SECRET: ${{ secrets.WECHAT_API_PROXY_SECRET }}
+        run: |
+          set -e
+          ARGS="--file ${{ inputs.post }}"
+          if [ -n "${{ inputs.cover }}" ]; then
+            ARGS="$ARGS --cover ${{ inputs.cover }}"
+          fi
+          if [ "${{ inputs.publish }}" = "true" ]; then
+            ARGS="$ARGS --publish"
+          fi
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          node tools/wechat-publish.mjs $ARGS
