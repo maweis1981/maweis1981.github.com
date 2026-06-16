@@ -22,6 +22,7 @@ function proxyHeaders(extra = {}) {
 async function callJson(url, opts = {}) {
   const res = await fetch(url, { ...opts, headers: proxyHeaders(opts.headers) });
   const text = await res.text();
+  console.log(`[client] ${url.split('?')[0]} -> ${res.status} body=${text.slice(0, 300)}`);
   let json;
   try { json = JSON.parse(text); }
   catch { throw new Error(`Non-JSON from ${url} (status ${res.status}): ${text.slice(0, 400)}`); }

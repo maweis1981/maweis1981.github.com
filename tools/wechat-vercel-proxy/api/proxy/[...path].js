@@ -41,12 +41,22 @@ export default async function handler(req, res) {
   const qs = passthrough.toString();
   const upstreamUrl = `https://api.weixin.qq.com${wechatPath}${qs ? '?' + qs : ''}`;
 
+  // Body: try raw stream first; fall back to re-stringified req.body if Vercel
+  // auto-parsed (which it does for application/json by default in pure
+  // Serverless Functions, ignoring the `config.api.bodyParser` next.js hint).
   let body;
   if (!['GET', 'HEAD'].includes((req.method || 'POST').toUpperCase())) {
     const chunks = [];
     for await (const chunk of req) chunks.push(chunk);
     body = Buffer.concat(chunks);
+    if (body.length === 0 && req.body != null) {
+      if (typeof req.body === 'string') body = Buffer.from(req.body, 'utf-8');
+      else if (Buffer.isBuffer(req.body)) body = req.body;
+      else body = Buffer.from(JSON.stringify(req.body), 'utf-8');
+    }
   }
+
+  console.log(`[proxy] ${req.method} ${wechatPath} ct=${req.headers['content-type']} body_len=${body?.length || 0}`);
 
   let upstream;
   try {
@@ -58,10 +68,12 @@ export default async function handler(req, res) {
       body,
     });
   } catch (e) {
+    console.error(`[proxy] upstream fetch error: ${e.message}`);
     return res.status(502).json({ ok: false, error: 'upstream fetch failed: ' + e.message });
   }
 
   const respBuf = Buffer.from(await upstream.arrayBuffer());
+  console.log(`[proxy] upstream ${upstream.status} body_preview=${respBuf.toString('utf-8').slice(0, 300)}`);
   res.status(upstream.status);
   const ct = upstream.headers.get('content-type');
   if (ct) res.setHeader('content-type', ct);
