@@ -1,0 +1,18 @@
+# fly.toml — rename `app` during `fly launch`, or set it here before launching.
+app = "wechat-feeds-proxy"
+primary_region = "hkg"
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Scale to zero when idle; the dedicated IPv4 stays attached to the app, so
+  # the egress IP is unchanged when a machine wakes back up.
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
