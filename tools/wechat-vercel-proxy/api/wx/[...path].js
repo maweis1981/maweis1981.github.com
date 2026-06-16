@@ -28,16 +28,17 @@ export default async function handler(req, res) {
     return res.status(401).json({ ok: false, error: 'unauthorized' });
   }
 
-  // Client URL pattern: ${PROXY}/api/proxy/cgi-bin/<rest>
-  // Catchall captures everything after /api/proxy/ as req.query.path (array
-  // for multi-segment, string for single-segment in some Vercel runtimes).
+  // Client URL pattern: ${PROXY}/api/wx/<wechat-path-after-cgi-bin>
+  // The /cgi-bin/ prefix is intentionally added on the server side so the
+  // client URL stays clean — Vercel Firewall has a managed rule that 403s
+  // any path containing the substring "cgi-bin" as a CGI-attack pattern.
   const segments = Array.isArray(req.query.path)
     ? req.query.path
     : (req.query.path ? [req.query.path] : []);
-  if (segments.length === 0 || segments[0] !== 'cgi-bin') {
-    return res.status(400).json({ ok: false, error: `expected path to start with cgi-bin, got: ${segments.join('/')}` });
+  if (segments.length === 0) {
+    return res.status(400).json({ ok: false, error: 'no path' });
   }
-  const wechatPath = '/' + segments.join('/');
+  const wechatPath = '/cgi-bin/' + segments.join('/');
 
   const passthrough = new URLSearchParams();
   for (const [k, v] of Object.entries(req.query)) {
