@@ -1,0 +1,11 @@
+{
+  "name": "wechat-publish",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Markdown -> WeChat 公众号 draft + freepublish for the blog's AI Daily series.",
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "js-yaml": "^4.1.0"
+  }
+}
