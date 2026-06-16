@@ -2,10 +2,10 @@
 //
 // Two modes:
 //   1. WECHAT_API_PROXY env set (e.g. https://your-proxy.vercel.app)
-//      Calls go to ${PROXY}/api/proxy/cgi-bin/... and are forwarded server-side
-//      to api.weixin.qq.com from the proxy's whitelisted outbound IP. The
-//      /api/proxy/ prefix is required so we don't hit Vercel's edge WAF
-//      which blocks raw /cgi-bin/* paths as suspicious CGI patterns.
+//      Calls go to ${PROXY}/api/wx/<rest> and the proxy adds /cgi-bin/
+//      server-side before forwarding to api.weixin.qq.com. The /api/wx/
+//      prefix (instead of the literal /cgi-bin/) is intentional — Vercel
+//      Firewall blocks paths containing "cgi-bin" as a CGI-attack pattern.
 //   2. WECHAT_API_PROXY not set
 //      Calls go directly to https://api.weixin.qq.com/cgi-bin/... — only
 //      works from a whitelisted IP.
@@ -19,10 +19,15 @@ const PROXY_SECRET = process.env.WECHAT_API_PROXY_SECRET;
 const DIRECT_BASE = 'https://api.weixin.qq.com';
 
 function wechatUrl(pathWithCgiBin) {
-  // pathWithCgiBin is "/cgi-bin/<rest>"
-  return PROXY
-    ? `${PROXY}/api/proxy${pathWithCgiBin}`
-    : `${DIRECT_BASE}${pathWithCgiBin}`;
+  // pathWithCgiBin is "/cgi-bin/<rest>[?query]"
+  if (!PROXY) {
+    return `${DIRECT_BASE}${pathWithCgiBin}`;
+  }
+  // Strip the leading "/cgi-bin" since the proxy adds it back; this keeps
+  // the substring out of the client URL so the Vercel Firewall rule that
+  // blocks any path containing "cgi-bin" doesn't fire.
+  const withoutPrefix = pathWithCgiBin.replace(/^\/cgi-bin/, '');
+  return `${PROXY}/api/wx${withoutPrefix}`;
 }
 
 function proxyHeaders(extra = {}) {
@@ -35,6 +40,9 @@ async function callJson(url, opts = {}) {
   const res = await fetch(url, { ...opts, headers: proxyHeaders(opts.headers) });
   const text = await res.text();
   console.log(`[client] ${url.split('?')[0]} -> ${res.status} body=${text.slice(0, 300)}`);
+  if (!res.ok) {
+    throw new Error(`${url.split('?')[0]} returned HTTP ${res.status}: ${text.slice(0, 400)}`);
+  }
   let json;
   try { json = JSON.parse(text); }
   catch { throw new Error(`Non-JSON from ${url} (status ${res.status}): ${text.slice(0, 400)}`); }

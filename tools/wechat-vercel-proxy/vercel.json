@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/proxy/[...path].js": {
+    "api/wx/[...path].js": {
       "maxDuration": 30
     }
   }
