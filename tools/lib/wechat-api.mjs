@@ -1,17 +1,29 @@
 // WeChat API wrappers.
 //
-// API_BASE precedence:
-//   1. WECHAT_API_PROXY env (e.g. https://your-proxy.vercel.app) — strongly
-//      recommended for CI use: the proxy's outbound IP gets added to the
-//      公众号 IP whitelist instead of trying to whitelist GitHub Actions IPs.
-//   2. https://api.weixin.qq.com (direct — only works from a whitelisted IP).
+// Two modes:
+//   1. WECHAT_API_PROXY env set (e.g. https://your-proxy.vercel.app)
+//      Calls go to ${PROXY}/api/proxy/cgi-bin/... and are forwarded server-side
+//      to api.weixin.qq.com from the proxy's whitelisted outbound IP. The
+//      /api/proxy/ prefix is required so we don't hit Vercel's edge WAF
+//      which blocks raw /cgi-bin/* paths as suspicious CGI patterns.
+//   2. WECHAT_API_PROXY not set
+//      Calls go directly to https://api.weixin.qq.com/cgi-bin/... — only
+//      works from a whitelisted IP.
 //
-// When WECHAT_API_PROXY is set, every request also sends
+// When using the proxy, every request also sends
 //   Authorization: Bearer ${WECHAT_API_PROXY_SECRET}
 // so the proxy can authenticate the caller.
 
-const API_BASE = process.env.WECHAT_API_PROXY?.replace(/\/+$/, '') || 'https://api.weixin.qq.com';
+const PROXY = process.env.WECHAT_API_PROXY?.replace(/\/+$/, '');
 const PROXY_SECRET = process.env.WECHAT_API_PROXY_SECRET;
+const DIRECT_BASE = 'https://api.weixin.qq.com';
+
+function wechatUrl(pathWithCgiBin) {
+  // pathWithCgiBin is "/cgi-bin/<rest>"
+  return PROXY
+    ? `${PROXY}/api/proxy${pathWithCgiBin}`
+    : `${DIRECT_BASE}${pathWithCgiBin}`;
+}
 
 function proxyHeaders(extra = {}) {
   const h = { ...extra };
@@ -33,7 +45,7 @@ async function callJson(url, opts = {}) {
 }
 
 export async function getAccessToken(appid, secret) {
-  return (await callJson(`${API_BASE}/cgi-bin/stable_token`, {
+  return (await callJson(wechatUrl('/cgi-bin/stable_token'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -48,7 +60,7 @@ export async function uploadBodyImage(token, buffer, filename) {
   const form = new FormData();
   form.append('media', new Blob([buffer]), filename);
   return (await callJson(
-    `${API_BASE}/cgi-bin/media/uploadimg?access_token=${encodeURIComponent(token)}`,
+    wechatUrl(`/cgi-bin/media/uploadimg?access_token=${encodeURIComponent(token)}`),
     { method: 'POST', body: form }
   )).url;
 }
@@ -57,7 +69,7 @@ export async function uploadPermanentImage(token, buffer, filename) {
   const form = new FormData();
   form.append('media', new Blob([buffer]), filename);
   const json = await callJson(
-    `${API_BASE}/cgi-bin/material/add_material?access_token=${encodeURIComponent(token)}&type=image`,
+    wechatUrl(`/cgi-bin/material/add_material?access_token=${encodeURIComponent(token)}&type=image`),
     { method: 'POST', body: form }
   );
   return { media_id: json.media_id, url: json.url };
@@ -65,7 +77,7 @@ export async function uploadPermanentImage(token, buffer, filename) {
 
 export async function createDraft(token, articles) {
   return (await callJson(
-    `${API_BASE}/cgi-bin/draft/add?access_token=${encodeURIComponent(token)}`,
+    wechatUrl(`/cgi-bin/draft/add?access_token=${encodeURIComponent(token)}`),
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
@@ -76,7 +88,7 @@ export async function createDraft(token, articles) {
 
 export async function publishDraft(token, draftMediaId) {
   return (await callJson(
-    `${API_BASE}/cgi-bin/freepublish/submit?access_token=${encodeURIComponent(token)}`,
+    wechatUrl(`/cgi-bin/freepublish/submit?access_token=${encodeURIComponent(token)}`),
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
