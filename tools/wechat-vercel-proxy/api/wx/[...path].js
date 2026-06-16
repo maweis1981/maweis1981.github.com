@@ -28,24 +28,27 @@ export default async function handler(req, res) {
     return res.status(401).json({ ok: false, error: 'unauthorized' });
   }
 
-  // Client URL pattern: ${PROXY}/api/wx/<wechat-path-after-cgi-bin>
-  // The /cgi-bin/ prefix is intentionally added on the server side so the
-  // client URL stays clean — Vercel Firewall has a managed rule that 403s
-  // any path containing the substring "cgi-bin" as a CGI-attack pattern.
-  const segments = Array.isArray(req.query.path)
-    ? req.query.path
-    : (req.query.path ? [req.query.path] : []);
+  // Parse the path directly from req.url instead of relying on req.query.path.
+  // Vercel's dynamic-route catchall [...path] doesn't reliably populate
+  // req.query.path for non-Next.js serverless functions — it sometimes
+  // arrives as undefined regardless of how many URL segments matched.
+  // req.url is always present and stable: it's the path after the host,
+  // including query string. We strip the /api/wx/ prefix to get the
+  // WeChat path segments.
+  const fullUrl = req.url || '';
+  const pathOnly = fullUrl.split('?')[0];
+  const afterPrefix = pathOnly.replace(/^\/api\/wx\/?/, '');
+  const segments = afterPrefix.split('/').filter(Boolean);
   if (segments.length === 0) {
-    return res.status(400).json({ ok: false, error: 'no path' });
+    return res.status(400).json({ ok: false, error: `no path; req.url=${fullUrl}` });
   }
   const wechatPath = '/cgi-bin/' + segments.join('/');
 
-  const passthrough = new URLSearchParams();
-  for (const [k, v] of Object.entries(req.query)) {
-    if (k === 'path') continue;
-    if (Array.isArray(v)) v.forEach(vi => passthrough.append(k, vi));
-    else if (v != null) passthrough.set(k, String(v));
-  }
+  // Pass through any non-path query params (e.g. access_token, type) to upstream.
+  // Use the raw query string from req.url so we don't depend on req.query at all.
+  const rawQs = (fullUrl.split('?')[1] || '');
+  const passthrough = new URLSearchParams(rawQs);
+  passthrough.delete('path'); // safety: in case Vercel still added it
   const qs = passthrough.toString();
   const upstreamUrl = `https://api.weixin.qq.com${wechatPath}${qs ? '?' + qs : ''}`;
 
