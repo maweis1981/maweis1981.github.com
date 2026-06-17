@@ -59,6 +59,38 @@ function buildDigest(description, fallback) {
   return raw.length > 120 ? raw.slice(0, 117) + '…' : raw;
 }
 
+// --- Math fallback for WeChat (no MathJax there) -------------------------
+// The blog renders `$$...$$` via Chirpy/MathJax. WeChat can't, so for posts
+// with `math: true` we degrade the LaTeX inside `$$...$$` to a readable
+// Unicode approximation (e.g. \dbinom{n}{4} -> C(n, 4), 2^{n-1} -> 2ⁿ⁻¹).
+// Gated on `math: true` so the `$` currency signs in other posts are untouched.
+const SUP = { '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹',
+  '+':'⁺','-':'⁻','−':'⁻','=':'⁼','(':'⁽',')':'⁾','n':'ⁿ','i':'ⁱ' };
+const SUB = { '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉',
+  '+':'₊','-':'₋','−':'₋','=':'₌','(':'₍',')':'₎','n':'ₙ','i':'ᵢ','k':'ₖ' };
+const mapChars = (str, table) => [...str].map(c => table[c] ?? c).join('');
+
+function latexToUnicode(tex) {
+  let s = tex;
+  s = s.replace(/\\(?:d|t)?binom\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,
+    (_m, a, b) => `C(${a.trim()}, ${b.trim()})`);
+  s = s.replace(/\^\{([^{}]*)\}/g, (_m, g) => mapChars(g, SUP));
+  s = s.replace(/\^(\S)/g, (_m, g) => mapChars(g, SUP));
+  s = s.replace(/_\{([^{}]*)\}/g, (_m, g) => mapChars(g, SUB));
+  s = s.replace(/_(\S)/g, (_m, g) => mapChars(g, SUB));
+  s = s.replace(/\\cdot/g, '·').replace(/\\times/g, '×')
+       .replace(/\\neq/g, '≠').replace(/\\leq?/g, '≤').replace(/\\geq?/g, '≥')
+       .replace(/\\left|\\right/g, '').replace(/\\[,;!:]| \\ /g, ' ');
+  s = s.replace(/[{}]/g, '').replace(/\s+/g, ' ').trim();
+  return s;
+}
+
+// Replace every `$$...$$` span in the markdown body with its Unicode form.
+function degradeMathToUnicode(markdownBody) {
+  return markdownBody.replace(/\$\$([\s\S]+?)\$\$/g, (_m, inner) => latexToUnicode(inner));
+}
+
+
 /**
  * Resolve the cover image buffer from CLI arg, post front matter, or DEFAULT_COVER env.
  * Accepts local file paths and https:// URLs.
@@ -130,7 +162,8 @@ async function main() {
   const author = fm.author || 'Max (Ma Wei)';
   const digest = buildDigest(fm.description, title);
 
-  const html = convertMarkdown(body);
+  const bodyForWeChat = fm.math === true ? degradeMathToUnicode(body) : body;
+  const html = convertMarkdown(bodyForWeChat);
   console.log(`[parse] title: ${title}`);
   console.log(`[parse] digest: ${digest.slice(0, 80)}${digest.length > 80 ? '…' : ''}`);
   console.log(`[render] HTML length: ${html.length}`);
