@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "(Not Boring) Camera 产品调研：两人工作室的订阅生意，开发者能借鉴什么"
-date: 2026-06-17 10:00:00 +0800
+date: 2026-06-17 08:00:00 +0800
 author: Max (Ma Wei)
 location: Singapore
 categories: [产品调研]
