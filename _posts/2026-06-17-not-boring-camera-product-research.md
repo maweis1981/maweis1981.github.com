@@ -14,7 +14,7 @@ tags:
 description: 拆解 (Not Boring) Camera：它如何在被免费系统应用占满的红海里，靠体验+信任+套件撑起订阅生意，以及对独立开发者的 9 条可迁移打法。
 image:
   path: /assets/img/posts/not-boring-camera/cover.jpg
-  alt: (Not Boring) Camera 的标志性"实体相机"式界面
+  alt: (Not Boring) Camera 标志性的"实体相机"式 3D 拍摄界面
 ---
 
 <!--
