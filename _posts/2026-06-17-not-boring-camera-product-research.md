@@ -18,10 +18,8 @@ image:
 ---
 
 <!--
-发布前请注意：
-1) 正文内嵌图片已下载到 /assets/img/posts/not-boring-camera/ 本地引用（原为 Epic Tutorials 图床热链，研究性引用并已注明出处）；如需替换为自有图床/CDN 可直接更新这些文件。
-2) 本文当前在 feature 分支 / 草稿 PR 中评审；确认无误后再合并到 main 发布。
-3) front-matter 字段已按本博客（Jekyll / Chirpy）调整。
+说明：正文内嵌图片已下载到 /assets/img/posts/not-boring-camera/ 本地引用
+（原为 Epic Tutorials 图床热链，研究性引用并已注明出处）；如需替换为自有图床/CDN 可直接更新这些文件。
 -->
 
 > **一句话**：一款把"最被商品化的 App（相机）"做成可付费体验的两人工作室作品。
