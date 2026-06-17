@@ -85,9 +85,58 @@ function latexToUnicode(tex) {
   return s;
 }
 
-// Replace every `$$...$$` span in the markdown body with its Unicode form.
-function degradeMathToUnicode(markdownBody) {
-  return markdownBody.replace(/\$\$([\s\S]+?)\$\$/g, (_m, inner) => latexToUnicode(inner));
+// Replace every `$$...$$` span in the markdown body with an <img> placeholder
+// carrying the LaTeX (base64) and whether it was a standalone (display) block
+// or inline. renderMathImages() later turns these into real WeChat images.
+function mathToImagePlaceholders(markdownBody) {
+  const enc = tex => Buffer.from(tex.trim(), 'utf-8').toString('base64');
+  let md = markdownBody;
+  // Block: a `$$...$$` that stands alone on its line(s).
+  md = md.replace(/(^|\n)[ \t]*\$\$([\s\S]+?)\$\$[ \t]*(?=\n|$)/g,
+    (_m, pre, tex) => `${pre}<img alt="formula" data-tex="${enc(tex)}" data-mathdisplay="block">`);
+  // Inline: any remaining `$$...$$` within text.
+  md = md.replace(/\$\$([\s\S]+?)\$\$/g,
+    (_m, tex) => `<img alt="formula" data-tex="${enc(tex)}" data-mathdisplay="inline">`);
+  return md;
+}
+
+function fetchWithTimeout(url, ms = 20000) {
+  const ac = new AbortController();
+  const t = setTimeout(() => ac.abort(), ms);
+  return fetch(url, { signal: ac.signal }).finally(() => clearTimeout(t));
+}
+
+// Turn the `data-tex` placeholders into images: render the LaTeX to PNG via
+// CodeCogs, upload to WeChat material, and swap in the WeChat URL. WeChat has
+// no MathJax, so this is how math shows up "as a formula". Falls back to a
+// Unicode approximation if rendering/upload fails (so a run never dies on it).
+async function renderMathImages(token, html) {
+  const re = /<img\b[^>]*?\bdata-tex="([^"]+)"[^>]*>/g;
+  const found = [...html.matchAll(re)];
+  let out = html;
+  for (const m of found) {
+    const tag = m[0];
+    const tex = Buffer.from(m[1], 'base64').toString('utf-8');
+    const isBlock = /data-mathdisplay="block"/.test(tag);
+    let replacement;
+    try {
+      const url = `https://latex.codecogs.com/png.image?${encodeURIComponent(`\\dpi{300} ${tex}`)}`;
+      const res = await fetchWithTimeout(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const buf = Buffer.from(await res.arrayBuffer());
+      const wxUrl = await uploadBodyImage(token, buf, 'formula.png');
+      const style = isBlock
+        ? 'max-width:80%;height:auto;display:block;margin:1.3em auto'
+        : 'height:1.15em;display:inline-block;vertical-align:-0.25em;margin:0 3px';
+      replacement = `<img src="${wxUrl}" alt="formula" style="${style}">`;
+      console.log(`[math] ${isBlock ? 'block' : 'inline'} ${tex} -> ${wxUrl}`);
+    } catch (e) {
+      replacement = latexToUnicode(tex);
+      console.warn(`[math] render failed (${e.message || e}); Unicode fallback: ${tex} -> ${replacement}`);
+    }
+    out = out.replace(tag, replacement);
+  }
+  return out;
 }
 
 
@@ -162,7 +211,7 @@ async function main() {
   const author = fm.author || 'Max (Ma Wei)';
   const digest = buildDigest(fm.description, title);
 
-  const bodyForWeChat = fm.math === true ? degradeMathToUnicode(body) : body;
+  const bodyForWeChat = fm.math === true ? mathToImagePlaceholders(body) : body;
   const html = convertMarkdown(bodyForWeChat);
   console.log(`[parse] title: ${title}`);
   console.log(`[parse] digest: ${digest.slice(0, 80)}${digest.length > 80 ? '…' : ''}`);
@@ -190,7 +239,8 @@ async function main() {
   console.log('[auth] ok');
 
   const postDir = path.dirname(filePath);
-  const finalHtml = await uploadInlineImages(token, html, postDir, repoRoot);
+  let finalHtml = await uploadInlineImages(token, html, postDir, repoRoot);
+  if (fm.math === true) finalHtml = await renderMathImages(token, finalHtml);
 
   const { buf: coverBuf, name: coverName, src: coverSrc } = await resolveCoverBuffer(args.cover, fm, repoRoot);
   console.log(`[cover] uploading ${coverSrc} to permanent material…`);
