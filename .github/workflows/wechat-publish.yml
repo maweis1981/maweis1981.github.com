@@ -29,14 +29,16 @@ on:
   repository_dispatch:
     types: [wechat-publish]
 
-  # Auto-trigger: when a new or updated AI Daily post lands on master,
-  # publish it as a draft to 公众号 (publish: false — review in 草稿箱
-  # before sending). Cover is read from the post's image.path front
-  # matter (supports https:// URLs), falling back to DEFAULT_COVER.
+  # Auto-trigger: when a new or updated AI Daily *or* product-research
+  # (评测/产品调研) post lands on master, publish it as a draft to 公众号
+  # (publish: false — review in 草稿箱 before sending). Cover is read from
+  # the post's image.path front matter (supports https:// URLs), falling
+  # back to DEFAULT_COVER.
   push:
     branches: [master]
     paths:
       - '_posts/*ai-daily*.md'
+      - '_posts/*product-research*.md'
 
 permissions:
   contents: read
@@ -84,14 +86,14 @@ jobs:
           set -e
 
           if [ "${{ github.event_name }}" = "push" ]; then
-            # Auto-trigger: find newly added or modified AI Daily posts in this
-            # push and create a draft for each. publish=false always — human
-            # reviews in 公众号 后台 → 草稿箱 before sending.
+            # Auto-trigger: find newly added or modified AI Daily / product-research
+            # posts in this push and create a draft for each. publish=false always —
+            # human reviews in 公众号 后台 → 草稿箱 before sending.
             # Cover priority: COVER_PATH env > post front matter image.path > DEFAULT_COVER env.
-            echo "::group::Find added/modified AI Daily posts in $BEFORE_SHA..$AFTER_SHA"
-            ADDED=$(git diff --name-only --diff-filter=AM "$BEFORE_SHA" "$AFTER_SHA" -- '_posts/*ai-daily*.md' 2>/dev/null || true)
+            echo "::group::Find added/modified auto-publish posts in $BEFORE_SHA..$AFTER_SHA"
+            ADDED=$(git diff --name-only --diff-filter=AM "$BEFORE_SHA" "$AFTER_SHA" -- '_posts/*ai-daily*.md' '_posts/*product-research*.md' 2>/dev/null || true)
             if [ -z "$ADDED" ]; then
-              echo "No added/modified AI Daily posts in this push — nothing to do."
+              echo "No added/modified auto-publish posts in this push — nothing to do."
               exit 0
             fi
             echo "Posts:"
