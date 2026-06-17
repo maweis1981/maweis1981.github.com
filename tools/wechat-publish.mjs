@@ -63,7 +63,7 @@ function buildDigest(description, fallback) {
  * Resolve the cover image buffer from CLI arg, post front matter, or DEFAULT_COVER env.
  * Accepts local file paths and https:// URLs.
  */
-async function resolveCoverBuffer(coverArg, fm) {
+async function resolveCoverBuffer(coverArg, fm, repoRoot) {
   // Priority: --cover CLI arg > post front matter image.path > DEFAULT_COVER env
   const src = coverArg || fm?.image?.path || process.env.DEFAULT_COVER;
   if (!src) throw new Error('No cover: pass --cover, set image.path in front matter, or set DEFAULT_COVER env');
@@ -73,7 +73,12 @@ async function resolveCoverBuffer(coverArg, fm) {
     if (!res.ok) throw new Error(`Cover URL fetch failed: HTTP ${res.status} ${src}`);
     return { buf: Buffer.from(await res.arrayBuffer()), name: path.basename(src) || 'cover.png', src };
   }
-  const abs = path.resolve(src);
+  // Repo-root-absolute paths (e.g. front matter `image.path: /assets/...`) are
+  // resolved against the repo root — mirroring inline-image handling — rather
+  // than the filesystem root. Other relative paths resolve from cwd (repo root).
+  const abs = src.startsWith('/')
+    ? path.join(repoRoot, src.replace(/^\/+/, ''))
+    : path.resolve(src);
   if (!fs.existsSync(abs)) throw new Error(`Cover not found: ${abs}`);
   return { buf: fs.readFileSync(abs), name: path.basename(abs), src: abs };
 }
@@ -154,7 +159,7 @@ async function main() {
   const postDir = path.dirname(filePath);
   const finalHtml = await uploadInlineImages(token, html, postDir, repoRoot);
 
-  const { buf: coverBuf, name: coverName, src: coverSrc } = await resolveCoverBuffer(args.cover, fm);
+  const { buf: coverBuf, name: coverName, src: coverSrc } = await resolveCoverBuffer(args.cover, fm, repoRoot);
   console.log(`[cover] uploading ${coverSrc} to permanent material…`);
   const cover = await uploadPermanentImage(token, coverBuf, coverName);
   console.log(`[cover] media_id: ${cover.media_id}`);
