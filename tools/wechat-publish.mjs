@@ -190,6 +190,34 @@ async function uploadInlineImages(token, html, postDir, repoRoot) {
   return out;
 }
 
+// Collect images for a 图片消息 (newspic): explicit front-matter `wechat_images`
+// list (in order) if given; otherwise the cover (image.path) plus every local
+// image referenced in the body, in document order, deduped.
+function resolveNewspicImages(fm, body, repoRoot) {
+  let srcs = [];
+  if (Array.isArray(fm.wechat_images) && fm.wechat_images.length) {
+    srcs = fm.wechat_images.map(String);
+  } else {
+    if (fm.image?.path) srcs.push(String(fm.image.path));
+    const re = /!\[[^\]]*\]\(([^)]+)\)/g;
+    let m;
+    while ((m = re.exec(body)) !== null) srcs.push(m[1].trim());
+  }
+  const seen = new Set();
+  const out = [];
+  for (const src of srcs) {
+    if (/^https?:\/\//i.test(src)) continue;
+    const abs = src.startsWith('/')
+      ? path.join(repoRoot, src.replace(/^\/+/, ''))
+      : path.join(repoRoot, src);
+    if (seen.has(abs)) continue;
+    seen.add(abs);
+    if (!fs.existsSync(abs)) { console.warn(`[newspic] image not found, skipped: ${abs}`); continue; }
+    out.push({ src, abs, name: path.basename(abs) });
+  }
+  return out;
+}
+
 async function main() {
   const args = parseArgs(process.argv);
   if (!args.file) {
@@ -219,6 +247,10 @@ async function main() {
   const author = fm.author || 'Max (Ma Wei)';
   const digest = buildDigest(fm.description, title);
 
+  // 图片消息（newspic / 贴图）mode: image-first WeChat post instead of 图文.
+  const isNewspic = ['newspic', 'image', '贴图', '图片', '图片消息']
+    .includes(String(fm.wechat_type || '').trim().toLowerCase());
+
   const bodyForWeChat = fm.math === true ? mathToImagePlaceholders(body) : body;
   const html = convertMarkdown(bodyForWeChat);
   console.log(`[parse] title: ${title}`);
@@ -226,9 +258,16 @@ async function main() {
   console.log(`[render] HTML length: ${html.length}`);
 
   if (args.dryRun) {
-    console.log('\n--- HTML preview (first 1500 chars) ---');
-    console.log(html.slice(0, 1500));
-    console.log('--- (end preview) ---');
+    if (isNewspic) {
+      const imgs = resolveNewspicImages(fm, body, repoRoot);
+      const caption = String(fm.wechat_caption || fm.description || title).replace(/\s+/g, ' ').trim();
+      console.log(`[newspic] mode 图片消息 — images (${imgs.length}): ${imgs.map(i => i.name).join(', ')}`);
+      console.log(`[newspic] caption: ${caption.slice(0, 140)}${caption.length > 140 ? '…' : ''}`);
+    } else {
+      console.log('\n--- HTML preview (first 1500 chars) ---');
+      console.log(html.slice(0, 1500));
+      console.log('--- (end preview) ---');
+    }
     return;
   }
 
@@ -245,6 +284,37 @@ async function main() {
   console.log('[auth] requesting stable_token…');
   const token = await getAccessToken(appid, secret);
   console.log('[auth] ok');
+
+  // --- 图片消息（newspic）path: upload each image as material, build a
+  // newspic article (image_info.image_list) and create a draft. ---
+  if (isNewspic) {
+    const imgs = resolveNewspicImages(fm, body, repoRoot);
+    if (!imgs.length) { console.error('[newspic] no images found for 图片消息'); process.exit(1); }
+    const caption = String(fm.wechat_caption || fm.description || title).replace(/\s+/g, ' ').trim();
+    const image_list = [];
+    for (const im of imgs) {
+      const { media_id } = await uploadPermanentImage(token, fs.readFileSync(im.abs), im.name);
+      console.log(`[newspic] ${im.src} -> media_id ${media_id}`);
+      image_list.push({ image_media_id: media_id });
+    }
+    const article = {
+      article_type: 'newspic',
+      title,
+      content: caption,
+      need_open_comment: 1,
+      only_fans_can_comment: 0,
+      image_info: { image_list },
+    };
+    const draftId = await createDraft(token, [article]);
+    console.log(`[newspic] 图片消息草稿 media_id: ${draftId} (${image_list.length} 图)`);
+    if (args.publish) {
+      const publishId = await publishDraft(token, draftId);
+      console.log(`[publish] publish_id: ${publishId}`);
+    } else {
+      console.log('图片消息草稿已建。Review in 公众号 后台 → 草稿筐。');
+    }
+    return;
+  }
 
   const postDir = path.dirname(filePath);
   let finalHtml = await uploadInlineImages(token, html, postDir, repoRoot);
