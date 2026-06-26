@@ -1,0 +1,69 @@
+name: "Google Indexing Ping"
+
+# When a new or updated post lands on master, notify Google's Indexing API so
+# it (re)crawls that URL sooner. Requires repo secret GOOGLE_INDEXING_SA_KEY
+# (a service-account JSON; the account must be an OWNER of the Search Console
+# property). Without the secret the job no-ops, so it's safe to merge first.
+on:
+  push:
+    branches: [master]
+    paths:
+      - '_posts/*.md'
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "Space-separated URLs to (re)submit manually"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "google-indexing"
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2   # need before..after to diff changed posts
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Collect changed post URLs and ping Google
+        env:
+          GOOGLE_INDEXING_SA_KEY: ${{ secrets.GOOGLE_INDEXING_SA_KEY }}
+          SITE: "https://maweis.com"
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.event.after }}
+          MANUAL_URLS: ${{ inputs.urls }}
+        run: |
+          set -e
+          if [ -n "$MANUAL_URLS" ]; then
+            URLS="$MANUAL_URLS"
+          else
+            echo "::group::Find added/modified posts in $BEFORE_SHA..$AFTER_SHA"
+            CHANGED=$(git diff --name-only --diff-filter=AM "$BEFORE_SHA" "$AFTER_SHA" -- '_posts/*.md' 2>/dev/null || true)
+            echo "$CHANGED"
+            echo "::endgroup::"
+            URLS=""
+            for f in $CHANGED; do
+              base=$(basename "$f" .md)        # e.g. 2026-06-26-three-doors
+              slug=${base#????-??-??-}         # strip YYYY-MM-DD- -> three-doors
+              URLS="$URLS $SITE/posts/$slug/"
+            done
+          fi
+          URLS=$(echo "$URLS" | xargs || true)
+          if [ -z "$URLS" ]; then
+            echo "No post URLs to submit — nothing to do."
+            exit 0
+          fi
+          echo "Submitting: $URLS"
+          node tools/google-indexing.mjs $URLS
