@@ -206,6 +206,14 @@ async function main() {
 
   const raw = fs.readFileSync(filePath, 'utf-8');
   const { fm, body } = parseFrontMatter(raw);
+
+  // Opt-out switch: a post with `wechat: false` in front matter is blog-only.
+  // Used for bulk back-fills we don't want flooding 公众号 草稿箱.
+  if (fm.wechat === false) {
+    console.log(`[skip] ${args.file}: front matter wechat:false — blog only, no draft created.`);
+    return;
+  }
+
   const title = fm.title;
   if (!title) { console.error('Front matter has no `title`'); process.exit(1); }
   const author = fm.author || 'Max (Ma Wei)';
