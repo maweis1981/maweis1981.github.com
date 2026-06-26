@@ -218,6 +218,19 @@ function resolveNewspicImages(fm, body, repoRoot) {
   return out;
 }
 
+// Build the 图片消息 caption (newspic `content`). Unlike the digest we keep
+// paragraph breaks: collapse only intra-line spaces/tabs, preserve newlines
+// (a blank line stays a blank line) so the post reads as written on WeChat.
+function buildNewspicCaption(fm, title) {
+  return String(fm.wechat_caption || fm.description || title)
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
+    .map((l) => l.replace(/[ \t]+/g, ' ').trim())
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 async function main() {
   const args = parseArgs(process.argv);
   if (!args.file) {
@@ -260,7 +273,7 @@ async function main() {
   if (args.dryRun) {
     if (isNewspic) {
       const imgs = resolveNewspicImages(fm, body, repoRoot);
-      const caption = String(fm.wechat_caption || fm.description || title).replace(/\s+/g, ' ').trim();
+      const caption = buildNewspicCaption(fm, title);
       console.log(`[newspic] mode 图片消息 — images (${imgs.length}): ${imgs.map(i => i.name).join(', ')}`);
       console.log(`[newspic] caption: ${caption.slice(0, 140)}${caption.length > 140 ? '…' : ''}`);
     } else {
@@ -290,7 +303,7 @@ async function main() {
   if (isNewspic) {
     const imgs = resolveNewspicImages(fm, body, repoRoot);
     if (!imgs.length) { console.error('[newspic] no images found for 图片消息'); process.exit(1); }
-    const caption = String(fm.wechat_caption || fm.description || title).replace(/\s+/g, ' ').trim();
+    const caption = buildNewspicCaption(fm, title);
     const image_list = [];
     for (const im of imgs) {
       const { media_id } = await uploadPermanentImage(token, fs.readFileSync(im.abs), im.name);
