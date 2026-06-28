@@ -1,6 +1,6 @@
 ---
 title: "第十章：第二盏不灭的灯"
-date: 2026-06-26 14:00:00 +0800
+date: 2026-06-26 15:00:00 +0800
 author: Max (Ma Wei)
 location: Singapore
 categories: [魔幻文学]
