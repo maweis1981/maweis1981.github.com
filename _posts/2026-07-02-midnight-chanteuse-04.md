@@ -166,7 +166,7 @@ _那条午夜频率消失了。守夜的人，终于可以睡了。_
 
 <br>
 
-> **回看全篇**：[第一话](/posts/midnight-chanteuse-01/) ｜ [第二话](/posts/midnight-chanteuse-02/) ｜ [第三话](/posts/midnight-chanteuse-03/) ｜ **本话（终章）**
+> **回看全篇**：第一话 ｜ 第二话 ｜ 第三话 ｜ **本话（终章）**
 >
-> 🎞️ 也可以读 [**竖屏漫画合集版**](/posts/midnight-chanteuse-comic/)。
+> 🎞️ 也可以读 **竖屏漫画合集版**。
 {: .prompt-tip }
