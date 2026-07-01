@@ -24,7 +24,7 @@ image:
 ---
 
 > 📖 **韩式条漫（Webtoon）版 · 全四话完整合集** · 建议竖屏、从上往下一口气滑到底。
-> 本篇为 [第一话](/posts/midnight-chanteuse-01/)～[第四话·终章](/posts/midnight-chanteuse-04/) 的漫画合集。
+> 本篇为 第一话～第四话·终章 的漫画合集。
 {: .prompt-tip }
 
 <br>
@@ -190,5 +190,5 @@ image:
 > 🌙 **《午夜歌女》第一部 · 全文完。谢谢你，看到了最后。**
 {: .prompt-info }
 
-> **单话文字版**：[第一话](/posts/midnight-chanteuse-01/) ｜ [第二话](/posts/midnight-chanteuse-02/) ｜ [第三话](/posts/midnight-chanteuse-03/) ｜ [第四话（终章）](/posts/midnight-chanteuse-04/)
+> **单话文字版**：第一话 ｜ 第二话 ｜ 第三话 ｜ 第四话（终章）
 {: .prompt-tip }
