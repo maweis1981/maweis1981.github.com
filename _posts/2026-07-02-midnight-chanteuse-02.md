@@ -130,5 +130,5 @@ _月亮的背面，有一道极细的裂痕，正沿着边缘，慢慢裂开。_
 
 ---
 
-> **上一话**：[第一话 · 没有观众的午夜场](/posts/midnight-chanteuse-01/)
+> **上一话**：[第一话 · 没有观众的午夜场](/posts/midnight-chanteuse-01/) ｜ **下一话**：[第三话 · 最后一个听众](/posts/midnight-chanteuse-03/)
 {: .prompt-tip }
