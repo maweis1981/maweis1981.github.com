@@ -107,11 +107,19 @@ export function convertMarkdown(markdownBody) {
   // markdown-it's default fence renderer wraps code in <pre><code class="language-x">.
   // We collapse to just <pre>...</pre> with the code's text, since WeChat strips
   // class-based syntax highlighting anyway.
-  md.renderer.rules.fence = (tokens, idx) => {
-    const token = tokens[idx];
-    const escaped = md.utils.escapeHtml(token.content);
-    return `<pre><code>${escaped}</code></pre>\n`;
+  //
+  // Both tags get explicit styles HERE so injectInlineStyles skips them: the
+  // generic STYLE.code (light chip for inline code) must never reach the <code>
+  // inside a dark <pre> — WeChat renders that as a light background strip per
+  // visual line with near-invisible text (see IMG_6156–6158).
+  const PRE_CODE_STYLE =
+    'background:none;color:#e6e6e6;padding:0;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.55;display:block;white-space:pre';
+  const renderCodeBlock = (content) => {
+    const escaped = md.utils.escapeHtml(content);
+    return `<pre style="${STYLE.pre}"><code style="${PRE_CODE_STYLE}">${escaped}</code></pre>\n`;
   };
+  md.renderer.rules.fence = (tokens, idx) => renderCodeBlock(tokens[idx].content);
+  md.renderer.rules.code_block = (tokens, idx) => renderCodeBlock(tokens[idx].content);
 
   // WeChat's editor renders native <ul>/<li> bullets unreliably — it injects a
   // stray empty bullet before each item (see IMG_5628). The robust fix used by
