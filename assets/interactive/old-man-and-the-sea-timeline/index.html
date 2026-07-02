@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《老人与海》· 分层叙事时间轴</title>
+<style>
+  :root{
+    --bg:#04101c; --bg2:#071a2b; --panel:#0c2438; --panel2:#0f2a41;
+    --grid:#1d3b52; --ink:#eaf4fb; --ink-dim:#9dbccf; --ink-faint:#5f829a;
+    --gold:#e0b96a; --gold-soft:#f2ddab;
+    --l0:#e0b15a; --l1:#e0654f; --l2:#4fc4d0; --l3:#9b8ce0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1300px 760px at 80% -12%, #10314b 0%, rgba(16,49,75,0) 60%),
+      linear-gradient(180deg,#062033 0%, #03101c 100%);
+    color:var(--ink);
+    font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    min-height:100vh;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1280px;margin:0 auto;padding:32px 28px 60px;}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;
+    border-bottom:1px solid var(--grid);padding-bottom:20px;margin-bottom:26px;}
+  .head .titleblock{display:flex;flex-direction:column;gap:8px;}
+  .kicker{display:flex;align-items:center;gap:10px;color:var(--gold);font-size:13px;letter-spacing:.28em;font-weight:600;}
+  .kicker::before{content:"";width:26px;height:1px;background:var(--gold);display:inline-block;}
+  h1{font-family:"Noto Serif SC",serif;font-weight:700;font-size:30px;margin:0;line-height:1.2;letter-spacing:.02em;}
+  h1 .sub{color:var(--ink-dim);font-weight:400;font-size:17px;margin-left:12px;font-family:inherit;}
+  .meta{color:var(--ink-faint);font-size:13px;text-align:right;line-height:1.7;}
+  .meta b{color:var(--gold-soft);font-weight:600;}
+  .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--grid);
+    color:var(--ink-dim);padding:7px 13px;border-radius:100px;font-size:13px;cursor:pointer;user-select:none;transition:.18s;}
+  .chip .dot{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c);}
+  .chip:hover{border-color:var(--c);color:var(--ink);}
+  .chip.off{opacity:.35;filter:grayscale(.6);}
+  .spacer{flex:1;}
+  .btn{background:linear-gradient(180deg,#123048,#0d2338);border:1px solid #2a4d6b;color:var(--gold-soft);
+    padding:9px 18px;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600;letter-spacing:.04em;
+    display:inline-flex;align-items:center;gap:8px;transition:.18s;}
+  .btn:hover{border-color:var(--gold);box-shadow:0 0 0 1px rgba(224,185,106,.25);}
+  .btn.playing{background:linear-gradient(180deg,#3a2c15,#2a2011);border-color:var(--gold);color:#ffe6b0;}
+  .board{position:relative;background:linear-gradient(180deg,var(--panel) 0%, #081a2b 100%);
+    border:1px solid var(--grid);border-radius:14px;padding:0;overflow:hidden;
+    box-shadow:0 30px 70px -40px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.03);}
+  .lanes{position:relative;}
+  .lane{position:relative;height:112px;border-bottom:1px solid rgba(29,59,82,.55);}
+  .lane:last-child{border-bottom:none;}
+  .lane-label{position:absolute;left:0;top:0;bottom:0;width:158px;padding:0 16px;display:flex;
+    flex-direction:column;justify-content:center;gap:5px;background:linear-gradient(90deg,rgba(4,16,28,.9),rgba(4,16,28,0));z-index:5;}
+  .lane-label .n{font-size:11px;color:var(--ink-faint);letter-spacing:.2em;}
+  .lane-label .t{font-size:15px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;}
+  .lane-label .t::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--c);box-shadow:0 0 10px var(--c);}
+  .lane-track{position:absolute;left:158px;right:26px;top:50%;height:2px;background:var(--grid);transform:translateY(-50%);}
+  .lane-track::after{content:"";position:absolute;inset:0;background:var(--c);opacity:.25;}
+  .axis-row{height:34px;position:relative;}
+  .grid-layer{position:absolute;left:158px;right:26px;top:0;bottom:34px;pointer-events:none;z-index:1;}
+  .yline{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(180deg,rgba(29,59,82,0),rgba(29,59,82,.7) 12%,rgba(29,59,82,.7) 88%,rgba(29,59,82,0));}
+  .ylabel{position:absolute;bottom:8px;transform:translateX(-50%);color:var(--ink-faint);font-size:12px;letter-spacing:.06em;white-space:nowrap;}
+  .node{position:absolute;top:50%;transform:translate(-50%,-50%);z-index:6;cursor:pointer;}
+  .node .ring{width:20px;height:20px;border-radius:50%;background:var(--bg2);border:2px solid var(--c);
+    display:flex;align-items:center;justify-content:center;transition:.2s;box-shadow:0 0 0 4px rgba(4,16,28,.9);}
+  .node .ring::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);transition:.2s;}
+  .node:hover .ring,.node.active .ring{transform:scale(1.25);box-shadow:0 0 0 4px rgba(4,16,28,.9),0 0 22px var(--c);}
+  .node .flag{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;
+    font-size:12px;color:var(--ink-dim);top:-30px;background:rgba(4,16,28,.78);padding:2px 8px;border-radius:5px;
+    border:1px solid var(--grid);transition:.2s;}
+  .node.low .flag{top:auto;bottom:-30px;}
+  .node:hover .flag,.node.active .flag{color:#fff;border-color:var(--c);}
+  .node.dim{opacity:.16;filter:grayscale(.7);}
+  .span{position:absolute;top:50%;transform:translateY(-50%);height:26px;border-radius:13px;z-index:4;cursor:pointer;
+    background:linear-gradient(90deg,rgba(224,177,90,.14),rgba(224,177,90,.30));border:1px solid rgba(224,177,90,.55);
+    display:flex;align-items:center;justify-content:center;transition:.2s;overflow:hidden;}
+  .span span{font-size:11px;color:#ffe6b8;font-weight:600;letter-spacing:.05em;position:relative;z-index:2;}
+  .span::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(224,177,90,.12) 0 6px,transparent 6px 12px);}
+  .span:hover,.span.active{box-shadow:0 0 22px rgba(224,177,90,.4);border-color:#e0b15a;}
+  .span.dim{opacity:.16;}
+  .detail{margin-top:22px;background:linear-gradient(180deg,var(--panel2),#0b2033);border:1px solid var(--grid);
+    border-left:4px solid var(--c,#e0b96a);border-radius:12px;padding:22px 24px;min-height:120px;display:flex;gap:22px;align-items:flex-start;transition:.25s;}
+  .detail .date{flex-shrink:0;text-align:center;min-width:132px;padding-right:22px;border-right:1px solid var(--grid);}
+  .detail .date .big{font-family:"Noto Serif SC",serif;font-size:26px;font-weight:700;color:var(--gold-soft);line-height:1.15;}
+  .detail .date .small{color:var(--ink-faint);font-size:13px;margin-top:8px;letter-spacing:.05em;}
+  .detail .body h3{margin:0 0 6px;font-size:19px;font-weight:700;letter-spacing:.01em;}
+  .detail .body .tag{display:inline-block;font-size:11px;padding:3px 10px;border-radius:100px;margin-bottom:10px;
+    background:rgba(224,185,106,.12);color:var(--c,#e0b96a);border:1px solid rgba(224,185,106,.3);}
+  .detail .body p{margin:0;color:var(--ink-dim);font-size:15px;line-height:1.75;}
+  .detail.placeholder{color:var(--ink-faint);align-items:center;justify-content:center;text-align:center;}
+  .detail.placeholder .body p{color:var(--ink-faint);}
+  .progress{margin-top:14px;height:3px;background:var(--grid);border-radius:3px;overflow:hidden;}
+  .progress .fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:.4s;}
+  .foot{margin-top:20px;color:var(--ink-faint);font-size:12px;line-height:1.7;}
+  @media(max-width:820px){
+    .lane-label{width:110px;padding:0 8px;} .lane-track,.grid-layer{left:110px;}
+    h1{font-size:22px;} h1 .sub{display:block;margin:6px 0 0;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="titleblock">
+      <div class="kicker">HEMINGWAY · 诺贝尔文学奖名作</div>
+      <h1>《老人与海》<span class="sub">分层叙事时间轴 · 一位老人与大海的三天</span></h1>
+    </div>
+    <div class="meta">
+      四条并行叙事线：<b>情节</b> · <b>搏斗</b> · <b>内心</b> · <b>象征</b><br>
+      虽败犹荣，精神不灭
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="legend" id="legend"></div>
+    <div class="spacer"></div>
+    <button class="btn" id="playBtn">▶ 播放故事</button>
+    <button class="btn" id="resetBtn">↺ 重置</button>
+  </div>
+
+  <div class="board">
+    <div class="lanes" id="lanes"></div>
+    <div class="axis-row"><div class="grid-layer" id="axis"></div></div>
+  </div>
+
+  <div class="detail placeholder" id="detail">
+    <div class="body"><p>将鼠标悬停或点击节点查看情节详情，或点击「播放故事」按叙事顺序自动演示。</p></div>
+  </div>
+  <div class="progress"><div class="fill" id="pfill"></div></div>
+
+  <div class="foot">
+    说明：横轴为故事阶段（出海前 → 第一天 → 第二天 → 第三天 → 归途 → 结局），四条平行线分别呈现外部情节、身体搏斗、内心精神与象征主题。内容为原创概述，仅“人可以被毁灭，但不能被打败”一句引自海明威《老人与海》。
+  </div>
+</div>
+
+<script>
+const LAYERS=[
+ {key:"plot",  name:"情节主线", n:"01", color:"var(--l0)"},
+ {key:"fight", name:"搏斗·身体", n:"02", color:"var(--l1)"},
+ {key:"inner", name:"内心·精神", n:"03", color:"var(--l2)"},
+ {key:"symbol",name:"象征·主题", n:"04", color:"var(--l3)"},
+];
+// phases along x-axis (fraction 0..1)
+const PHASES=[
+ {x:0.03,label:"出海前"},{x:0.22,label:"第一天"},{x:0.42,label:"第二天"},
+ {x:0.62,label:"第三天"},{x:0.80,label:"归途"},{x:0.955,label:"结局"},
+];
+// events in narrative order
+const EVENTS=[
+ {id:0, layer:0, xf:0.03, phase:"出海前", sub:"第 1–84 天",
+   title:"连续 84 天一无所获",
+   text:"老渔夫桑地亚哥已连续八十四天没有捕到鱼，被同行视为“倒霉透顶”，小男孩马诺林也被父母安排到别的船。"},
+ {id:1, layer:2, xf:0.095, phase:"出海前 · 夜", sub:"梦境",
+   title:"狮子之梦",
+   text:"入睡时，他一次次梦见年轻时在非洲海滩见到的狮子——象征逝去的青春与力量，也是贯穿全书的希望意象。"},
+ {id:2, layer:0, xf:0.22, phase:"第一天", sub:"第 85 天 · 正午",
+   title:"独自远航，大鱼上钩",
+   text:"第八十五天，桑地亚哥把船划向远海。正午，一条巨大的马林鱼咬住钓饵，开始拖着小船缓缓向深海前行。"},
+ {id:3, layer:1, xf:0.27, phase:"第一天", sub:"身体",
+   title:"绳索入骨",
+   text:"老人用后背与双手死死拉住钓索，绳子勒进皮肉，鲜血渗出，他却始终不肯松手。"},
+ {id:4, layer:1, xf:0.42, phase:"第二天", sub:"身体",
+   title:"左手抽筋，生食充饥",
+   text:"僵持进入第二天，老人左手抽筋，他生吃钓到的小鱼补充体力，在孤独与伤痛中独自硬撑。"},
+ {id:5, layer:2, xf:0.47, phase:"第二天", sub:"内心",
+   title:"“兄弟”与迪马乔",
+   text:"他与大鱼低声交谈，称它为“兄弟”，既要杀它又敬它；回忆年轻时的掰腕子比赛，想起崇拜的棒球明星迪马乔，为自己鼓劲。"},
+ {id:6, layer:0, xf:0.62, phase:"第三天", sub:"高潮",
+   title:"刺杀马林鱼",
+   text:"第三天，马林鱼力竭浮起。老人用尽最后力气，把鱼叉刺入它的心脏，将这条比船还长的大鱼绑在船舷，踏上归途。"},
+ {id:7, layer:3, xf:0.67, phase:"第三天", sub:"象征",
+   title:"敬重的对手",
+   text:"马林鱼既是猎物，也是他敬重的对手——象征人所追求的尊严与价值，胜利本身包含着对对手的敬意。"},
+ {id:8, layer:1, xf:0.80, phase:"归途", sub:"搏斗",
+   title:"鲨鱼围攻",
+   text:"返航途中，血腥味引来成群鲨鱼。老人用鱼叉、刀子、船桨、舵柄逐一搏斗，武器一件件损毁，猎物被一口口撕去。"},
+ {id:9, layer:2, xf:0.85, phase:"归途", sub:"精神",
+   title:"虽败不屈",
+   text:"即使猎物被吞噬，老人的意志始终没有垮。“人可以被毁灭，但不能被打败”——这是全书的精神内核。（语出海明威《老人与海》）"},
+ {id:10, layer:0, xf:0.94, phase:"返港", sub:"结局",
+   title:"只剩骨架，扛桅归窝",
+   text:"回到港口时，马林鱼只剩一具巨大的白骨。老人筋疲力尽，扛着沉重的桅杆一步步走回窝棚，倒下沉沉睡去。"},
+ {id:11, layer:3, xf:0.975, phase:"结局", sub:"余韵",
+   title:"狮子再入梦",
+   text:"男孩守在他身旁，含泪决定重新与他出海。老人又一次梦见了海滩上的狮子——希望与不灭的精神在梦中延续。"},
+];
+const SPAN={xf0:0.24, xf1:0.60, layer:0, label:"被大鱼拖行 · 两天两夜",
+  detail:{phase:"第一天 → 第三天", sub:"人鱼僵持", title:"被大鱼拖行的两天两夜",
+    text:"从大鱼上钩到力竭浮起，老人被马林鱼拖着在海上漂行近两天两夜，人与鱼在沉默中彼此消耗、彼此成就。"}};
+
+const lanesEl=document.getElementById("lanes"),axisEl=document.getElementById("axis"),
+  legendEl=document.getElementById("legend"),detailEl=document.getElementById("detail"),
+  pfill=document.getElementById("pfill");
+const activeLayers=new Set(LAYERS.map((_,i)=>i));
+
+LAYERS.forEach((L,i)=>{
+  const lane=document.createElement("div"); lane.className="lane"; lane.style.setProperty("--c",L.color);
+  lane.innerHTML=`<div class="lane-label"><div class="n">${L.n}</div><div class="t">${L.name}</div></div><div class="lane-track"></div>`;
+  lanesEl.appendChild(lane);
+});
+const laneEls=[...document.querySelectorAll(".lane")];
+
+// axis phase lines + labels
+PHASES.forEach(p=>{
+  const lab=document.createElement("div"); lab.className="ylabel"; lab.style.left=(p.x*100)+"%"; lab.textContent=p.label;
+  axisEl.appendChild(lab);
+});
+laneEls.forEach(lane=>{
+  const g=document.createElement("div"); g.className="grid-layer";
+  PHASES.forEach(p=>{ const l=document.createElement("div"); l.className="yline"; l.style.left=(p.x*100)+"%"; g.appendChild(l); });
+  lane.insertBefore(g, lane.firstChild);
+});
+
+const nodeEls={};
+// span first (behind nodes)
+(function(){
+  const lane=laneEls[SPAN.layer], track=lane.querySelector(".lane-track");
+  const el=document.createElement("div"); el.className="span";
+  el.style.left=(SPAN.xf0*100)+"%"; el.style.width=((SPAN.xf1-SPAN.xf0)*100)+"%";
+  el.innerHTML=`<span>${SPAN.label}</span>`;
+  track.appendChild(el); nodeEls["span"]=el;
+  const ev={layer:SPAN.layer, ...SPAN.detail};
+  el.addEventListener("mouseenter",()=>show(ev));
+  el.addEventListener("click",()=>{show(ev);});
+})();
+
+EVENTS.forEach(ev=>{
+  const lane=laneEls[ev.layer], track=lane.querySelector(".lane-track");
+  const el=document.createElement("div"); el.className="node"+(ev.layer>=2?" low":""); el.style.left=(ev.xf*100)+"%";
+  el.style.setProperty("--c",LAYERS[ev.layer].color);
+  el.innerHTML=`<div class="flag">${ev.phase}</div><div class="ring"></div>`;
+  track.appendChild(el); nodeEls[ev.id]=el;
+  el.addEventListener("mouseenter",()=>show(ev));
+  el.addEventListener("click",()=>{show(ev);setActive(ev.id);});
+});
+
+LAYERS.forEach((L,i)=>{
+  const c=document.createElement("div"); c.className="chip"; c.style.setProperty("--c",L.color);
+  c.innerHTML=`<span class="dot"></span>${L.name}`;
+  c.addEventListener("click",()=>{
+    if(activeLayers.has(i)){activeLayers.delete(i);c.classList.add("off");}
+    else{activeLayers.add(i);c.classList.remove("off");}
+    EVENTS.forEach(ev=>nodeEls[ev.id].classList.toggle("dim",!activeLayers.has(ev.layer)));
+    nodeEls["span"].classList.toggle("dim",!activeLayers.has(SPAN.layer));
+  });
+  legendEl.appendChild(c);
+});
+
+function show(ev){
+  const c=LAYERS[ev.layer].color;
+  detailEl.className="detail"; detailEl.style.setProperty("--c",c);
+  detailEl.innerHTML=`
+    <div class="date"><div class="big">${ev.phase}</div><div class="small">${ev.sub||''}</div></div>
+    <div class="body"><span class="tag">${LAYERS[ev.layer].name}</span><h3>${ev.title}</h3><p>${ev.text}</p></div>`;
+}
+function setActive(id){
+  Object.values(nodeEls).forEach(n=>n.classList.remove("active"));
+  if(nodeEls[id]) nodeEls[id].classList.add("active");
+}
+
+let playing=false, idx=0, timer=null;
+const playBtn=document.getElementById("playBtn");
+function stepPlay(){
+  if(idx>=EVENTS.length){stopPlay(true);return;}
+  const ev=EVENTS[idx]; show(ev); setActive(ev.id);
+  pfill.style.width=((idx+1)/EVENTS.length*100)+"%"; idx++;
+  timer=setTimeout(stepPlay,2800);
+}
+function startPlay(){playing=true;playBtn.textContent="⏸ 暂停";playBtn.classList.add("playing");if(idx>=EVENTS.length)idx=0;stepPlay();}
+function stopPlay(done){playing=false;clearTimeout(timer);playBtn.textContent=done?"▶ 重新播放":"▶ 继续播放";playBtn.classList.remove("playing");if(done)idx=0;}
+playBtn.addEventListener("click",()=>{playing?stopPlay(false):startPlay();});
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  stopPlay(true); pfill.style.width="0"; idx=0;
+  Object.values(nodeEls).forEach(n=>n.classList.remove("active"));
+  detailEl.className="detail placeholder";
+  detailEl.innerHTML=`<div class="body"><p>将鼠标悬停或点击节点查看情节详情，或点击「播放故事」按叙事顺序自动演示。</p></div>`;
+});
+</script>
+</body>
+</html>
