@@ -476,3 +476,4 @@ A：把"美术产能"从死结变成 API 调用，把"下班后的时间"变成 
 ---
 
 *附：本文中的行业数据来源包括 Wikipedia（行业裁员条目、Unity、Unreal Engine、GoldSrc、Havok、MCP、SAG-AFTRA 罢工、赛博朋克 2077）、GDC State of the Game Industry 2025/2026、Kotaku、PC Gamer、SteamDB、Totally Human Media、lua.org、Anthropic 官方公告等；Rezona: Make Memeplays 的下载与月活数据来自 AppBrain / Apptopia 等应用商店数据平台的估计，"游戏的 TikTok 时刻"的说法见 Khaleej Times 的相关报道；AAA 预算与美术占比为行业通行估计。本文描述的开发流程均来自本仓库的真实 git 历史与 Floniks 的实际 MCP 工具清单；本文全部配图（封面与章节插画）由 Floniks 平台生成，游戏截图为 iPhone 真机/模拟器实拍。*
+
