@@ -19,6 +19,9 @@ description: >-
 image:
   path: /assets/interactive/four-petal-flower/cover.jpg
   alt: "一朵四瓣花，走了两千年：从汉镜到LV再到茉莉奶白"
+# 交互长读（正文在 index.html 的 iframe 里），不适合公众号图文自动发布；
+# 公众号用线性图文版 _wechat/2026-07-05-four-petal-flower-lv.md 手动生成草稿。
+wechat: false
 ---
 
 LV 告赢茉莉奶白，一审判赔一千零三十万。全网都在吵那朵四瓣花，凭什么算 LV 的。

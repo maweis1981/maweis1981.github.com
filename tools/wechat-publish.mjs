@@ -347,6 +347,12 @@ async function main() {
     need_open_comment: 0,
     only_fans_can_comment: 0,
   };
+  // 阅读原文 link: front matter `wechat_source_url` (e.g. the full/interactive
+  // web version). Omitted key when unset so the draft has no source link.
+  if (fm.wechat_source_url) {
+    article.content_source_url = String(fm.wechat_source_url);
+    console.log(`[draft] content_source_url (阅读原文): ${article.content_source_url}`);
+  }
 
   console.log('[draft] creating…');
   const draftMediaId = await createDraft(token, [article]);
