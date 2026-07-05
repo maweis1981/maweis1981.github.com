@@ -1,5 +1,5 @@
 ---
-title: "一朵四瓣花，走了两千年：从汉镜到 LV，再到茉莉奶白"
+title: "一朵四瓣花，中国人用了两千年，如今用它却要赔 LV 1030 万"
 date: 2026-07-05 10:00:00 +0800
 author: Max (Ma Wei)
 location: Singapore
