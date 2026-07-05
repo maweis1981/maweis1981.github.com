@@ -97,6 +97,19 @@
   .refs li{margin:6px 0;}
   .end{text-align:center;color:var(--brown);font-size:22px;margin:54px 0 12px;line-height:1.8;font-weight:700;}
   .ask{font-family:var(--sans);text-align:center;color:var(--ink-soft);font-size:15px;background:var(--paper2);border:1px solid var(--line);border-radius:3px;padding:24px;margin-top:28px;line-height:1.95;}
+
+  /* AI cover hero visual */
+  .cover-fig{margin:38px 0 6px;}
+  .cover-fig .mount{padding:12px;}
+  /* labelled AI image (overlay Chinese text on text-free AI art) */
+  .shot{position:relative;line-height:0;}
+  .shot img{width:100%;display:block;border-radius:1px;}
+  .lbl-row{position:absolute;left:0;right:0;bottom:0;display:flex;line-height:normal;pointer-events:none;}
+  .lbl-row .cell{flex:1;display:flex;justify-content:center;align-items:flex-end;padding:0 6px 14px;}
+  .lbl{font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.14em;color:#f4eddf;
+    background:rgba(34,28,21,.82);border:1px solid rgba(189,151,90,.55);
+    padding:5px 12px;border-radius:100px;white-space:nowrap;backdrop-filter:blur(1px);}
+  @media(max-width:600px){.lbl{font-size:10.5px;letter-spacing:.08em;padding:4px 8px;}.lbl-row .cell{padding:0 3px 9px;}}
 </style>
 </head>
 <body>
@@ -110,6 +123,11 @@
     <div class="byline sans">图 / 文　MAX（MA WEI）　·　文中真实文物图均来自公开馆藏，授权见文末</div>
   </div>
 
+  <figure class="cover-fig">
+    <div class="mount"><img src="img/ai-cover.jpg" alt="四瓣花主题静物：汉代四神铜镜、唐代团窠花卉织锦、日本四瓣家纹漆印、金色四瓣花" loading="eager"></div>
+    <figcaption class="sans">一枚汉代四神铜镜、一片唐代团窠花卉织锦、一枚日本四瓣家纹漆印、一朵金色四瓣花——同一朵四瓣花的四张面孔，静物同框。<b>本图为 AI 生成插画（Floniks GPT-image），用于氛围呈现，非实物照片、非官方商标；文中另附真实馆藏文物照片。</b></figcaption>
+  </figure>
+
   <div class="orn"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4"><g transform="translate(20,20)"><path d="M0,-4 C6,-11 6,-17 0,-22 C-6,-17 -6,-11 0,-4Z"/><path d="M0,4 C6,11 6,17 0,22 C-6,17 -6,11 0,4Z"/><path d="M-4,0 C-11,-6 -17,-6 -22,0 C-17,6 -11,6 -4,0Z"/><path d="M4,0 C11,-6 17,-6 22,0 C17,6 11,6 4,0Z"/><circle r="2.4" fill="currentColor" stroke="none"/></g></svg></div>
 
   <!-- 1 -->
@@ -118,50 +136,19 @@
   <p>公园的地砖，一格一格拼过去，中间常常是一朵四瓣花。老小区的围墙，那种镂空花砖，四瓣花也是最常见的样式之一。再往细里看，我们的人民币纸币上，那圈精细的<em>团花</em>，骨子里也是同一套传统花卉纹样，柿蒂纹、团花纹、莲花纹，都在里面。</p>
   <p class="p-dim">换句话说，四瓣花、四叶花这种东西，对中国人来说，属于那种熟到视而不见的背景。你说它像谁，第一反应多半是：它谁也不像，它就是个到处都有的老花样。</p>
 
-  <figure class="fig-svg">
-    <svg viewBox="0 0 640 190" width="100%" role="img" aria-label="四瓣花在地砖、花砖、团花、LV上的示意">
-      <defs>
-        <g id="quatre"><path d="M0,-8 C10,-20 10,-32 0,-40 C-10,-32 -10,-20 0,-8Z"/><path d="M0,8 C10,20 10,32 0,40 C-10,32 -10,20 0,8Z"/><path d="M-8,0 C-20,-10 -32,-10 -40,0 C-32,10 -20,10 -8,0Z"/><path d="M8,0 C20,-10 32,-10 40,0 C32,10 20,10 8,0Z"/></g>
-      </defs>
-      <g transform="translate(78,86)">
-        <rect x="-52" y="-52" width="104" height="104" rx="3" fill="#ece2cf" stroke="#cbb797"/>
-        <g transform="scale(.9)" fill="none" stroke="#6a4d31" stroke-width="2.6"><use href="#quatre"/></g>
-        <circle r="3.6" fill="#a07d3e"/>
-      </g>
-      <text x="78" y="172" fill="#8c7a61" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif" letter-spacing="1">公园地砖</text>
-
-      <g transform="translate(238,86)">
-        <rect x="-52" y="-52" width="104" height="104" rx="3" fill="#ece2cf" stroke="#cbb797"/>
-        <g fill="#faf6ec" stroke="#8a6a3c" stroke-width="2.4">
-          <circle cx="0" cy="-26" r="14"/><circle cx="0" cy="26" r="14"/><circle cx="-26" cy="0" r="14"/><circle cx="26" cy="0" r="14"/>
-        </g>
-        <circle r="8" fill="none" stroke="#8a6a3c" stroke-width="2.4"/>
-      </g>
-      <text x="238" y="172" fill="#8c7a61" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif" letter-spacing="1">围墙花砖</text>
-
-      <g transform="translate(400,86)">
-        <circle r="50" fill="#ece2cf" stroke="#cbb797"/>
-        <g fill="none" stroke="#a07d3e" stroke-width="1.7">
-          <g id="pt"><path d="M0,-9 C7,-20 7,-33 0,-42 C-7,-33 -7,-20 0,-9Z"/></g>
-          <use href="#pt"/><use href="#pt" transform="rotate(45)"/><use href="#pt" transform="rotate(90)"/><use href="#pt" transform="rotate(135)"/><use href="#pt" transform="rotate(180)"/><use href="#pt" transform="rotate(225)"/><use href="#pt" transform="rotate(270)"/><use href="#pt" transform="rotate(315)"/>
-        </g>
-        <circle r="6" fill="#a07d3e"/>
-      </g>
-      <text x="400" y="172" fill="#8c7a61" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif" letter-spacing="1">人民币团花（示意）</text>
-
-      <g transform="translate(562,86)">
-        <rect x="-56" y="-52" width="112" height="104" rx="3" fill="#221c15" stroke="#a07d3e"/>
-        <g fill="none" stroke="#bd975a" stroke-width="2">
-          <g id="qs"><path d="M0,-6 C8,-15 8,-24 0,-31 C-8,-24 -8,-15 0,-6Z"/></g>
-          <g transform="translate(-24,-17) scale(.66)"><use href="#qs"/><use href="#qs" transform="rotate(90)"/><use href="#qs" transform="rotate(180)"/><use href="#qs" transform="rotate(270)"/></g>
-          <g transform="translate(24,-17) scale(.66)"><use href="#qs"/><use href="#qs" transform="rotate(90)"/><use href="#qs" transform="rotate(180)"/><use href="#qs" transform="rotate(270)"/></g>
-          <g transform="translate(-24,19) scale(.66)"><use href="#qs"/><use href="#qs" transform="rotate(90)"/><use href="#qs" transform="rotate(180)"/><use href="#qs" transform="rotate(270)"/></g>
-          <g transform="translate(24,19) scale(.66)"><use href="#qs"/><use href="#qs" transform="rotate(90)"/><use href="#qs" transform="rotate(180)"/><use href="#qs" transform="rotate(270)"/></g>
-        </g>
-      </g>
-      <text x="562" y="172" fill="#8c7a61" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif" letter-spacing="1">LV 老花（示意）</text>
-    </svg>
-    <figcaption class="sans">同一朵四瓣花，出现在地砖、花砖、纸币团花，和一个法国牌子的老花里。<b>以上为作者绘制的示意图，非实物照片、非官方商标。</b></figcaption>
+  <figure>
+    <div class="mount">
+      <div class="shot">
+        <img src="img/ai-everyday.jpg" alt="四瓣花出现在公园石刻、围墙花砖、纸币团花、帆布压印金标上" loading="lazy">
+        <div class="lbl-row">
+          <div class="cell"><span class="lbl">公园石刻</span></div>
+          <div class="cell"><span class="lbl">围墙花砖</span></div>
+          <div class="cell"><span class="lbl">纸币团花</span></div>
+          <div class="cell"><span class="lbl">帆布金标</span></div>
+        </div>
+      </div>
+    </div>
+    <figcaption class="sans">同一朵四瓣花，藏在公园的石刻地砖、老小区的镂空围墙花砖、纸币上的团花，和一块压印金标的帆布里——熟到你视而不见。<b>本图为 AI 生成插画，中文标签为后期文字叠加，非实物照片、非官方商标。</b></figcaption>
   </figure>
 
   <div class="orn"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4"><g transform="translate(20,20)"><path d="M0,-4 C6,-11 6,-17 0,-22 C-6,-17 -6,-11 0,-4Z"/><path d="M0,4 C6,11 6,17 0,22 C-6,17 -6,11 0,4Z"/><path d="M-4,0 C-11,-6 -17,-6 -22,0 C-17,6 -11,6 -4,0Z"/><path d="M4,0 C11,-6 17,-6 22,0 C17,6 11,6 4,0Z"/><circle r="2.4" fill="currentColor" stroke="none"/></g></svg></div>
@@ -183,6 +170,19 @@
 
   <h3>第一站，日本的家纹</h3>
   <p>日本家纹里，有一种叫<em>木瓜纹</em>，四片花瓣一样的结构，是全日本最常见的家纹之一，织田信长家用的就是它。你把它跟 LV 那朵花摆在一起看。</p>
+
+  <figure>
+    <div class="mount">
+      <div class="shot">
+        <img src="img/ai-crest-vs-lv.jpg" alt="黑漆印章分别压出日本四瓣木瓜家纹与金色四瓣老花" loading="lazy">
+        <div class="lbl-row">
+          <div class="cell"><span class="lbl">日本 · 木瓜家纹</span></div>
+          <div class="cell"><span class="lbl">LV · 四瓣老花</span></div>
+        </div>
+      </div>
+    </div>
+    <figcaption class="sans">同一枚黑漆印章，左边压出日本四瓣木瓜家纹，右边压出四瓣老花——像不像，你自己有数。<b>本图为 AI 生成插画，中文标签为后期文字叠加，非实物照片、非官方商标；下方为可查证的实物家纹与线稿对照。</b></figcaption>
+  </figure>
 
   <div class="duo">
     <figure>
