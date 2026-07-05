@@ -7,7 +7,8 @@ image:
   path: /assets/interactive/four-petal-flower/cover.jpg
   alt: "一朵四瓣花，走了两千年"
 # 公众号专用线性版：交互长读的正文在网页里，这里是可进图文的线性图文版。
-# 通过手动 dispatch（repository_dispatch: wechat-publish）生成草稿，不随博客自动发布。
+# 落到 master 时由 wechat-publish 工作流自动在草稿箱生成草稿（publish:false），
+# 供人工审阅后自行群发；_wechat/ 是下划线目录，不会生成博客页。
 wechat_source_url: https://maweis.com/assets/interactive/four-petal-flower/index.html
 ---
 

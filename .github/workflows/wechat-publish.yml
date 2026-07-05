@@ -33,10 +33,16 @@ on:
   # as a draft to 公众号 (publish: false — review in 草稿箱 before sending).
   # Cover is read from the post's image.path front matter (supports https://
   # URLs), falling back to DEFAULT_COVER.
+  #
+  # Also covers `_wechat/*.md`: 公众号-only 线性图文版 for posts whose blog
+  # form can't go into a 图文 (e.g. interactive long-reads embedding an
+  # <iframe>). `_wechat/` is an underscore dir Jekyll doesn't build, so these
+  # files never become a second blog page.
   push:
     branches: [master]
     paths:
       - '_posts/*.md'
+      - '_wechat/*.md'
 
 permissions:
   contents: read
@@ -89,7 +95,7 @@ jobs:
             # in 公众号 后台 → 草稿箱 before sending.
             # Cover priority: COVER_PATH env > post front matter image.path > DEFAULT_COVER env.
             echo "::group::Find added/modified posts in $BEFORE_SHA..$AFTER_SHA"
-            ADDED=$(git diff --name-only --diff-filter=AM "$BEFORE_SHA" "$AFTER_SHA" -- '_posts/*.md' 2>/dev/null || true)
+            ADDED=$(git diff --name-only --diff-filter=AM "$BEFORE_SHA" "$AFTER_SHA" -- '_posts/*.md' '_wechat/*.md' 2>/dev/null || true)
             if [ -z "$ADDED" ]; then
               echo "No added/modified auto-publish posts in this push — nothing to do."
               exit 0
