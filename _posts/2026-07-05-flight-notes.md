@@ -14,8 +14,8 @@ description: >-
 image:
   path: /assets/img/posts/flight-notes/cover.jpg
   alt: 高空之上，黄昏的云海与天际的一线微光（AI 生成题图）
-# 个人随笔，仅博客，不进公众号图文。（rev: 云海题图 · 触发 Pages 重新部署）
-wechat: false
+# 也发公众号图文；「阅读原文」回链博客。
+wechat_source_url: https://maweis.com/posts/flight-notes/
 ---
 
 十六点二十五分。三点整起飞，一个半小时了。应该在越南上空，或者柬埔寨，快到中国的领空了。
