@@ -17,7 +17,7 @@ tags:
 description: >-
   LV 告赢茉莉奶白、判赔 1030 万，全网都在吵那朵四瓣花。但很少有人把这朵花的来路从头摸一遍。这是一篇图文夹杂的交互长读：顺着时间线，从你家楼下的地砖，倒推到 LV 的老花，再一路摸回日本家纹、唐代宝相花、汉代柿蒂纹与"方华"，用真实馆藏文物和分层时间轴，讲清欧洲与亚洲、日本与中国之间的来龙去脉，最后追问中国的商标保护有没有自己的根。
 image:
-  path: /assets/interactive/four-petal-flower/cover.png
+  path: /assets/interactive/four-petal-flower/cover.jpg
   alt: "一朵四瓣花，走了两千年：从汉镜到LV再到茉莉奶白"
 ---
 
