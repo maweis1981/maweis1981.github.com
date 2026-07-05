@@ -6,153 +6,168 @@
 <title>一朵四瓣花，走了两千年：从汉镜到LV，再到茉莉奶白</title>
 <style>
   :root{
-    --bg:#0c0f14; --bg2:#11151d; --panel:#161b25; --panel2:#1b2130;
-    --line:#2a3242; --ink:#eef2f7; --dim:#a7b3c4; --faint:#6b788c;
-    --gold:#d9b46a; --gold2:#f0d79f; --jade:#5fb7a6; --red:#d2694e; --blue:#6d8fce;
-    --cn:#d9b46a; --jp:#c98b5a; --eu:#6d8fce; --law:#b06bd0;
+    --paper:#f4eddf; --paper2:#faf6ec; --swatch:#ece2cf; --seal:#221c15;
+    --ink:#2c241c; --ink-soft:#5a4a39; --muted:#8c7a61; --faint:#a99a80;
+    --line:#dccdb2; --line2:#e8ddc8;
+    --brown:#6a4d31; --gold:#a07d3e; --gold2:#bd975a;
+    --cn:#8a6a3c; --jp:#a5794a; --eu:#5f6b78; --law:#7d5f70;
+    --serif:"Noto Serif SC","Songti SC","STSong",Georgia,"Times New Roman",serif;
+    --sans:"PingFang SC","Helvetica Neue","Microsoft YaHei",system-ui,sans-serif;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:radial-gradient(1200px 700px at 78% -10%,#182236 0%,rgba(24,34,54,0) 60%),
-               linear-gradient(180deg,#0e1219 0%,#0a0d12 100%);
+    background:var(--paper);
     color:var(--ink);
-    font-family:"Noto Serif SC","Songti SC","PingFang SC","Microsoft YaHei",serif;
-    line-height:1.95; -webkit-font-smoothing:antialiased;
+    font-family:var(--serif);
+    line-height:2.02;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
   }
-  .wrap{max-width:820px;margin:0 auto;padding:0 22px 90px;}
-  .sans{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;}
+  .wrap{max-width:760px;margin:0 auto;padding:0 26px 110px;}
+  .sans{font-family:var(--sans);}
+
+  /* ornament divider */
+  .orn{display:flex;align-items:center;justify-content:center;gap:16px;margin:52px 0;color:var(--gold);}
+  .orn::before,.orn::after{content:"";height:1px;width:74px;background:linear-gradient(90deg,transparent,var(--line));}
+  .orn::after{background:linear-gradient(90deg,var(--line),transparent);}
+  .orn svg{width:20px;height:20px;opacity:.9;}
 
   /* hero */
-  .hero{padding:74px 0 36px;border-bottom:1px solid var(--line);margin-bottom:12px;}
-  .kicker{font-family:"PingFang SC",sans-serif;color:var(--gold);letter-spacing:.32em;font-size:12px;font-weight:600;display:flex;align-items:center;gap:12px;margin-bottom:20px;}
-  .kicker::before{content:"";width:30px;height:1px;background:var(--gold);}
-  h1{font-size:34px;line-height:1.32;margin:0 0 18px;letter-spacing:.01em;}
-  h1 .hl{color:var(--gold2);}
-  .lead{font-size:18px;color:var(--dim);line-height:1.9;}
-  .byline{margin-top:22px;font-family:"PingFang SC",sans-serif;font-size:13px;color:var(--faint);}
+  .hero{padding:76px 0 8px;text-align:center;}
+  .kicker{font-family:var(--sans);color:var(--gold);letter-spacing:.42em;font-size:11.5px;font-weight:600;text-transform:uppercase;margin-bottom:30px;}
+  h1{font-size:37px;line-height:1.45;margin:0 0 26px;font-weight:700;letter-spacing:.015em;}
+  h1 .hl{color:var(--gold);}
+  .lead{font-size:18.5px;color:var(--ink-soft);line-height:1.95;max-width:620px;margin:0 auto;}
+  .byline{margin-top:30px;font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.08em;}
+  .rule{width:52px;height:1px;background:var(--gold);margin:30px auto 0;opacity:.7;}
 
-  h2{font-size:24px;margin:56px 0 8px;letter-spacing:.01em;display:flex;align-items:center;gap:12px;}
-  h2 .idx{font-family:"PingFang SC",sans-serif;font-size:13px;font-weight:700;color:var(--gold);border:1px solid var(--gold);border-radius:6px;padding:2px 8px;flex-shrink:0;}
-  h3{font-size:19px;margin:34px 0 6px;color:var(--gold2);}
-  p{margin:15px 0;font-size:17px;color:#dfe6ef;}
-  .p-dim{color:var(--dim);}
-  em{color:var(--gold2);font-style:normal;font-weight:600;}
-  .pull{font-size:21px;line-height:1.7;color:var(--gold2);text-align:center;margin:34px 0;padding:0 10px;}
+  h2{font-size:25px;margin:14px 0 6px;font-weight:700;letter-spacing:.01em;display:flex;align-items:baseline;gap:16px;}
+  h2 .ch{font-family:var(--serif);color:var(--gold);font-size:30px;font-weight:700;line-height:1;flex-shrink:0;padding-right:16px;border-right:1px solid var(--line);}
+  h3{font-size:19.5px;margin:34px 0 4px;color:var(--brown);font-weight:700;}
+  p{margin:16px 0;font-size:17.5px;color:var(--ink);}
+  .p-dim{color:var(--ink-soft);}
+  em{color:var(--brown);font-style:normal;font-weight:700;}
+  .pull{font-size:23px;line-height:1.75;color:var(--brown);text-align:center;margin:40px 0;font-weight:700;}
 
-  figure{margin:30px 0;}
-  figure img{width:100%;border-radius:10px;display:block;border:1px solid var(--line);background:#000;}
-  figcaption{font-family:"PingFang SC",sans-serif;font-size:12.5px;color:var(--faint);margin-top:9px;line-height:1.7;}
-  figcaption b{color:var(--dim);font-weight:600;}
-  .fig-svg{background:linear-gradient(180deg,#121620,#0d1017);border:1px solid var(--line);border-radius:10px;padding:20px;}
-  .duo{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:end;}
+  figure{margin:34px 0;}
+  .mount{background:var(--paper2);border:1px solid var(--line);padding:14px;border-radius:2px;box-shadow:0 2px 0 #fff inset, 0 20px 44px -34px rgba(60,40,20,.5);}
+  .mount img{width:100%;display:block;}
+  figcaption{font-family:var(--sans);font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.75;padding-top:10px;border-top:1px solid var(--line2);}
+  figcaption b{color:var(--ink-soft);font-weight:600;}
+  .fig-svg{background:var(--paper2);border:1px solid var(--line);border-radius:2px;padding:22px;}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;}
   .duo figure{margin:0;}
-  @media(max-width:640px){.duo{grid-template-columns:1fr;}}
+  .seal{background:var(--seal);border:1px solid var(--gold);border-radius:2px;padding:16px;box-shadow:0 20px 44px -32px rgba(0,0,0,.7);}
+  .seal img{width:100%;display:block;}
+  .seal svg{width:100%;display:block;}
+  @media(max-width:600px){.duo{grid-template-columns:1fr;}}
 
-  .note{background:linear-gradient(180deg,var(--panel),#12161f);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:16px 18px;margin:22px 0;font-family:"PingFang SC",sans-serif;font-size:15px;color:var(--dim);line-height:1.85;}
-  .note b{color:var(--gold2);}
+  .note{background:var(--paper2);border:1px solid var(--line);border-left:2px solid var(--gold);border-radius:0 3px 3px 0;padding:20px 22px;margin:26px 0;font-family:var(--sans);font-size:15.5px;color:var(--ink-soft);line-height:1.95;}
+  .note b{color:var(--brown);}
 
-  /* timeline */
-  .tl-wrap{margin:26px 0 8px;background:linear-gradient(180deg,var(--panel),#0e121a);border:1px solid var(--line);border-radius:14px;padding:16px 14px 8px;box-shadow:0 30px 70px -46px #000;}
-  .tl-head{font-family:"PingFang SC",sans-serif;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:4px 4px 14px;}
-  .tl-title{font-weight:700;font-size:15px;color:var(--ink);margin-right:auto;}
-  .chip{font-size:12px;padding:6px 12px;border-radius:100px;border:1px solid var(--line);color:var(--dim);cursor:pointer;user-select:none;transition:.15s;background:var(--panel2);}
-  .chip .d{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--c,#888);}
-  .chip.off{opacity:.4;}
-  .lane{position:relative;border-top:1px dashed rgba(120,140,170,.18);}
-  .lane-h{font-family:"PingFang SC",sans-serif;font-size:12px;letter-spacing:.15em;padding:10px 4px 2px;color:var(--c);font-weight:700;}
-  .lane-row{position:relative;display:flex;gap:10px;overflow-x:auto;padding:6px 4px 16px;scrollbar-width:thin;}
-  .ev{flex:0 0 auto;width:150px;background:var(--panel2);border:1px solid var(--line);border-top:2px solid var(--c);border-radius:9px;padding:10px 11px;cursor:pointer;transition:.15s;}
-  .ev:hover{transform:translateY(-2px);border-color:var(--c);box-shadow:0 10px 24px -14px #000;}
-  .ev .yr{font-family:"PingFang SC",sans-serif;font-size:11px;color:var(--c);font-weight:700;letter-spacing:.03em;}
-  .ev .tt{font-family:"PingFang SC",sans-serif;font-size:13px;color:var(--ink);margin-top:4px;line-height:1.5;}
+  /* timeline — editorial luxury */
+  .tl{margin:24px 0 6px;background:var(--paper2);border:1px solid var(--line);border-radius:3px;padding:26px 22px 14px;}
+  .tl-cap{font-family:var(--sans);font-size:11px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:4px;}
+  .tl-title{font-family:var(--serif);font-weight:700;font-size:20px;text-align:center;margin-bottom:20px;}
+  .tl-filter{font-family:var(--sans);display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-bottom:8px;}
+  .chip{font-size:12px;letter-spacing:.04em;padding:6px 15px;border-radius:100px;border:1px solid var(--line);color:var(--muted);cursor:pointer;user-select:none;transition:.18s;background:transparent;}
+  .chip .d{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:1px;background:var(--c,#aaa);}
+  .chip:hover{border-color:var(--c);color:var(--ink);}
+  .chip.off{opacity:.42;}
+  .lane{position:relative;padding:6px 0;border-top:1px solid var(--line2);}
+  .lane:first-of-type{border-top:none;}
+  .lane-h{font-family:var(--sans);font-size:12px;letter-spacing:.24em;padding:12px 2px 4px;color:var(--c);font-weight:700;display:flex;align-items:center;gap:10px;}
+  .lane-h::before{content:"";width:16px;height:1px;background:var(--c);}
+  .lane-row{display:flex;gap:12px;overflow-x:auto;padding:6px 2px 18px;scrollbar-width:thin;}
+  .ev{flex:0 0 auto;width:158px;background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:13px 14px;cursor:pointer;transition:.18s;}
+  .ev:hover{border-color:var(--c);transform:translateY(-2px);box-shadow:0 14px 30px -20px rgba(60,40,20,.55);}
+  .ev .yr{font-family:var(--sans);font-size:11px;color:var(--c);font-weight:700;letter-spacing:.05em;}
+  .ev .tt{font-family:var(--serif);font-size:14.5px;color:var(--ink);margin-top:5px;line-height:1.5;font-weight:700;}
   .ev.hide{display:none;}
-  .tag{display:inline-block;font-family:"PingFang SC",sans-serif;font-size:10px;padding:1px 7px;border-radius:100px;margin-top:7px;border:1px solid var(--line);color:var(--faint);}
-  .tl-detail{font-family:"PingFang SC",sans-serif;min-height:70px;margin:6px 4px 4px;padding:14px 16px;background:#0c1017;border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;font-size:14.5px;color:var(--dim);line-height:1.8;}
-  .tl-detail b{color:var(--gold2);}
-  .tl-hint{font-family:"PingFang SC",sans-serif;font-size:11.5px;color:var(--faint);padding:2px 4px 10px;}
+  .tag{display:inline-block;font-family:var(--sans);font-size:10px;letter-spacing:.05em;padding:1px 8px;border-radius:100px;margin-top:9px;border:1px solid var(--line);color:var(--faint);}
+  .tl-detail{font-family:var(--sans);min-height:64px;margin:8px 2px 2px;padding:16px 18px;background:var(--paper);border:1px solid var(--line);border-left:2px solid var(--gold);border-radius:0 3px 3px 0;font-size:14.5px;color:var(--ink-soft);line-height:1.85;}
+  .tl-detail b{color:var(--brown);}
+  .tl-hint{font-family:var(--sans);font-size:11.5px;color:var(--faint);text-align:center;padding:2px 4px 8px;letter-spacing:.03em;}
 
-  .refs{font-family:"PingFang SC",sans-serif;font-size:12.5px;color:var(--faint);line-height:1.85;border-top:1px solid var(--line);margin-top:60px;padding-top:22px;}
-  .refs h4{color:var(--dim);font-size:13px;letter-spacing:.1em;margin:0 0 10px;}
-  .refs a{color:var(--blue);text-decoration:none;}
-  .refs a:hover{text-decoration:underline;}
-  .refs li{margin:5px 0;}
-  .end{text-align:center;color:var(--gold2);font-size:20px;margin:50px 0 10px;line-height:1.7;}
-  .ask{font-family:"PingFang SC",sans-serif;text-align:center;color:var(--dim);font-size:15px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-top:26px;}
+  .refs{font-family:var(--sans);font-size:12.5px;color:var(--muted);line-height:1.9;border-top:1px solid var(--line);margin-top:64px;padding-top:26px;}
+  .refs h4{color:var(--ink-soft);font-size:11px;letter-spacing:.28em;text-transform:uppercase;margin:0 0 12px;}
+  .refs a{color:var(--brown);text-decoration:none;border-bottom:1px solid var(--line);}
+  .refs a:hover{color:var(--gold);}
+  .refs li{margin:6px 0;}
+  .end{text-align:center;color:var(--brown);font-size:22px;margin:54px 0 12px;line-height:1.8;font-weight:700;}
+  .ask{font-family:var(--sans);text-align:center;color:var(--ink-soft);font-size:15px;background:var(--paper2);border:1px solid var(--line);border-radius:3px;padding:24px;margin-top:28px;line-height:1.95;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="hero">
-    <div class="kicker">纹样考 · 一朵花的两千年</div>
-    <h1>一朵四瓣花，走了两千年：<br>从汉朝的铜镜，到 LV，再到<span class="hl">茉莉奶白</span></h1>
-    <p class="lead">这次上热搜的，是一朵四瓣花，和一张一千零三十万的判决书。<br>但很少有人真的把这朵花的来路，从头到尾摸一遍。今天我们就慢慢摸一次。</p>
-    <div class="byline sans">图 / 文　Max（Ma Wei）　·　文中真实文物图均来自公开馆藏，授权见文末</div>
+    <div class="kicker sans">纹样考 · 一朵花的两千年</div>
+    <h1>一朵四瓣花，走了两千年<br>从汉朝的铜镜，到 LV，再到<span class="hl">茉莉奶白</span></h1>
+    <p class="lead">这次上热搜的，是一朵四瓣花，和一张一千零三十万的判决书。但很少有人真的把这朵花的来路，从头到尾摸一遍。今天我们就慢慢摸一次。</p>
+    <div class="rule"></div>
+    <div class="byline sans">图 / 文　MAX（MA WEI）　·　文中真实文物图均来自公开馆藏，授权见文末</div>
   </div>
 
+  <div class="orn"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4"><g transform="translate(20,20)"><path d="M0,-4 C6,-11 6,-17 0,-22 C-6,-17 -6,-11 0,-4Z"/><path d="M0,4 C6,11 6,17 0,22 C-6,17 -6,11 0,4Z"/><path d="M-4,0 C-11,-6 -17,-6 -22,0 C-17,6 -11,6 -4,0Z"/><path d="M4,0 C11,-6 17,-6 22,0 C17,6 11,6 4,0Z"/><circle r="2.4" fill="currentColor" stroke="none"/></g></svg></div>
+
   <!-- 1 -->
-  <h2><span class="idx sans">01</span> 先别看 LV，先看看你家楼下</h2>
+  <h2><span class="ch">壹</span>先别看 LV，先看看你家楼下</h2>
   <p>你大概没注意过，这朵花其实天天在你眼前晃。</p>
   <p>公园的地砖，一格一格拼过去，中间常常是一朵四瓣花。老小区的围墙，那种镂空花砖，四瓣花也是最常见的样式之一。再往细里看，我们的人民币纸币上，那圈精细的<em>团花</em>，骨子里也是同一套传统花卉纹样，柿蒂纹、团花纹、莲花纹，都在里面。</p>
   <p class="p-dim">换句话说，四瓣花、四叶花这种东西，对中国人来说，属于那种熟到视而不见的背景。你说它像谁，第一反应多半是：它谁也不像，它就是个到处都有的老花样。</p>
 
   <figure class="fig-svg">
-    <svg viewBox="0 0 640 200" width="100%" role="img" aria-label="四瓣花在地砖、花砖、团花上的示意">
-      <rect width="640" height="200" fill="none"/>
-      <g transform="translate(60,100)">
-        <!-- floor tile -->
-        <rect x="-46" y="-46" width="92" height="92" rx="6" fill="#151b26" stroke="#39435a"/>
-        <g fill="none" stroke="#d9b46a" stroke-width="3">
-          <path d="M0,-30 C12,-18 12,-12 0,0 C-12,-12 -12,-18 0,-30Z"/>
-          <path d="M0,30 C12,18 12,12 0,0 C-12,12 -12,18 0,30Z"/>
-          <path d="M-30,0 C-18,-12 -12,-12 0,0 C-12,12 -18,12 -30,0Z"/>
-          <path d="M30,0 C18,-12 12,-12 0,0 C12,12 18,12 30,0Z"/>
-        </g>
-        <circle r="4" fill="#f0d79f"/>
+    <svg viewBox="0 0 640 190" width="100%" role="img" aria-label="四瓣花在地砖、花砖、团花、LV上的示意">
+      <defs>
+        <g id="quatre"><path d="M0,-8 C10,-20 10,-32 0,-40 C-10,-32 -10,-20 0,-8Z"/><path d="M0,8 C10,20 10,32 0,40 C-10,32 -10,20 0,8Z"/><path d="M-8,0 C-20,-10 -32,-10 -40,0 C-32,10 -20,10 -8,0Z"/><path d="M8,0 C20,-10 32,-10 40,0 C32,10 20,10 8,0Z"/></g>
+      </defs>
+      <g transform="translate(78,86)">
+        <rect x="-52" y="-52" width="104" height="104" rx="3" fill="#ece2cf" stroke="#cbb797"/>
+        <g transform="scale(.9)" fill="none" stroke="#6a4d31" stroke-width="2.6"><use href="#quatre"/></g>
+        <circle r="3.6" fill="#a07d3e"/>
       </g>
-      <text x="60" y="176" fill="#6b788c" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif">公园地砖</text>
+      <text x="78" y="172" fill="#8c7a61" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif" letter-spacing="1">公园地砖</text>
 
-      <g transform="translate(200,100)">
-        <rect x="-46" y="-46" width="92" height="92" rx="6" fill="#151b26" stroke="#39435a"/>
-        <g fill="#0c0f14" stroke="#c98b5a" stroke-width="2.4">
-          <circle cx="0" cy="-24" r="13"/><circle cx="0" cy="24" r="13"/>
-          <circle cx="-24" cy="0" r="13"/><circle cx="24" cy="0" r="13"/>
+      <g transform="translate(238,86)">
+        <rect x="-52" y="-52" width="104" height="104" rx="3" fill="#ece2cf" stroke="#cbb797"/>
+        <g fill="#faf6ec" stroke="#8a6a3c" stroke-width="2.4">
+          <circle cx="0" cy="-26" r="14"/><circle cx="0" cy="26" r="14"/><circle cx="-26" cy="0" r="14"/><circle cx="26" cy="0" r="14"/>
         </g>
-        <circle r="7" fill="none" stroke="#c98b5a" stroke-width="2.4"/>
+        <circle r="8" fill="none" stroke="#8a6a3c" stroke-width="2.4"/>
       </g>
-      <text x="200" y="176" fill="#6b788c" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif">围墙花砖</text>
+      <text x="238" y="172" fill="#8c7a61" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif" letter-spacing="1">围墙花砖</text>
 
-      <g transform="translate(340,100)">
-        <circle r="44" fill="#151b26" stroke="#39435a"/>
-        <g fill="none" stroke="#5fb7a6" stroke-width="2">
-          <g id="pet"><path d="M0,-8 C10,-20 10,-32 0,-40 C-10,-32 -10,-20 0,-8Z"/></g>
-          <use href="#pet" transform="rotate(45)"/><use href="#pet" transform="rotate(90)"/>
-          <use href="#pet" transform="rotate(135)"/><use href="#pet" transform="rotate(180)"/>
-          <use href="#pet" transform="rotate(225)"/><use href="#pet" transform="rotate(270)"/>
-          <use href="#pet" transform="rotate(315)"/>
+      <g transform="translate(400,86)">
+        <circle r="50" fill="#ece2cf" stroke="#cbb797"/>
+        <g fill="none" stroke="#a07d3e" stroke-width="1.7">
+          <g id="pt"><path d="M0,-9 C7,-20 7,-33 0,-42 C-7,-33 -7,-20 0,-9Z"/></g>
+          <use href="#pt"/><use href="#pt" transform="rotate(45)"/><use href="#pt" transform="rotate(90)"/><use href="#pt" transform="rotate(135)"/><use href="#pt" transform="rotate(180)"/><use href="#pt" transform="rotate(225)"/><use href="#pt" transform="rotate(270)"/><use href="#pt" transform="rotate(315)"/>
         </g>
-        <circle r="6" fill="#5fb7a6"/>
+        <circle r="6" fill="#a07d3e"/>
       </g>
-      <text x="340" y="176" fill="#6b788c" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif">人民币团花（示意）</text>
+      <text x="400" y="172" fill="#8c7a61" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif" letter-spacing="1">人民币团花（示意）</text>
 
-      <g transform="translate(500,100)" opacity=".9">
-        <rect x="-52" y="-46" width="104" height="92" rx="8" fill="#151b26" stroke="#39435a"/>
-        <g fill="none" stroke="#d9b46a" stroke-width="2.2">
-          <g id="q"><path d="M0,-6 C9,-16 9,-26 0,-34 C-9,-26 -9,-16 0,-6Z"/></g>
-          <g transform="translate(-22,-16) scale(.7)"><use href="#q"/><use href="#q" transform="rotate(90)"/><use href="#q" transform="rotate(180)"/><use href="#q" transform="rotate(270)"/></g>
-          <g transform="translate(22,-16) scale(.7)"><use href="#q"/><use href="#q" transform="rotate(90)"/><use href="#q" transform="rotate(180)"/><use href="#q" transform="rotate(270)"/></g>
-          <g transform="translate(-22,18) scale(.7)"><use href="#q"/><use href="#q" transform="rotate(90)"/><use href="#q" transform="rotate(180)"/><use href="#q" transform="rotate(270)"/></g>
-          <g transform="translate(22,18) scale(.7)"><use href="#q"/><use href="#q" transform="rotate(90)"/><use href="#q" transform="rotate(180)"/><use href="#q" transform="rotate(270)"/></g>
+      <g transform="translate(562,86)">
+        <rect x="-56" y="-52" width="112" height="104" rx="3" fill="#221c15" stroke="#a07d3e"/>
+        <g fill="none" stroke="#bd975a" stroke-width="2">
+          <g id="qs"><path d="M0,-6 C8,-15 8,-24 0,-31 C-8,-24 -8,-15 0,-6Z"/></g>
+          <g transform="translate(-24,-17) scale(.66)"><use href="#qs"/><use href="#qs" transform="rotate(90)"/><use href="#qs" transform="rotate(180)"/><use href="#qs" transform="rotate(270)"/></g>
+          <g transform="translate(24,-17) scale(.66)"><use href="#qs"/><use href="#qs" transform="rotate(90)"/><use href="#qs" transform="rotate(180)"/><use href="#qs" transform="rotate(270)"/></g>
+          <g transform="translate(-24,19) scale(.66)"><use href="#qs"/><use href="#qs" transform="rotate(90)"/><use href="#qs" transform="rotate(180)"/><use href="#qs" transform="rotate(270)"/></g>
+          <g transform="translate(24,19) scale(.66)"><use href="#qs"/><use href="#qs" transform="rotate(90)"/><use href="#qs" transform="rotate(180)"/><use href="#qs" transform="rotate(270)"/></g>
         </g>
       </g>
-      <text x="500" y="176" fill="#6b788c" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif">LV 老花（示意）</text>
+      <text x="562" y="172" fill="#8c7a61" font-size="12" text-anchor="middle" font-family="PingFang SC,sans-serif" letter-spacing="1">LV 老花（示意）</text>
     </svg>
     <figcaption class="sans">同一朵四瓣花，出现在地砖、花砖、纸币团花，和一个法国牌子的老花里。<b>以上为作者绘制的示意图，非实物照片、非官方商标。</b></figcaption>
   </figure>
 
+  <div class="orn"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4"><g transform="translate(20,20)"><path d="M0,-4 C6,-11 6,-17 0,-22 C-6,-17 -6,-11 0,-4Z"/><path d="M0,4 C6,11 6,17 0,22 C-6,17 -6,11 0,4Z"/><path d="M-4,0 C-11,-6 -17,-6 -22,0 C-17,6 -11,6 -4,0Z"/><path d="M4,0 C11,-6 17,-6 22,0 C17,6 11,6 4,0Z"/><circle r="2.4" fill="currentColor" stroke="none"/></g></svg></div>
+
   <!-- 2 -->
-  <h2><span class="idx sans">02</span> 那 LV 这朵花，是哪来的</h2>
+  <h2><span class="ch">贰</span>那 LV 这朵花，是哪来的</h2>
   <p>把镜头切到巴黎。</p>
   <p>1896 年，路易威登的儿子乔治·威登，画出了那套后来红遍全球的老花。四个字母 LV，配上四瓣花、星形花、菱形花，铺成一整片。他做这个东西的目的很实在，一是防伪，当时仿冒太猖獗，得有个别人抄不像的记号；二是纪念四年前去世的父亲。</p>
   <p>官方给出的三个灵感来源是：新艺术运动、日本主义，还有哥特纹章艺术。</p>
@@ -160,8 +175,10 @@
   <p>有一个很具体的时间点。1867 年，巴黎办世界博览会，第一次大规模展出日本艺术。有记载说，就是这段时间，路易威登的人，盯上了日本德川家、岛津家的家纹。</p>
   <div class="note sans">家纹（かもん），是日本家族的纹章，讲究几何、对称、极简。它跟欧洲的纹章艺术，是能对上话的两套视觉系统。一个把日本家纹看在眼里的法国设计师，会做出什么，其实已经不难猜了。</div>
 
+  <div class="orn"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4"><g transform="translate(20,20)"><path d="M0,-4 C6,-11 6,-17 0,-22 C-6,-17 -6,-11 0,-4Z"/><path d="M0,4 C6,11 6,17 0,22 C-6,17 -6,11 0,4Z"/><path d="M-4,0 C-11,-6 -17,-6 -22,0 C-17,6 -11,6 -4,0Z"/><path d="M4,0 C11,-6 17,-6 22,0 C17,6 11,6 4,0Z"/><circle r="2.4" fill="currentColor" stroke="none"/></g></svg></div>
+
   <!-- 3 -->
-  <h2><span class="idx sans">03</span> 顺着这朵花，一路摸回中国</h2>
+  <h2><span class="ch">叁</span>顺着这朵花，一路摸回中国</h2>
   <p>接下来才是这篇文章真正想讲的。LV 借鉴了东方，那这个东方，它的东方，又是从哪来的。</p>
 
   <h3>第一站，日本的家纹</h3>
@@ -169,20 +186,20 @@
 
   <div class="duo">
     <figure>
-      <img src="img/mokko.svg" alt="日本木瓜纹家纹" loading="lazy">
+      <div class="seal"><img src="img/mokko.svg" alt="日本木瓜纹家纹" loading="lazy"></div>
       <figcaption class="sans"><b>日本 · 木瓜纹家纹</b>　四瓣造型，日本最常见家纹之一。<br>图：Wikimedia Commons，作者 Mukai，CC BY-SA 3.0</figcaption>
     </figure>
-    <figure class="fig-svg" style="padding:0;">
-      <svg viewBox="0 0 200 200" width="100%" aria-label="LV 老花四瓣花示意">
-        <rect width="200" height="200" fill="none"/>
-        <g transform="translate(100,100)" fill="none" stroke="#d9b46a" stroke-width="3.4">
-          <g id="lp"><path d="M0,-14 C22,-40 22,-66 0,-84 C-22,-66 -22,-40 0,-14Z"/></g>
-          <use href="#lp"/><use href="#lp" transform="rotate(90)"/>
-          <use href="#lp" transform="rotate(180)"/><use href="#lp" transform="rotate(270)"/>
-        </g>
-        <circle cx="100" cy="100" r="9" fill="#d9b46a"/>
-      </svg>
-      <figcaption class="sans" style="padding:0 14px 14px;"><b>LV 老花那朵花（示意）</b>　四瓣结构。<br>作者绘制示意图，非官方商标。</figcaption>
+    <figure>
+      <div class="seal">
+        <svg viewBox="0 0 200 200" width="100%" aria-label="LV 老花四瓣花示意">
+          <g transform="translate(100,100)" fill="none" stroke="#e7d3a6" stroke-width="3">
+            <g id="lp"><path d="M0,-14 C22,-40 22,-66 0,-84 C-22,-66 -22,-40 0,-14Z"/></g>
+            <use href="#lp"/><use href="#lp" transform="rotate(90)"/><use href="#lp" transform="rotate(180)"/><use href="#lp" transform="rotate(270)"/>
+          </g>
+          <circle cx="100" cy="100" r="8.5" fill="#e7d3a6"/>
+        </svg>
+      </div>
+      <figcaption class="sans"><b>LV 老花那朵花（示意）</b>　四瓣结构。<br>作者绘制示意图，非官方商标。</figcaption>
     </figure>
   </div>
   <p>像不像，你自己有数。而更关键的是，这个相似不是我们硬凑的。跟 LV 合作了十几年的日本艺术家村上隆，自己公开说过：Damier 格纹的灵感来自日本的市松格，那朵花，和日本家纹很像。LV 后来还出过一个系列，名字直接叫 <em>Kamonogram</em>，家纹（Kamon）加老花（Monogram），拼在一起。</p>
@@ -193,7 +210,7 @@
   <p>宝相花是什么。它是以牡丹、莲花、芙蓉这些为底子，再把云纹、忍冬、桃瓣一层层包进去，人工拼出来的一朵现实里根本不存在的花。一朵幻想之花。唐朝的壁画、丝绸、瓷器上，全是它。</p>
 
   <figure>
-    <img src="img/tang-textile.jpg" alt="唐代团窠花卉纹织物，大都会艺术博物馆藏" loading="lazy">
+    <div class="mount"><img src="img/tang-textile.jpg" alt="唐代团窠花卉纹织物，大都会艺术博物馆藏" loading="lazy"></div>
     <figcaption class="sans"><b>唐 · 团窠花卉纹织物</b>（8 世纪末至 9 世纪初，丝织）　层层花瓣向外绽开，这就是宝相花的样子。它后来沿着丝路东传，进了日本。<br>图：美国大都会艺术博物馆 The Met，Open Access 公共领域（CC0）</figcaption>
   </figure>
 
@@ -206,31 +223,36 @@
   <p class="pull">四片花瓣，四个方位，四大神兽。<br>两千多年前，中国人拿这朵花，标的是整个天地宇宙。</p>
 
   <figure>
-    <img src="img/han-mirror.jpg" alt="东汉博局四神纹铜镜，香港历史博物馆藏" loading="lazy">
+    <div class="mount"><img src="img/han-mirror.jpg" alt="东汉博局四神纹铜镜，香港历史博物馆藏" loading="lazy"></div>
     <figcaption class="sans"><b>东汉 · 博局四神纹铜镜</b>（广州梅花村出土，香港历史博物馆藏）　正中方框标定四方，青龙、白虎、朱雀、玄武分守四面。中国人用花与镜，画出的是一张宇宙的缩略图。<br>图：Wikimedia Commons，摄 Daderot，CC0 公共领域</figcaption>
   </figure>
 
   <p>把这条路连起来看，有一点要说清楚，免得会错意：</p>
   <div class="note sans"><b>四瓣花的根，是中国自己的。</b>方华、柿蒂纹，战国汉代就长在这片土地上，跟西亚没关系。真正从西亚经丝路传来的，是<b>卷草、棕叶纹</b>那类缠枝母题；中国到了唐代，把印度来的莲花、西亚来的卷草棕叶，一并吸收进本土花卉，才融成更华丽的<b>宝相花</b>。中国在这条链上不是接种者，是原创者，也是大熔炉。<br><br>然后，唐朝把这套花传给日本，日本做成家纹。日本主义把它带进法国，法国做成老花。一百多年后，这个法国牌子带着它回到中国，用商标法，要一个中国奶茶品牌赔一千零三十万。<br><br><b>这一圈，绕了两千年。</b></div>
 
+  <div class="orn"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4"><g transform="translate(20,20)"><path d="M0,-4 C6,-11 6,-17 0,-22 C-6,-17 -6,-11 0,-4Z"/><path d="M0,4 C6,11 6,17 0,22 C-6,17 -6,11 0,4Z"/><path d="M-4,0 C-11,-6 -17,-6 -22,0 C-17,6 -11,6 -4,0Z"/><path d="M4,0 C11,-6 17,-6 22,0 C17,6 11,6 4,0Z"/><circle r="2.4" fill="currentColor" stroke="none"/></g></svg></div>
+
   <!-- 4 timeline -->
-  <h2><span class="idx sans">04</span> 一张能看清来龙去脉的时间轴</h2>
+  <h2><span class="ch">肆</span>一张能看清来龙去脉的时间轴</h2>
   <p class="p-dim">这条路同时在三个地方发生，又在三条线上推进：纹样怎么演变，怎么被做成生意，最后怎么变成一纸法律权利。下面这张分层时间轴，你可以按维度筛，也可以点开每一个节点看细节。</p>
 
-  <div class="tl-wrap sans">
-    <div class="tl-head">
-      <span class="tl-title">四瓣花 · 分层时间轴</span>
+  <div class="tl">
+    <div class="tl-cap sans">Ornament · Commerce · Law</div>
+    <div class="tl-title">四瓣花 · 分层时间轴</div>
+    <div class="tl-filter">
       <span class="chip" data-th="pattern" style="--c:var(--gold)"><span class="d"></span>纹样演变</span>
       <span class="chip" data-th="biz" style="--c:var(--eu)"><span class="d"></span>商业化</span>
       <span class="chip" data-th="law" style="--c:var(--law)"><span class="d"></span>法律权利</span>
     </div>
     <div id="lanes"></div>
-    <div class="tl-hint">点上面的标签可筛维度，点卡片看详情。左右可滑动。</div>
-    <div class="tl-detail" id="tld">点开任意一个节点，这里会显示它的来龙去脉。</div>
+    <div class="tl-hint sans">点标签筛维度 · 点卡片看详情 · 左右可滑动</div>
+    <div class="tl-detail sans" id="tld">点开任意一个节点，这里会显示它的来龙去脉。</div>
   </div>
 
+  <div class="orn"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4"><g transform="translate(20,20)"><path d="M0,-4 C6,-11 6,-17 0,-22 C-6,-17 -6,-11 0,-4Z"/><path d="M0,4 C6,11 6,17 0,22 C-6,17 -6,11 0,4Z"/><path d="M-4,0 C-11,-6 -17,-6 -22,0 C-17,6 -11,6 -4,0Z"/><path d="M4,0 C11,-6 17,-6 22,0 C17,6 11,6 4,0Z"/><circle r="2.4" fill="currentColor" stroke="none"/></g></svg></div>
+
   <!-- 5 -->
-  <h2><span class="idx sans">05</span> 那中国的商标保护，有没有自己的根</h2>
+  <h2><span class="ch">伍</span>那中国的商标保护，有没有自己的根</h2>
   <p>讲到这，有人可能已经憋不住了：既然这朵花的老家在中国，法律凭什么判它是 LV 的。</p>
   <p>先说清楚，这场官司，LV 赢得并不冤。</p>
   <p>商标法从来不保护一朵花本身。它保护的，是一个图形用了很久很久之后，跟一个牌子死死绑在一起的那种识别关系。耐克不用证明那个勾是它发明的。LV 也不用证明四瓣花是它原创的。它只需要证明一件事：我这一朵特定的花，用了一百多年，你一看就知道是我。这在法律上叫<em>第二含义</em>。加上它是驰名商标，按商标法第十三条能跨类保护，哪怕你卖的是奶茶不是包，也管得着。</p>
@@ -241,8 +263,10 @@
   <p>这就是那句<em>中国的怎么变 LV 的了</em>，背后真正的憋屈。也是官和民之间，那道永远拧巴的缝。法律讲的是证据、规则、注册在先；民间讲的是来路、情理、老祖宗。两边都不是空话，但根本不在一个频道上。</p>
   <p>那中国有没有自己的根。有。我们对纹样的理解，是方华标四方、宝相含万象、缠枝寓绵长，是一套讲究来路和意涵的活的传统。真正该补的，是让这套文化溯源的逻辑，有机会走进现代商标审查的视野，而不是永远停在像不像这一层。这条路很长，但方向是对的。</p>
 
+  <div class="orn"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4"><g transform="translate(20,20)"><path d="M0,-4 C6,-11 6,-17 0,-22 C-6,-17 -6,-11 0,-4Z"/><path d="M0,4 C6,11 6,17 0,22 C-6,17 -6,11 0,4Z"/><path d="M-4,0 C-11,-6 -17,-6 -22,0 C-17,6 -11,6 -4,0Z"/><path d="M4,0 C11,-6 17,-6 22,0 C17,6 11,6 4,0Z"/><circle r="2.4" fill="currentColor" stroke="none"/></g></svg></div>
+
   <!-- 6 -->
-  <h2><span class="idx sans">06</span> 最后，说回茉莉奶白这朵花</h2>
+  <h2><span class="ch">陆</span>最后，说回茉莉奶白这朵花</h2>
   <p>绕了两千年，我们把镜头拉回来。</p>
   <p>其实这里还藏着一个特别好笑的点，很多人没细想：<em>茉莉花，根本不是四瓣花。</em></p>
   <p>茉莉是单瓣五六片、重瓣一大簇的花，圆润、层叠，怎么都跟四瓣扯不上关系。一个叫茉莉的牌子，不去用自己名字里那朵真花，偏偏挑了一朵四瓣花。而这朵四瓣花的真身，是柿蒂纹、宝相花、家纹、LV 老花这一整条线，跟茉莉半毛钱关系都没有。</p>
@@ -317,7 +341,6 @@ document.querySelectorAll(".chip").forEach(ch=>{
     const th=ch.dataset.th;
     if(active.has(th)){active.delete(th);ch.classList.add("off");}
     else{active.add(th);ch.classList.remove("off");}
-    document.querySelectorAll(".ev").forEach(el=>{});
     build();
   });
 });
