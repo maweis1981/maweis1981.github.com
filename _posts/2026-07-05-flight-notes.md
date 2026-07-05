@@ -14,7 +14,7 @@ description: >-
 image:
   path: /assets/img/posts/flight-notes/cover.jpg
   alt: 高空之上，黄昏的云海与天际的一线微光（AI 生成题图）
-# 个人随笔，仅博客，不进公众号图文。
+# 个人随笔，仅博客，不进公众号图文。（rev: 云海题图 · 触发 Pages 重新部署）
 wechat: false
 ---
 
