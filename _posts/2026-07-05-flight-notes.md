@@ -13,7 +13,7 @@ description: >-
   十六点二十五分，气流里的一个半小时。等我发现掌心的汗为什么说得通，才想清楚落地之后，第一条消息发给谁。
 image:
   path: /assets/img/posts/flight-notes/cover.jpg
-  alt: 机舱舷窗与小桌板上半杯静止的水（AI 生成题图）
+  alt: 国航商务舱舷窗旁，小桌板上半杯静止的水与凤凰餐巾（AI 生成题图）
 # 个人随笔，仅博客，不进公众号图文。
 wechat: false
 ---
