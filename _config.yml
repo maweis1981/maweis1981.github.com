@@ -148,3 +148,4 @@ jekyll-archives:
     category: /categories/:name/
 
 # ci: trigger GitHub Actions Pages redeploy (restore rendered site after Pages source fix)
+# ci: retrigger Pages deploy (第 03 期合并后 syncing_files 瞬时失败)
