@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>hollowlullaby</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #5c8f57; overflow: hidden; }
+    /* Center the game canvas; Bevy sizes it from the window resolution. */
+    canvas { display: block; margin: 0 auto; max-width: 100%; max-height: 100%; }
+    #loading { position: fixed; inset: 0; display: grid; place-items: center;
+               color: #eef; font: 600 16px/1.6 system-ui, sans-serif;
+               background: linear-gradient(#080b1a, #180d2c); }
+    #load-title { text-align: center; font-size: 24px; letter-spacing: 2px; }
+    #load-bar { width: 240px; height: 8px; margin: 14px auto 8px;
+                border-radius: 4px; background: rgba(255,255,255,.15); }
+    #load-fill { width: 0%; height: 100%; border-radius: 4px;
+                 background: linear-gradient(90deg, #8cd7ff, #ff5040);
+                 transition: width .15s ease; }
+    #load-pct { text-align: center; opacity: .8; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <div>
+      <div id="load-title">LOADING</div>
+      <div id="load-bar"><div id="load-fill"></div></div>
+      <div id="load-pct">0%</div>
+    </div>
+  </div>
+  <script>
+    // Web audio starts SUSPENDED until a user gesture, and cpal (Bevy's wasm
+    // audio backend) creates its AudioContext inside the wasm module before any
+    // click happens — so game sound stays silent. Patch the AudioContext ctor to
+    // collect every instance, then resume them all on the first pointer/key/touch.
+    (function () {
+      var Orig = window.AudioContext || window.webkitAudioContext;
+      if (!Orig) return;
+      var ctxs = [];
+      function Patched() {
+        var c = arguments.length ? new Orig(arguments[0]) : new Orig();
+        ctxs.push(c);
+        return c;
+      }
+      Patched.prototype = Orig.prototype;
+      window.AudioContext = Patched;
+      if (window.webkitAudioContext) window.webkitAudioContext = Patched;
+      function resume() {
+        for (var i = 0; i < ctxs.length; i++) {
+          if (ctxs[i].state !== 'running') ctxs[i].resume().catch(function () {});
+        }
+      }
+      ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(function (ev) {
+        window.addEventListener(ev, resume, { passive: true });
+      });
+    })();
+  </script>
+  <script>
+    // ?game=<key> turns this shared bundle into a single-game build with a
+    // URL: intercept the engine's fetch of scripts/main.lua and prepend
+    // AUTOBOOT (same line tools/export_web_games.sh bakes into offline zips).
+    (function () {
+      var key = new URLSearchParams(location.search).get('game');
+      if (!key || !/^[a-z0-9_]+$/.test(key)) return;
+      var orig = window.fetch.bind(window);
+      window.fetch = function (input, init) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (url.indexOf('scripts/main.lua') !== -1) {
+          return orig(input, init).then(function (res) {
+            return res.text().then(function (txt) {
+              return new Response('AUTOBOOT = "' + key + '"\n' + txt,
+                { status: 200, headers: { 'Content-Type': 'text/x-lua' } });
+            });
+          });
+        }
+        return orig(input, init);
+      };
+    })();
+  </script>
+  <script type="module">
+    // Relative import so it works under a GitHub Pages sub-path (…/<repo>/).
+    import init from './hollowlullaby.js';
+
+    // Stream the wasm ourselves so the overlay can show real download
+    // progress (the module is tens of MB). Content-Length is the compressed
+    // size when the host gzips, while we count decompressed bytes — so clamp
+    // to 99% until the stream actually ends.
+    async function fetchWasm(url) {
+      const res = await fetch(url);
+      if (!res.ok || !res.body) return res;      // let init() surface the error
+      const fill = document.getElementById('load-fill');
+      const pct = document.getElementById('load-pct');
+      const total = +(res.headers.get('Content-Length') || 0);
+      const reader = res.body.getReader();
+      const chunks = [];
+      let got = 0;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        got += value.length;
+        if (total > 0) {
+          const p = Math.min(99, Math.round((100 * got) / total));
+          fill.style.width = p + '%';
+          pct.textContent = p + '% - ' + (got / 1048576).toFixed(1) + ' MB';
+        } else {
+          fill.style.width = '99%';
+          pct.textContent = (got / 1048576).toFixed(1) + ' MB';
+        }
+      }
+      fill.style.width = '100%';
+      pct.textContent = 'starting engine…';
+      const buf = new Uint8Array(got);
+      let off = 0;
+      for (const c of chunks) { buf.set(c, off); off += c.length; }
+      return new Response(buf, { headers: { 'Content-Type': 'application/wasm' } });
+    }
+
+    fetchWasm('./hollowlullaby_bg.wasm')
+      .then((resp) => init({ module_or_path: resp }))
+      .then(() => document.getElementById('loading')?.remove())
+      .catch((e) => {
+        // winit unwinds its event loop via a JS exception on the web; that's normal.
+        if (!`${e}`.includes('Using exceptions for control flow')) {
+          console.error(e);
+        } else {
+          document.getElementById('loading')?.remove();
+        }
+      });
+  </script>
+</body>
+</html>
