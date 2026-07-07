@@ -113,6 +113,56 @@ function make_timedodge()
   local player, gate_id = nil, nil
   local hud_ids, hud_cache = {}, nil     -- custom in-game HUD (see hud_* below)
   local hud_clear                        -- fwd decl: wipe() (above) tears it down
+  local base_btn = nil                   -- small "return to base" icon (all screens)
+  local close_confirm_fwd                -- fwd: wipe() closes the confirm dialog
+  local confirm = nil                    -- { yes, no, ids }: return-to-base confirm
+  local CY = { 0.45, 0.85, 1.0 }         -- HUD cyan
+
+  -- Small "return to space base" icon (replaces the old Home button). Placed
+  -- top-left on every screen; tapping it asks for confirmation first so a
+  -- mis-tap never dumps you out of a run.
+  -- Keep the animated space backdrop lit on EVERY timedodge screen (menus and
+  -- end cards, not just while rocks fly). `game.space_mode(true)` boots the 3D
+  -- camera + space-shader plane and hides the 2D aurora even with no rocks on
+  -- screen; `game.space_mode(false)` restores the aurora on scene exit.
+  local function keep_space()
+    if game.space_mode then game.space_mode(true) end
+  end
+  local function drop_space()
+    if game.space_mode then game.space_mode(false) end
+  end
+
+  local function place_base()
+    base_btn = { x = -SW + 34, y = SH - 34, w = 40, h = 40 }
+    local ic = T.sprite(base_btn.x, base_btn.y, 30, 30, "icon_base")
+    game.set_color(ic, CY[1], CY[2], CY[3], 0.85)
+  end
+  local function close_confirm()
+    if not confirm then return end
+    for _, id in ipairs(confirm.ids) do game.despawn(id) end
+    confirm = nil
+  end
+  close_confirm_fwd = close_confirm
+  local function open_confirm()
+    if confirm then return end
+    local ids = {}
+    local function add(...) ids[#ids + 1] = game.spawn(...) end
+    local function txt(...) ids[#ids + 1] = game.spawn_text(...) end
+    add(0, 0, SW * 2, SH * 2, 0, 0, 0, 0.66)
+    add(0, 10, 360, 200, 0.09, 0.11, 0.17, 0.97)
+    add(0, 100, 360, 6, CY[1], CY[2], CY[3], 1)
+    txt(0, 60, 27, 1, 1, 1, 1, "RETURN TO BASE?")
+    txt(0, 22, 15, 0.8, 0.88, 1.0, 1, "this run will be abandoned")
+    local yes = { x = -85, y = -46, w = 150, h = 54 }
+    local no = { x = 85, y = -46, w = 150, h = 54 }
+    add(yes.x, yes.y, yes.w, yes.h, 0.24, 0.30, 0.42, 1)
+    txt(yes.x, yes.y, 20, 1, 1, 1, 1, "RETURN")
+    add(no.x, no.y, no.w, no.h, 0.20, 0.62, 0.35, 1)
+    txt(no.x, no.y, 20, 1, 1, 1, 1, "STAY")
+    confirm = { yes = yes, no = no, ids = ids }
+    game.play_sound("wall"); game.haptic("light")
+  end
+
 
   local function new_lcg(seed)
     local s = seed
@@ -168,6 +218,7 @@ function make_timedodge()
 
   local function wipe()
     close_hit_dialog()
+    if close_confirm_fwd then close_confirm_fwd() end   -- close return-to-base confirm
     if hud_clear then hud_clear() end                  -- tear down the HUD spawns
     clear_foes()
     if HAS3D and player then game.despawn(player) end  -- 3D player isn't in T
@@ -178,13 +229,17 @@ function make_timedodge()
   -- Screens: mode select / level grid
   ------------------------------------------------------------------
   local function set_debug(extra)
-    local d = { game = "timedodge", back = back, mode = function() return mode end }
+    local d = {
+      game = "timedodge", mode = function() return mode end,
+      base = function() return base_btn end,       -- the "return to base" icon
+      confirm = function() return confirm end,      -- the confirm dialog (or nil)
+    }
     for k, v in pairs(extra or {}) do d[k] = v end
     DEBUG = d
   end
 
   local function build_select(hw, hh)
-    mode = "select"
+    mode = "select"; keep_space()
     game.set_text("")
     T.text(0, 210, 44, 1, 1, 1, 1, "TIME DODGE")
     T.text(0, 150, 17, 0.75, 0.85, 1.0, 1, "Hold: time flows. Release: the world freezes.")
@@ -201,12 +256,12 @@ function make_timedodge()
     T.spawn(btn_absorb.x, btn_absorb.y, btn_absorb.w, btn_absorb.h, 0.45, 0.28, 0.70, 1)
     T.text(btn_absorb.x, btn_absorb.y + 12, 30, 1, 1, 1, 1, "ABSORB")
     T.text(btn_absorb.x, btn_absorb.y - 22, 14, 0.85, 0.8, 1, 1, "eat the small - fear the big")
-    back = K.make_back(T, hw, hh)
+    place_base()
     set_debug({ btn_endless = btn_endless, btn_trials = btn_trials, btn_absorb = btn_absorb })
   end
 
   local function build_levels(hw, hh)
-    mode = "levels"
+    mode = "levels"; keep_space()
     game.set_text("")
     T.text(40, 270, 30, 1, 1, 1, 1, "SEALED MOMENTS")
     T.text(0, 220, 15, 0.75, 0.85, 1.0, 1, "release to freeze - the clock only forgives the dead")
@@ -225,7 +280,7 @@ function make_timedodge()
         open and star_str(stars_of(i)) or "?")
       lv_rects[i] = { x = x, y = y, w = tw, h = th }
     end
-    back = K.make_back(T, hw, hh)
+    place_base()
     set_debug({
       lv_btn = function(i) return lv_rects[i] end,
       stars_of = stars_of, unlocked = unlocked,
@@ -255,7 +310,7 @@ function make_timedodge()
   end
 
   local function build_run(hw, hh)
-    mode = "run"
+    mode = "run"; keep_space()
     for i = 1, TRAIL_N do
       trail[i] = { id = T.spawn(0, 0, PLAYER * 0.6, PLAYER * 0.6, 0.7, 0.9, 1.0, 0), a = 0 }
     end
@@ -271,7 +326,7 @@ function make_timedodge()
       gate_id = T.sprite(0, 0, GATE, GATE, "gem")
       place_gate()
     end
-    back = nil                             -- no Home button during a run (the
+    place_base()                           -- small confirm-gated "to base" icon
     game.set_text("")                      -- HUD owns the top; clear the engine line
     set_debug({
       player = player,
@@ -322,18 +377,73 @@ function make_timedodge()
   end
   local function hud_add(id) hud_ids[#hud_ids + 1] = id end
 
-  local function hud_line(primary, secondary, frozen)
-    local key = primary .. "|" .. (secondary or "") .. "|" .. tostring(frozen)
-    if key == hud_cache then return end     -- unchanged: skip the re-spawn
+  -- Seven-segment "instrument" glyphs for the HUD readout — a spaceship-console
+  -- typeface drawn from thin rects (no font file). Supports 0-9 . : and 's'.
+  local SEG = {                          -- which of a,b,c,d,e,f,g are lit
+    ["0"] = "abcdef", ["1"] = "bc", ["2"] = "abged", ["3"] = "abgcd",
+    ["4"] = "fgbc", ["5"] = "afgcd", ["6"] = "afgcde", ["7"] = "abc",
+    ["8"] = "abcdefg", ["9"] = "abcfgd", ["s"] = "afgcd",
+  }
+  local function seg_char(cx, cy, ch, hw, hh, th, col)
+    local a = col[4] or 1
+    local function bar(x, y, w, h) hud_add(game.spawn(x, y, w, h, col[1], col[2], col[3], a)) end
+    if ch == "." then bar(cx, cy - hh, th * 1.3, th * 1.3); return end
+    if ch == ":" then bar(cx, cy + hh * 0.5, th, th); bar(cx, cy - hh * 0.5, th, th); return end
+    local segs = SEG[ch]; if not segs then return end
+    local function on(s) return segs:find(s, 1, true) ~= nil end
+    if on("a") then bar(cx, cy + hh, hw * 2, th) end
+    if on("g") then bar(cx, cy, hw * 2, th) end
+    if on("d") then bar(cx, cy - hh, hw * 2, th) end
+    if on("f") then bar(cx - hw, cy + hh * 0.5, th, hh) end
+    if on("b") then bar(cx + hw, cy + hh * 0.5, th, hh) end
+    if on("e") then bar(cx - hw, cy - hh * 0.5, th, hh) end
+    if on("c") then bar(cx + hw, cy - hh * 0.5, th, hh) end
+  end
+  -- Draw a numeric string centered at (cx,cy); returns total width used.
+  local function seg_number(cx, cy, str, scale, col)
+    local hw, hh, th = 5 * scale, 9 * scale, 2.2 * scale
+    local adv = {}                       -- per-char advance
+    local total = 0
+    for i = 1, #str do
+      local ch = str:sub(i, i)
+      local w = (ch == "." or ch == ":") and (th * 2.2) or (hw * 2 + 4 * scale)
+      adv[i] = w; total = total + w
+    end
+    local x = cx - total * 0.5
+    for i = 1, #str do
+      local ch = str:sub(i, i)
+      seg_char(x + adv[i] * 0.5, cy, ch, hw, hh, th, col)
+      x = x + adv[i]
+    end
+    return total
+  end
+
+  -- Sci-fi HUD: a framed header with an icon + a seven-segment readout + a
+  -- small caption. `value` is the big instrument number (drawn as segments),
+  -- `icon` a texture name, `label` the caption. Re-spawned only on change.
+  local function hud_line(value, icon, label, frozen)
+    local key = value .. "|" .. icon .. "|" .. (label or "") .. "|" .. tostring(frozen)
+    if key == hud_cache then return end
     hud_clear()
     hud_cache = key
-    hud_add(game.spawn(0, SH - 6, SW * 2 + 40, 108, 0.02, 0.03, 0.08, 0.42)) -- header band
-    hud_add(game.spawn_text(0, SH - 46, 28, 1, 1, 1, 1, primary))
-    if secondary and secondary ~= "" then
-      hud_add(game.spawn_text(0, SH - 74, 14, 0.72, 0.82, 1.0, 1, secondary))
+    local top = SH - 4
+    hud_add(game.spawn(0, top, SW * 2 + 40, 116, 0.02, 0.04, 0.09, 0.5))     -- band
+    hud_add(game.spawn(0, SH - 58, SW * 2, 2, CY[1], CY[2], CY[3], 0.55))    -- hairline
+    -- corner brackets (sci-fi frame)
+    hud_add(game.spawn(-SW + 10, SH - 30, 22, 2, CY[1], CY[2], CY[3], 0.7))
+    hud_add(game.spawn(-SW + 20, SH - 24, 2, 14, CY[1], CY[2], CY[3], 0.7))
+    hud_add(game.spawn(SW - 10, SH - 30, 22, 2, CY[1], CY[2], CY[3], 0.7))
+    hud_add(game.spawn(SW - 20, SH - 24, 2, 14, CY[1], CY[2], CY[3], 0.7))
+    -- icon + segmented value, grouped and centered
+    local vw = seg_number(18, SH - 40, value, 1.15, { 0.85, 0.95, 1.0, 1 })
+    local ic = game.spawn_sprite(18 - vw * 0.5 - 22, SH - 40, 30, 30, icon)
+    game.set_color(ic, CY[1], CY[2], CY[3], 1); hud_add(ic)
+    if label and label ~= "" then
+      hud_add(game.spawn_text(0, SH - 74, 13, CY[1], CY[2], CY[3], 1, label))
     end
     if frozen then
-      hud_add(game.spawn_text(0, SH - 94, 12, 0.55, 0.85, 1.0, 1, "- FROZEN -"))
+      hud_add(game.spawn(0, SH - 92, 92, 18, CY[1], CY[2], CY[3], 0.16))
+      hud_add(game.spawn_text(0, SH - 92, 12, CY[1], CY[2], CY[3], 1, "FROZEN"))
     end
   end
 
@@ -366,16 +476,16 @@ function make_timedodge()
   local function hud()
     local frozen = S.ts < 0.15
     if S.absorb then
-      hud_line(string.format("MASS %d", math.floor(S.mass)),
-        string.format("EATEN %d", S.eaten), frozen)
+      hud_line(string.format("%d", math.floor(S.mass)), "icon_mass",
+        string.format("MASS   -   EATEN %d", S.eaten), frozen)
     elseif S.trial then
       local lv = LEVELS[S.trial]
-      hud_line(string.format("%.1fs", S.elapsed),
-        string.format("MOMENT %d   GATE %d/%d", S.trial, S.gate_i, lv.gates), frozen)
+      hud_line(string.format("%.1fs", S.elapsed), "icon_time",
+        string.format("MOMENT %d   -   GATE %d/%d", S.trial, S.gate_i, lv.gates), frozen)
     elseif S.ann_t > 0 then
-      hud_line(string.format("%.1fs", S.score), S.ann, frozen)
+      hud_line(string.format("%.1fs", S.score), "icon_time", S.ann, frozen)
     else
-      hud_line(string.format("%.1fs", S.score), "STOLEN", frozen)
+      hud_line(string.format("%.1fs", S.score), "icon_time", "TIME STOLEN", frozen)
     end
   end
 
@@ -712,11 +822,22 @@ function make_timedodge()
   ------------------------------------------------------------------
   return {
     enter = function() built = false; mode = "select" end,
-    leave = function() wipe(); S = nil; built = false end,
+    leave = function() wipe(); drop_space(); S = nil; built = false end,
     tap = function(x, y)
-      if S and S.hit_dialog then             -- the dialog swallows every tap
-        local hd = S.hit_dialog              -- (including BACK): only its two
-        if K.in_rect(hd.yes, x, y) then      -- buttons do anything
+      -- The return-to-base confirm swallows every tap except its two buttons.
+      -- YES = leave the run "up one level" (trial -> levels, else -> mode select).
+      if confirm then
+        if K.in_rect(confirm.yes, x, y) then
+          close_confirm()
+          if S and S.trial then to_levels() else to_select() end
+        elseif K.in_rect(confirm.no, x, y) then
+          close_confirm()
+        end
+        return
+      end
+      if S and S.hit_dialog then             -- the sponsor dialog swallows every
+        local hd = S.hit_dialog              -- tap: only its two buttons act
+        if K.in_rect(hd.yes, x, y) then
           -- Sponsor absorbs the hit: no chip, the rock already shattered.
           close_hit_dialog()
           if game.open_url then game.open_url("https://google.com") end
@@ -728,11 +849,12 @@ function make_timedodge()
         end
         return
       end
-      if back and K.in_rect(back, x, y) then
-        if mode == "select" then K.switch("menu")
+      -- The small "return to base" icon. In a RUN it asks for confirmation
+      -- (a mis-tap must never abandon progress); on the menus it just steps up.
+      if base_btn and K.in_rect(base_btn, x, y) then
+        if mode == "run" then open_confirm()
         elseif mode == "levels" then to_select()
-        elseif S and S.trial then to_levels()
-        else to_select() end
+        else K.switch("menu") end
         return
       end
       if mode == "select" then
