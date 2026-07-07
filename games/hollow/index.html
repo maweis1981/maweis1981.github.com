@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>hollowlullaby</title>
+  <title>Play · hollowlullaby</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🎮</text></svg>" />
   <style>
     html, body { margin: 0; height: 100%; background: #5c8f57; overflow: hidden; }
     /* Center the game canvas; Bevy sizes it from the window resolution. */
@@ -85,7 +86,7 @@
     // progress (the module is tens of MB). Content-Length is the compressed
     // size when the host gzips, while we count decompressed bytes — so clamp
     // to 99% until the stream actually ends.
-    const WASM_SIZE = Number('80667512') || 0;   // injected by web/build.sh
+    const WASM_SIZE = Number('80779696') || 0;   // injected by web/build.sh
     async function fetchWasm(url) {
       const res = await fetch(url);
       if (!res.ok || !res.body) return res;      // let init() surface the error
