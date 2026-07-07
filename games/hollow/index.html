@@ -85,12 +85,15 @@
     // progress (the module is tens of MB). Content-Length is the compressed
     // size when the host gzips, while we count decompressed bytes — so clamp
     // to 99% until the stream actually ends.
+    const WASM_SIZE = Number('80667512') || 0;   // injected by web/build.sh
     async function fetchWasm(url) {
       const res = await fetch(url);
       if (!res.ok || !res.body) return res;      // let init() surface the error
       const fill = document.getElementById('load-fill');
       const pct = document.getElementById('load-pct');
-      const total = +(res.headers.get('Content-Length') || 0);
+      // We count DECOMPRESSED bytes; Content-Length is the COMPRESSED size
+      // when the host gzips — measure against the injected true size instead.
+      const total = WASM_SIZE || +(res.headers.get('Content-Length') || 0);
       const reader = res.body.getReader();
       const chunks = [];
       let got = 0;

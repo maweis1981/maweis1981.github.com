@@ -5,13 +5,17 @@
 -- anything that moves. Time flows only while you TOUCH (hold the screen /
 -- mouse / a key); release and the world freezes. Every held second is stolen.
 --
--- Two modes behind an in-scene select screen:
+-- Three modes behind an in-scene select screen:
 --   ENDLESS — survive converging entropy. Score = stolen (world-time) seconds;
 --             new foe kinds wake at survival milestones; best persists.
 --   TRIALS  — 10 "sealed moments": reach every time gate in sequence. The run
 --             is timed in REAL seconds (freezing is safe but the clock keeps
 --             counting), 1–3 stars by finish time, next level unlocks at 1
 --             star. Stars/bests persist via game.save.
+--   ABSORB  — osmos-style: eat rocks smaller than you (grow by their area,
+--             green tint), bigger rocks chip you by 25% (red tint); below
+--             MIN_MASS you fade away. Rock sizes track yours and the danger
+--             share grows with every meal — growth is power, never safety.
 --
 -- Foe kinds — one colour + one motion signature each, readable with no text:
 --   dart (red, straight aimed) · surge (yellow, accelerates) · seeker (purple,
@@ -48,6 +52,12 @@ function make_timedodge()
   -- slowly while small/dim, and accelerate to full size/speed as they reach
   -- the play plane. Only meteors near the plane (z <= PLANE_Z) can touch you.
   local Z_RATE, PLANE_Z = 1.2, 0.35
+  -- ABSORB mode: eat rocks smaller than you (grow by their area), bigger rocks
+  -- chip you down; below MIN_MASS you fade away. Rock sizes track yours, so
+  -- something bigger always exists — growth is power, never safety.
+  local MIN_MASS, MAX_MASS = 13, 120
+  local EAT_GAIN, CHIP = 1.0, 0.75       -- area fraction kept / size kept on hit
+  local SAFE_C, DANGER_C = { 0.35, 0.90, 0.50 }, { 1.0, 0.25, 0.20 }
   local FROZEN_C = { 0.55, 0.85, 1.0 }
 
   local KINDS = {
@@ -85,7 +95,7 @@ function make_timedodge()
   local mode, built = "select", false
   local SW, SH = 0, 0
   local back = nil
-  local btn_endless, btn_trials, lv_rects = nil, nil, {}
+  local btn_endless, btn_trials, btn_absorb, lv_rects = nil, nil, nil, {}
   local S = nil                          -- the live run (endless or trial)
   local trail, tcur = {}, 0
   local player, gate_id = nil, nil
@@ -128,8 +138,12 @@ function make_timedodge()
     T.spawn(btn_trials.x, btn_trials.y, btn_trials.w, btn_trials.h, 0.20, 0.55, 0.70, 1)
     T.text(btn_trials.x, btn_trials.y + 12, 30, 1, 1, 1, 1, "TRIALS")
     T.text(btn_trials.x, btn_trials.y - 22, 14, 0.8, 0.95, 1, 1, "ten sealed moments to break")
+    btn_absorb = { x = 0, y = -230, w = 300, h = 86 }
+    T.spawn(btn_absorb.x, btn_absorb.y, btn_absorb.w, btn_absorb.h, 0.45, 0.28, 0.70, 1)
+    T.text(btn_absorb.x, btn_absorb.y + 12, 30, 1, 1, 1, 1, "ABSORB")
+    T.text(btn_absorb.x, btn_absorb.y - 22, 14, 0.85, 0.8, 1, 1, "eat the small - fear the big")
     back = K.make_back(T, hw, hh)
-    set_debug({ btn_endless = btn_endless, btn_trials = btn_trials })
+    set_debug({ btn_endless = btn_endless, btn_trials = btn_trials, btn_absorb = btn_absorb })
   end
 
   local function build_levels(hw, hh)
@@ -186,7 +200,7 @@ function make_timedodge()
     for i = 1, TRAIL_N do
       trail[i] = { id = T.spawn(0, 0, PLAYER * 0.6, PLAYER * 0.6, 0.7, 0.9, 1.0, 0), a = 0 }
     end
-    player = T.sprite(S.px, S.py, PLAYER, PLAYER, "orb")
+    player = T.sprite(S.px, S.py, PLAYER, PLAYER, "rockball")
     if S.trial then
       gate_id = T.sprite(0, 0, GATE, GATE, "gem")
       place_gate()
@@ -205,15 +219,19 @@ function make_timedodge()
         local ids = {}; for i, b in ipairs(S.bullets) do ids[i] = b.id end; return ids
       end,
       gate = function() return S.gate end,
+      size = function() return S.mass end,
+      eaten = function() return S.eaten end,
+      absorb = function() return S.absorb end,
     })
   end
 
-  local function start_run(lv)
+  local function start_run(lv, absorb)
     wipe()
-    S = { trial = lv, px = 0, py = 0, ts = TS_MIN, score = 0, elapsed = 0,
-          playing = true, done = false, bullets = {}, gate = nil, gate_i = 0,
-          spawn_t = lv and -1.0 or -0.5, mark = 10, next_unlock = 2, ann = "", ann_t = 0,
-          volley_due = lv and LEVELS[lv].volley or 0 }
+    S = { trial = lv, absorb = absorb, px = 0, py = 0, ts = TS_MIN, score = 0,
+          elapsed = 0, playing = true, done = false, bullets = {}, gate = nil,
+          gate_i = 0, spawn_t = lv and -1.0 or -0.5, mark = 10, next_unlock = 2,
+          ann = "", ann_t = 0, volley_due = lv and LEVELS[lv].volley or 0,
+          mass = PLAYER, peak = PLAYER, eaten = 0 }
     if lv then S.rng = new_lcg(LEVELS[lv].seed) end
     build_run(SW, SH)
   end
@@ -221,6 +239,11 @@ function make_timedodge()
   local function to_levels() wipe(); S = nil; build_levels(SW, SH) end
 
   local function hud()
+    if S.absorb then
+      game.set_text(string.format("MASS %d   EATEN %d%s", math.floor(S.mass), S.eaten,
+        S.ts < 0.15 and "  FROZEN" or ""))
+      return
+    end
     if S.trial then
       local lv = LEVELS[S.trial]
       game.set_text(string.format("MOMENT %d   GATE %d/%d   %.1fs%s",
@@ -238,6 +261,7 @@ function make_timedodge()
     return math.min(SPEED0 + S.score * SPEED_PER_S, SPEED_MAX)
   end
   local function spawn_gap()
+    if S.absorb then return 0.5 end
     if S.trial then return LEVELS[S.trial].every end
     return math.max(SPAWN_MIN, SPAWN0 - S.score * SPAWN_PER_S)
   end
@@ -257,13 +281,14 @@ function make_timedodge()
     return "dart"
   end
 
-  local function spawn_foe(kind, x, y, vx, vy, z)
+  local function spawn_foe(kind, x, y, vx, vy, z, size)
     if #S.bullets >= MAX_FOES then return end
-    local id = game.spawn_sprite(x, y, FOE * 0.3, FOE * 0.3, "meteor")
+    size = size or FOE
+    local id = game.spawn_sprite(x, y, size * 0.3, size * 0.3, "meteor")
     S.bullets[#S.bullets + 1] = { id = id, kind = kind, x = x, y = y,
                                   vx = vx, vy = vy, age = 0, near = false,
                                   z = z or 1, rot = rnd() * 6.28,
-                                  spin = (rnd() * 2 - 1) * 3.5 }
+                                  spin = (rnd() * 2 - 1) * 3.5, size = size }
   end
   local function spawn_edge()
     local kind = pick_kind()
@@ -272,6 +297,16 @@ function make_timedodge()
     elseif side == 2 then x, y = SW + FOE, (rnd() * 2 - 1) * SH
     elseif side == 3 then x, y = (rnd() * 2 - 1) * SW, SH + FOE
     else x, y = (rnd() * 2 - 1) * SW, -SH - FOE end
+    if S.absorb then                       -- wandering rocks sized around you:
+      -- mostly edible at first; the danger share grows with every meal
+      local lo = clamp(S.mass * 0.40, 10, 80)
+      local hi = clamp(S.mass * math.min(1.1 + 0.06 * S.eaten, 1.7), 24, 160)
+      local size = lo + rnd() * (hi - lo)
+      local a = math.atan(S.py - y, S.px - x) + (rnd() * 1.2 - 0.6)
+      local sp = 140 + rnd() * 120
+      spawn_foe("dart", x, y, sp * math.cos(a), sp * math.sin(a), 1, size)
+      return
+    end
     local a = math.atan(S.py - y, S.px - x) + (rnd() * 0.5 - 0.25)
     local s = kind == "drifter" and DRIFT_SPEED or foe_speed()
     spawn_foe(kind, x, y, s * math.cos(a), s * math.sin(a))
@@ -282,7 +317,12 @@ function make_timedodge()
     clear_foes()
     game.play_sound("hit"); game.haptic("heavy"); game.shake(0.7); game.zoom(0.8)
     game.emit("spark", S.px, S.py)
-    if S.trial then
+    if S.absorb then
+      local best = tonumber(game.load("td_absorb_best")) or 0
+      if S.peak > best then best = S.peak; game.save("td_absorb_best", best) end
+      game.set_text(string.format("YOU FADED AWAY\nPEAK MASS %d   EATEN %d   BEST %d\nTap to restart",
+        math.floor(S.peak), S.eaten, math.floor(best)))
+    elseif S.trial then
       game.set_text(string.format("THE FROZEN WORLD KEEPS YOU\nMOMENT %d   GATE %d/%d\nTap to retry",
         S.trial, S.gate_i, LEVELS[S.trial].gates))
     else
@@ -349,7 +389,7 @@ function make_timedodge()
     S.ts = S.ts + (target - S.ts) * math.min(1, dt * TS_SMOOTH)
     local wdt = dt * S.ts                    -- world time: foes, spawns, stolen score
 
-    if not S.trial then
+    if not S.trial and not S.absorb then
       S.score = S.score + wdt
       if S.score >= S.mark then             -- 10s survival milestones
         S.mark = S.mark + 10
@@ -414,19 +454,44 @@ function make_timedodge()
       b.x, b.y = b.x + b.vx * bdt * drift, b.y + b.vy * bdt * drift
       b.rot = b.rot + b.spin * bdt
       game.set_rotation(b.id, b.rot)
-      local sc = FOE * (0.30 + 0.70 * depth * depth)
+      local sc = b.size * (0.30 + 0.70 * depth * depth)
       game.set_size(b.id, sc, sc)
 
       local d = math.sqrt((b.x - S.px) ^ 2 + (b.y - S.py) ^ 2)
-      if b.z <= PLANE_Z then                 -- only near-plane rocks can touch
+      local consumed = false
+      if S.absorb then                       -- eat the small, fear the big
+        if b.z <= PLANE_Z and d < (S.mass + sc) * 0.45 then
+          consumed = true
+          game.despawn(b.id)
+          game.emit("spark", b.x, b.y)
+          if b.size <= S.mass then           -- absorb: grow by its area
+            S.mass = math.min(MAX_MASS, math.sqrt(S.mass ^ 2 + EAT_GAIN * b.size ^ 2))
+            S.eaten = S.eaten + 1
+            if S.mass > S.peak then S.peak = S.mass end
+            game.play_sound("hit"); game.haptic("light"); game.shake(0.10)
+          else                               -- chipped by a bigger rock
+            S.mass = S.mass * CHIP
+            game.play_sound("wall"); game.haptic("heavy"); game.shake(0.5); game.zoom(0.5)
+            if S.mass < MIN_MASS then die(); return end
+          end
+          game.set_size(player, S.mass, S.mass)
+          hud()
+        end
+      elseif b.z <= PLANE_Z then             -- only near-plane rocks can touch
         if d < HIT_R then die(); return end
         if d < NEAR and not b.near then      -- near miss: a graze of juice
           b.near = true
           game.play_sound("wall"); game.haptic("light"); game.shake(0.06); game.zoom(0.25)
         end
       end
+      if consumed then
+        -- rock was eaten or shattered: drop it without the offscreen check
+        b.gone = true
+      end
 
-      if split then
+      if b.gone then
+        -- already despawned by the absorb branch
+      elseif split then
         game.despawn(b.id)
         local sp = math.sqrt(b.vx ^ 2 + b.vy ^ 2)
         local base = math.atan(b.vy, b.vx)
@@ -437,9 +502,10 @@ function make_timedodge()
       elseif math.abs(b.x) > SW + OFF or math.abs(b.y) > SH + OFF then
         game.despawn(b.id)
       else
-        -- kind tint, dimmed with depth (rocks brighten as they surface), then
-        -- pulled toward icy blue capped at 55% so kinds stay readable frozen
+        -- kind tint (ABSORB: green = edible, red = bigger than you), dimmed
+        -- with depth, then pulled toward icy blue capped at 55% when frozen
         local c, k = kd.c, (1 - S.ts) * 0.55
+        if S.absorb then c = (b.size <= S.mass) and SAFE_C or DANGER_C end
         local br = 0.45 + 0.55 * depth
         game.move_to(b.id, b.x, b.y)
         game.set_color(b.id,
@@ -483,14 +549,15 @@ function make_timedodge()
       end
       if mode == "select" then
         if btn_endless and K.in_rect(btn_endless, x, y) then start_run(nil)
-        elseif btn_trials and K.in_rect(btn_trials, x, y) then to_levels() end
+        elseif btn_trials and K.in_rect(btn_trials, x, y) then to_levels()
+        elseif btn_absorb and K.in_rect(btn_absorb, x, y) then start_run(nil, true) end
       elseif mode == "levels" then
         for i, r in ipairs(lv_rects) do
           if K.in_rect(r, x, y) and unlocked(i) then start_run(i); return end
         end
       elseif S then
         if S.done then to_levels()
-        elseif not S.playing then start_run(S.trial) end
+        elseif not S.playing then start_run(S.trial, S.absorb) end
       end
     end,
     update = function(dt, hw, hh)
