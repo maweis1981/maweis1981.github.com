@@ -86,7 +86,7 @@
     // progress (the module is tens of MB). Content-Length is the compressed
     // size when the host gzips, while we count decompressed bytes — so clamp
     // to 99% until the stream actually ends.
-    const WASM_SIZE = Number('80779696') || 0;   // injected by web/build.sh
+    const WASM_SIZE = Number('26471915') || 0;   // injected by web/build.sh
     async function fetchWasm(url) {
       const res = await fetch(url);
       if (!res.ok || !res.body) return res;      // let init() surface the error

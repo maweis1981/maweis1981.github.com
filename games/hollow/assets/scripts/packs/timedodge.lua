@@ -111,6 +111,8 @@ function make_timedodge()
   local S = nil                          -- the live run (endless or trial)
   local trail, tcur = {}, 0
   local player, gate_id = nil, nil
+  local hud_ids, hud_cache = {}, nil     -- custom in-game HUD (see hud_* below)
+  local hud_clear                        -- fwd decl: wipe() (above) tears it down
 
   local function new_lcg(seed)
     local s = seed
@@ -166,6 +168,7 @@ function make_timedodge()
 
   local function wipe()
     close_hit_dialog()
+    if hud_clear then hud_clear() end                  -- tear down the HUD spawns
     clear_foes()
     if HAS3D and player then game.despawn(player) end  -- 3D player isn't in T
     T.clear(); gate_id, player = nil, nil; trail = {}
@@ -268,7 +271,8 @@ function make_timedodge()
       gate_id = T.sprite(0, 0, GATE, GATE, "gem")
       place_gate()
     end
-    back = K.make_back(T, hw, hh)
+    back = nil                             -- no Home button during a run (the
+    game.set_text("")                      -- HUD owns the top; clear the engine line
     set_debug({
       player = player,
       timescale = function() return S.ts end,
@@ -287,6 +291,7 @@ function make_timedodge()
       absorb = function() return S.absorb end,
       hit_dialog = function() return S.hit_dialog end,
       dialog_used = function() return S.dialog_used end,
+      card = function() return S.card end,
     })
   end
 
@@ -305,21 +310,72 @@ function make_timedodge()
   local function to_select() wipe(); S = nil; build_select(SW, SH) end
   local function to_levels() wipe(); S = nil; build_levels(SW, SH) end
 
-  local function hud()
-    if S.absorb then
-      game.set_text(string.format("MASS %d   EATEN %d%s", math.floor(S.mass), S.eaten,
-        S.ts < 0.15 and "  FROZEN" or ""))
-      return
+  -- ---- Polished in-game HUD ------------------------------------------------
+  -- Drawn with tracked 2D spawns (a top header band + a live readout, and a
+  -- centered end-of-run card) instead of the engine's top-left debug line, so
+  -- it reads as a real game UI. The live readout is re-spawned only when its
+  -- text actually changes; hud_clear() tears everything down on wipe/restart.
+  hud_clear = function()
+    for _, id in ipairs(hud_ids) do game.despawn(id) end
+    hud_ids = {}
+    hud_cache = nil
+  end
+  local function hud_add(id) hud_ids[#hud_ids + 1] = id end
+
+  local function hud_line(primary, secondary, frozen)
+    local key = primary .. "|" .. (secondary or "") .. "|" .. tostring(frozen)
+    if key == hud_cache then return end     -- unchanged: skip the re-spawn
+    hud_clear()
+    hud_cache = key
+    hud_add(game.spawn(0, SH - 6, SW * 2 + 40, 108, 0.02, 0.03, 0.08, 0.42)) -- header band
+    hud_add(game.spawn_text(0, SH - 46, 28, 1, 1, 1, 1, primary))
+    if secondary and secondary ~= "" then
+      hud_add(game.spawn_text(0, SH - 74, 14, 0.72, 0.82, 1.0, 1, secondary))
     end
-    if S.trial then
+    if frozen then
+      hud_add(game.spawn_text(0, SH - 94, 12, 0.55, 0.85, 1.0, 1, "- FROZEN -"))
+    end
+  end
+
+  -- End-of-run card: title + subtitle + one or two action buttons. The button
+  -- rects are stashed on S.card so the tap handler can route them (replacing the
+  -- old wooden Home button — navigation now lives on the card, not the HUD).
+  local function hud_card(title, sub, btns)
+    hud_clear()
+    hud_add(game.spawn(0, 0, SW * 2, SH * 2, 0, 0, 0, 0.62))          -- dim arena
+    hud_add(game.spawn(0, 10, 360, 214, 0.09, 0.11, 0.17, 0.97))     -- panel
+    hud_add(game.spawn(0, 106, 360, 6, 0.35, 0.70, 1.0, 1))         -- accent bar
+    hud_add(game.spawn_text(0, 68, 29, 1, 1, 1, 1, title))
+    if sub and sub ~= "" then
+      hud_add(game.spawn_text(0, 24, 16, 0.80, 0.88, 1.0, 1, sub))
+    end
+    local n = #btns
+    local bw, gap = 150, 14
+    local x0 = -(n - 1) * (bw + gap) * 0.5
+    S.card = {}
+    for i, b in ipairs(btns) do
+      local x = x0 + (i - 1) * (bw + gap)
+      local r = { x = x, y = -52, w = bw, h = 54 }
+      local c = b.primary and { 0.20, 0.62, 0.35 } or { 0.24, 0.30, 0.42 }
+      hud_add(game.spawn(r.x, r.y, r.w, r.h, c[1], c[2], c[3], 1))
+      hud_add(game.spawn_text(r.x, r.y, 20, 1, 1, 1, 1, b.label))
+      S.card[#S.card + 1] = { rect = r, act = b.act }
+    end
+  end
+
+  local function hud()
+    local frozen = S.ts < 0.15
+    if S.absorb then
+      hud_line(string.format("MASS %d", math.floor(S.mass)),
+        string.format("EATEN %d", S.eaten), frozen)
+    elseif S.trial then
       local lv = LEVELS[S.trial]
-      game.set_text(string.format("MOMENT %d   GATE %d/%d   %.1fs%s",
-        S.trial, S.gate_i, lv.gates, S.elapsed, S.ts < 0.15 and "  FROZEN" or ""))
+      hud_line(string.format("%.1fs", S.elapsed),
+        string.format("MOMENT %d   GATE %d/%d", S.trial, S.gate_i, lv.gates), frozen)
     elseif S.ann_t > 0 then
-      game.set_text(S.ann)
+      hud_line(string.format("%.1fs", S.score), S.ann, frozen)
     else
-      game.set_text(string.format("STOLEN %.1fs%s", S.score,
-        S.ts < 0.15 and "  FROZEN" or ""))
+      hud_line(string.format("%.1fs", S.score), "STOLEN", frozen)
     end
   end
 
@@ -391,19 +447,23 @@ function make_timedodge()
     clear_foes()
     game.play_sound("hit"); game.haptic("heavy"); game.shake(0.7); game.zoom(0.8)
     game.emit("spark", S.px, S.py)
+    local retry = { label = "RETRY", act = "retry", primary = true }
+    local modes = { label = "MODES", act = "modes" }
     if S.absorb then
       local best = tonumber(game.load("td_absorb_best")) or 0
       if S.peak > best then best = S.peak; game.save("td_absorb_best", best) end
-      game.set_text(string.format("YOU FADED AWAY\nPEAK MASS %d   EATEN %d   BEST %d\nTap to restart",
-        math.floor(S.peak), S.eaten, math.floor(best)))
+      hud_card("YOU FADED AWAY",
+        string.format("PEAK %d   EATEN %d   BEST %d", math.floor(S.peak), S.eaten, math.floor(best)),
+        { retry, modes })
     elseif S.trial then
-      game.set_text(string.format("THE FROZEN WORLD KEEPS YOU\nMOMENT %d   GATE %d/%d\nTap to retry",
-        S.trial, S.gate_i, LEVELS[S.trial].gates))
+      hud_card("CAUGHT BY THE FREEZE",
+        string.format("MOMENT %d   GATE %d/%d", S.trial, S.gate_i, LEVELS[S.trial].gates),
+        { retry, { label = "LEVELS", act = "levels" } })
     else
       local best = tonumber(game.load("timedodge_best")) or 0
       if S.score > best then best = S.score; game.save("timedodge_best", best) end
-      game.set_text(string.format("TIME RECLAIMED YOU\nSTOLEN %.1fs   BEST %.1fs\nTap to restart",
-        S.score, best))
+      hud_card("TIME RECLAIMED YOU",
+        string.format("STOLEN %.1fs   BEST %.1fs", S.score, best), { retry, modes })
     end
     game.log("lose")
   end
@@ -427,8 +487,9 @@ function make_timedodge()
     if stars > stars_of(i) then game.save("td_lv" .. i .. "_stars", stars) end
     local best = tonumber(game.load("td_lv" .. i .. "_best")) or 1e9
     if S.elapsed < best then game.save("td_lv" .. i .. "_best", S.elapsed) end
-    game.set_text(string.format("MOMENT SEALED!\nTIME %.1fs   %s\nTap to continue",
-      S.elapsed, star_str(stars)))
+    hud_card("MOMENT SEALED",
+      string.format("TIME %.1fs      %s", S.elapsed, star_str(stars)),
+      { { label = "LEVELS", act = "levels", primary = true }, { label = "REPLAY", act = "retry" } })
     game.play_sound("score"); game.haptic("success"); game.shake(0.5)
     game.emit("confetti", S.px, S.py)
     game.log("clear")
@@ -682,9 +743,15 @@ function make_timedodge()
         for i, r in ipairs(lv_rects) do
           if K.in_rect(r, x, y) and unlocked(i) then start_run(i); return end
         end
-      elseif S then
-        if S.done then to_levels()
-        elseif not S.playing then start_run(S.trial, S.absorb) end
+      elseif S and not S.playing and S.card then
+        for _, b in ipairs(S.card) do
+          if K.in_rect(b.rect, x, y) then
+            if b.act == "retry" then start_run(S.trial, S.absorb)
+            elseif b.act == "levels" then to_levels()
+            else to_select() end                 -- "modes"
+            return
+          end
+        end
       end
     end,
     update = function(dt, hw, hh)
