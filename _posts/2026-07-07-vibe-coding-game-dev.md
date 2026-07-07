@@ -148,3 +148,4 @@ git push        # 合并到 main
 一个人加一个 agent，晚上留一句话，早上收一串带着绿色测试的提交。这就是我们认为的、属于 AI 时代的游戏开发方式。
 
 > 本文所有截图、立绘、语音、音乐均来自本项目真实的构建过程与 Floniks 生成管线。开源脚手架 [rust_bevy_lua_game](https://github.com/maweis1981/rust_bevy_lua_game)；素材平台 [Floniks](https://floniks.com)（MCP 端点 `api.floniks.com/api/v1/mcp`）；编排 Claude Code。
+

@@ -126,3 +126,4 @@ agent 的处理链:
 
 > 开源脚手架:[rust_bevy_lua_game](https://github.com/maweis1981/rust_bevy_lua_game)(仓库内 `docs/blog/` 有开发博客与会话存档);素材平台 [Floniks](https://floniks.com)(MCP 端点 `api.floniks.com/api/v1/mcp`);编排 Claude Code。上篇:《[小马拼图:一张截图、一段视频,复刻一款解谜手游]({% post_url 2026-07-07-pony-parade-tutorial %})》。
 {: .prompt-tip }
+

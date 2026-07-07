@@ -130,3 +130,4 @@ _广告视频的关键帧:画面元素全部是游戏内真实素材。_
 
 > 开源脚手架:[rust_bevy_lua_game](https://github.com/maweis1981/rust_bevy_lua_game)(仓库内 `docs/blog/` 有开发博客与会话存档);素材平台 [Floniks](https://floniks.com)(MCP 端点 `api.floniks.com/api/v1/mcp`);编排 Claude Code。下篇:《[深夜画廊:一句题材词,做出有声有色的视觉小说]({% post_url 2026-07-07-midnight-gallery-tutorial %})》。
 {: .prompt-tip }
+
