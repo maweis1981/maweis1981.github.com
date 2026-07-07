@@ -1,4 +1,4 @@
--- timedodge.lua — "TIME DODGE": a SUPERHOT-style time-control dodger.
+-- timedodge.lua — "TIME DODGE": a SUPERHOT-style 2.5D meteor dodger.
 --
 -- Narrative skin ("Borrowed Time"): the world is frozen in a single instant;
 -- you are the only thing that still moves, and the sparks of entropy hunt
@@ -44,6 +44,10 @@ function make_timedodge()
   local NEAR, HIT_R = 44, 19             -- near-miss ring / kill distance
   local MAX_DT, TRAIL_N = 1 / 30, 10
   local DRIFT_SPEED = 70                 -- drifter real-time crawl px/s
+  -- 2.5D depth: meteors surface from the deep — they spawn far (z=1), drift
+  -- slowly while small/dim, and accelerate to full size/speed as they reach
+  -- the play plane. Only meteors near the plane (z <= PLANE_Z) can touch you.
+  local Z_RATE, PLANE_Z = 1.2, 0.35
   local FROZEN_C = { 0.55, 0.85, 1.0 }
 
   local KINDS = {
@@ -66,16 +70,16 @@ function make_timedodge()
   -- autopilot (~1.7x / 2.8x its measured clear time), so 3 stars means
   -- decisive routing (see the verification sweep in PR #71).
   local LEVELS = {
-    { seed = 101,  gates = 3, volley = 2, kinds = { "dart" },                                        speed = 240, every = 0.70, s3 = 4, s2 = 7 },
-    { seed = 202,  gates = 3, volley = 2, kinds = { "dart" },                                        speed = 255, every = 0.62, s3 = 5, s2 = 8 },
-    { seed = 303,  gates = 4, volley = 3, kinds = { "dart", "surge" },                               speed = 265, every = 0.58, s3 = 8, s2 = 13 },
+    { seed = 101,  gates = 3, volley = 2, kinds = { "dart" },                                        speed = 240, every = 0.70, s3 = 6, s2 = 10 },
+    { seed = 202,  gates = 3, volley = 2, kinds = { "dart" },                                        speed = 255, every = 0.62, s3 = 4, s2 = 7 },
+    { seed = 303,  gates = 4, volley = 3, kinds = { "dart", "surge" },                               speed = 265, every = 0.58, s3 = 7, s2 = 11 },
     { seed = 404,  gates = 4, volley = 3, kinds = { "dart", "surge" },                               speed = 275, every = 0.52, s3 = 7, s2 = 11 },
     { seed = 505,  gates = 5, volley = 4, kinds = { "dart", "surge", "seeker" },                     speed = 285, every = 0.48, s3 = 9, s2 = 14 },
-    { seed = 606,  gates = 5, volley = 4, kinds = { "dart", "surge", "seeker" },                     speed = 295, every = 0.44, s3 = 11, s2 = 18 },
-    { seed = 707,  gates = 6, volley = 5, kinds = { "dart", "seeker", "splitter" },                  speed = 305, every = 0.40, s3 = 23, s2 = 38 },
-    { seed = 808,  gates = 6, volley = 5, kinds = { "dart", "surge", "splitter" },                   speed = 315, every = 0.36, s3 = 13, s2 = 21 },
-    { seed = 909,  gates = 7, volley = 4, kinds = { "dart", "dart", "seeker", "splitter", "drifter" }, speed = 320, every = 0.33, s3 = 32, s2 = 52 },
-    { seed = 1010, gates = 8, volley = 6, kinds = { "dart", "surge", "seeker", "splitter", "drifter" }, speed = 335, every = 0.30, s3 = 23, s2 = 38 },
+    { seed = 606,  gates = 5, volley = 4, kinds = { "dart", "surge", "seeker" },                     speed = 295, every = 0.44, s3 = 9, s2 = 14 },
+    { seed = 707,  gates = 6, volley = 5, kinds = { "dart", "seeker", "splitter" },                  speed = 305, every = 0.40, s3 = 16, s2 = 25 },
+    { seed = 808,  gates = 6, volley = 5, kinds = { "dart", "surge", "splitter" },                   speed = 315, every = 0.36, s3 = 19, s2 = 30 },
+    { seed = 909,  gates = 7, volley = 4, kinds = { "dart", "dart", "seeker", "splitter", "drifter" }, speed = 320, every = 0.33, s3 = 20, s2 = 32 },
+    { seed = 1010, gates = 8, volley = 6, kinds = { "dart", "surge", "seeker", "splitter", "drifter" }, speed = 335, every = 0.30, s3 = 39, s2 = 63 },
   }
 
   local mode, built = "select", false
@@ -253,11 +257,13 @@ function make_timedodge()
     return "dart"
   end
 
-  local function spawn_foe(kind, x, y, vx, vy)
+  local function spawn_foe(kind, x, y, vx, vy, z)
     if #S.bullets >= MAX_FOES then return end
-    local id = game.spawn_sprite(x, y, FOE, FOE, "orb")
+    local id = game.spawn_sprite(x, y, FOE * 0.3, FOE * 0.3, "meteor")
     S.bullets[#S.bullets + 1] = { id = id, kind = kind, x = x, y = y,
-                                  vx = vx, vy = vy, age = 0, near = false }
+                                  vx = vx, vy = vy, age = 0, near = false,
+                                  z = z or 1, rot = rnd() * 6.28,
+                                  spin = (rnd() * 2 - 1) * 3.5 }
   end
   local function spawn_edge()
     local kind = pick_kind()
@@ -402,13 +408,22 @@ function make_timedodge()
       end
       b.age = b.age + bdt
       local split = kd.split_at and b.age >= kd.split_at
-      b.x, b.y = b.x + b.vx * bdt, b.y + b.vy * bdt
+      b.z = math.max(0, b.z - Z_RATE * bdt)
+      local depth = 1 - b.z                  -- 0 = deep space, 1 = in the plane
+      local drift = 0.5 + 0.5 * depth        -- far meteors drift (parallax)
+      b.x, b.y = b.x + b.vx * bdt * drift, b.y + b.vy * bdt * drift
+      b.rot = b.rot + b.spin * bdt
+      game.set_rotation(b.id, b.rot)
+      local sc = FOE * (0.30 + 0.70 * depth * depth)
+      game.set_size(b.id, sc, sc)
 
       local d = math.sqrt((b.x - S.px) ^ 2 + (b.y - S.py) ^ 2)
-      if d < HIT_R then die(); return end
-      if d < NEAR and not b.near then        -- near miss: a graze of juice
-        b.near = true
-        game.play_sound("wall"); game.haptic("light"); game.shake(0.06); game.zoom(0.25)
+      if b.z <= PLANE_Z then                 -- only near-plane rocks can touch
+        if d < HIT_R then die(); return end
+        if d < NEAR and not b.near then      -- near miss: a graze of juice
+          b.near = true
+          game.play_sound("wall"); game.haptic("light"); game.shake(0.06); game.zoom(0.25)
+        end
       end
 
       if split then
@@ -416,24 +431,26 @@ function make_timedodge()
         local sp = math.sqrt(b.vx ^ 2 + b.vy ^ 2)
         local base = math.atan(b.vy, b.vx)
         for _, off in ipairs({ -0.55, 0, 0.55 }) do
-          spawned[#spawned + 1] = { "dart", b.x, b.y, sp * math.cos(base + off), sp * math.sin(base + off) }
+          spawned[#spawned + 1] = { "dart", b.x, b.y,
+            sp * math.cos(base + off), sp * math.sin(base + off), b.z }
         end
       elseif math.abs(b.x) > SW + OFF or math.abs(b.y) > SH + OFF then
         game.despawn(b.id)
       else
-        -- freeze telegraph: pull the kind colour toward icy blue, but cap the
-        -- blend at 55% so kinds stay readable while you plan mid-freeze
+        -- kind tint, dimmed with depth (rocks brighten as they surface), then
+        -- pulled toward icy blue capped at 55% so kinds stay readable frozen
         local c, k = kd.c, (1 - S.ts) * 0.55
+        local br = 0.45 + 0.55 * depth
         game.move_to(b.id, b.x, b.y)
         game.set_color(b.id,
-          c[1] + (FROZEN_C[1] - c[1]) * k,
-          c[2] + (FROZEN_C[2] - c[2]) * k,
-          c[3] + (FROZEN_C[3] - c[3]) * k, 1)
+          (c[1] + (FROZEN_C[1] - c[1]) * k) * br,
+          (c[2] + (FROZEN_C[2] - c[2]) * k) * br,
+          (c[3] + (FROZEN_C[3] - c[3]) * k) * br, 1)
         kept[#kept + 1] = b
       end
     end
     S.bullets = kept
-    for _, sp in ipairs(spawned) do spawn_foe(sp[1], sp[2], sp[3], sp[4], sp[5]) end
+    for _, sp in ipairs(spawned) do spawn_foe(sp[1], sp[2], sp[3], sp[4], sp[5], sp[6]) end
 
     -- Player trail (only while dashing) + frozen tint on the orb itself.
     if pspeed > REF_SPEED * 0.5 then
