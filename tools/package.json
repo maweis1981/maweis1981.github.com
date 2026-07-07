@@ -6,6 +6,7 @@
   "description": "Markdown -> WeChat 公众号 draft + freepublish for the blog's AI Daily series.",
   "dependencies": {
     "markdown-it": "^14.1.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "sharp": "^0.34.0"
   }
 }

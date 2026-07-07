@@ -32,8 +32,11 @@ const STYLE = {
   pre:  'background:#282c34;color:#e6e6e6;padding:1em;border-radius:6px;overflow-x:auto;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.55;margin:1em 0',
   hr:   'border:none;border-top:1px solid #e3e3e3;margin:1.6em 0',
   table: 'border-collapse:collapse;margin:1em 0;width:100%;font-size:13px',
-  th:    'background:#f3f3f3;padding:8px 10px;border:1px solid #d8d8d8;text-align:left;font-weight:600',
-  td:    'padding:8px 10px;border:1px solid #d8d8d8;vertical-align:top',
+  // Header cells never wrap; body cells wrap freely — EXCEPT the first column,
+  // which stays nowrap so it keeps the natural width of its text (row labels).
+  th:    'background:#f3f3f3;padding:8px 10px;border:1px solid #d8d8d8;text-align:left;font-weight:600;white-space:nowrap',
+  td:    'padding:8px 10px;border:1px solid #d8d8d8;vertical-align:top;word-break:break-word',
+  tdFirst: 'padding:8px 10px;border:1px solid #d8d8d8;vertical-align:top;white-space:nowrap',
   img:  'max-width:100%;height:auto;display:block;margin:1em auto',
   a:    'color:#2d8cf0;text-decoration:none;word-break:break-all',
 };
@@ -84,6 +87,7 @@ function rewritePromptBoxes(html) {
 function injectInlineStyles(html) {
   let out = html;
   for (const [tag, style] of Object.entries(STYLE)) {
+    if (tag === 'tdFirst') continue; // composite key, not a real tag
     // Match tag opens without an existing style attribute, preserving any other attrs.
     const re = new RegExp(`<${tag}((?:\\s[^>]*)?)>`, 'g');
     out = out.replace(re, (full, attrs) => {
@@ -127,6 +131,16 @@ export function convertMarkdown(markdownBody) {
   // item as a <section> with a manual "• " (or "N. ") marker and a hanging
   // indent. We override the list renderer rules with a per-render marker stack
   // so ordered lists number correctly and nesting indents.
+  // Table cells get explicit styles here (injectInlineStyles then skips them)
+  // so the FIRST body column can stay nowrap while the rest wrap.
+  let tblCol = 0;
+  md.renderer.rules.tr_open = () => { tblCol = 0; return '<tr>'; };
+  md.renderer.rules.th_open = () => { tblCol++; return `<th style="${STYLE.th}">`; };
+  md.renderer.rules.td_open = () => {
+    tblCol++;
+    return `<td style="${tblCol === 1 ? STYLE.tdFirst : STYLE.td}">`;
+  };
+
   const listStack = [];
   md.renderer.rules.bullet_list_open = () => { listStack.push({ type: 'ul' }); return ''; };
   md.renderer.rules.bullet_list_close = () => { listStack.pop(); return ''; };
@@ -138,12 +152,14 @@ export function convertMarkdown(markdownBody) {
   md.renderer.rules.ordered_list_close = () => { listStack.pop(); return ''; };
   md.renderer.rules.list_item_open = () => {
     const ctx = listStack[listStack.length - 1] || { type: 'ul' };
-    const marker = ctx.type === 'ol' ? `${ctx.n++}. ` : '• ';
+    // Unordered items carry NO bullet — WeChat readers found the dots noisy —
+    // just the indent. Ordered items keep their number (a hanging indent).
+    const marker = ctx.type === 'ol' ? `${ctx.n++}. ` : '';
     const depth = Math.max(1, listStack.length);
     const padLeft = (0.4 + 1.1 * depth).toFixed(2);
-    // <section> (not <p>) so a loose-list inner <p> stays valid markup;
-    // text-indent gives the hanging-bullet effect for the common tight list.
-    return `<section style="margin:0.3em 0;padding-left:${padLeft}em;text-indent:-1.1em;line-height:1.75;font-size:15px;color:#3f3f3f"><span style="color:#9a9a9a">${marker}</span>`;
+    const indent = marker ? 'text-indent:-1.1em;' : '';
+    // <section> (not <p>) so a loose-list inner <p> stays valid markup.
+    return `<section style="margin:0.3em 0;padding-left:${padLeft}em;${indent}line-height:1.75;font-size:15px;color:#3f3f3f"><span style="color:#9a9a9a">${marker}</span>`;
   };
   md.renderer.rules.list_item_close = () => '</section>\n';
 

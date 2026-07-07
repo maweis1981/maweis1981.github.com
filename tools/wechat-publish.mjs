@@ -27,6 +27,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
+import sharp from 'sharp';
 import { convertMarkdown } from './lib/wechat-md.mjs';
 import {
   getAccessToken,
@@ -35,6 +36,21 @@ import {
   createDraft,
   publishDraft,
 } from './lib/wechat-api.mjs';
+
+// WeChat's material APIs only accept jpg/png/gif/bmp — a .webp upload dies
+// with errcode 40005 "invalid file type" (which killed the 2026-07-07 pony
+// post run). Blog images are increasingly .webp, so transcode those to PNG
+// right before upload; everything else passes through untouched.
+async function toWxImage(buf, name) {
+  const isWebp =
+    /\.webp$/i.test(name) ||
+    (buf.length > 12 && buf.toString('ascii', 0, 4) === 'RIFF' && buf.toString('ascii', 8, 12) === 'WEBP');
+  if (!isWebp) return { buf, name };
+  const png = await sharp(buf).png().toBuffer();
+  const pngName = name.replace(/\.webp$/i, '') + '.png';
+  console.log(`[image] transcoded webp -> png for WeChat: ${name} (${buf.length}B) -> ${pngName} (${png.length}B)`);
+  return { buf: png, name: pngName };
+}
 
 function parseArgs(argv) {
   const out = { file: null, cover: null, publish: false, dryRun: false };
@@ -83,6 +99,20 @@ function latexToUnicode(tex) {
        .replace(/\\left|\\right/g, '').replace(/\\[,;!:]| \\ /g, ' ');
   s = s.replace(/[{}]/g, '').replace(/\s+/g, ' ').trim();
   return s;
+}
+
+// Jekyll liquid tags never reach the blog reader as-is — Jekyll expands them at
+// build time. WeChat gets the RAW markdown though, and `{% post_url ... %}`
+// contains spaces, so markdown-it can't even parse the link and the tag leaks
+// into the article as literal text. Expand what we can, drop the rest:
+//   - {% post_url YYYY-MM-DD-name %} -> https://maweis.com/posts/name/
+//     (mirrors the site's /posts/:title/ permalink)
+//   - {% raw %} / {% endraw %} and any other {% ... %} -> removed
+function resolveLiquidTags(markdownBody) {
+  return markdownBody
+    .replace(/\{%\s*post_url\s+(\S+)\s*%\}/g, (_m, name) =>
+      `https://maweis.com/posts/${name.replace(/^\d{4}-\d{2}-\d{2}-/, '')}/`)
+    .replace(/\{%[^%]*%\}/g, '');
 }
 
 // Replace every `$$...$$` span in the markdown body with an <img> placeholder
@@ -182,8 +212,8 @@ async function uploadInlineImages(token, html, postDir, repoRoot) {
   }
   let out = html;
   for (const t of tasks) {
-    const buf = fs.readFileSync(t.abs);
-    const url = await uploadBodyImage(token, buf, path.basename(t.abs));
+    const { buf, name } = await toWxImage(fs.readFileSync(t.abs), path.basename(t.abs));
+    const url = await uploadBodyImage(token, buf, name);
     out = out.replace(t.match, `<img${t.pre} src="${url}"${t.post}>`);
     console.log(`[image] ${t.src} -> ${url}`);
   }
@@ -264,7 +294,8 @@ async function main() {
   const isNewspic = ['newspic', 'image', '贴图', '图片', '图片消息']
     .includes(String(fm.wechat_type || '').trim().toLowerCase());
 
-  const bodyForWeChat = fm.math === true ? mathToImagePlaceholders(body) : body;
+  let bodyForWeChat = resolveLiquidTags(body);
+  if (fm.math === true) bodyForWeChat = mathToImagePlaceholders(bodyForWeChat);
   const html = convertMarkdown(bodyForWeChat);
   console.log(`[parse] title: ${title}`);
   console.log(`[parse] digest: ${digest.slice(0, 80)}${digest.length > 80 ? '…' : ''}`);
@@ -306,7 +337,8 @@ async function main() {
     const caption = buildNewspicCaption(fm, title);
     const image_list = [];
     for (const im of imgs) {
-      const { media_id } = await uploadPermanentImage(token, fs.readFileSync(im.abs), im.name);
+      const wx = await toWxImage(fs.readFileSync(im.abs), im.name);
+      const { media_id } = await uploadPermanentImage(token, wx.buf, wx.name);
       console.log(`[newspic] ${im.src} -> media_id ${media_id}`);
       image_list.push({ image_media_id: media_id });
     }
@@ -333,8 +365,9 @@ async function main() {
   let finalHtml = await uploadInlineImages(token, html, postDir, repoRoot);
   if (fm.math === true) finalHtml = await renderMathImages(token, finalHtml);
 
-  const { buf: coverBuf, name: coverName, src: coverSrc } = await resolveCoverBuffer(args.cover, fm, repoRoot);
-  console.log(`[cover] uploading ${coverSrc} to permanent material…`);
+  const resolvedCover = await resolveCoverBuffer(args.cover, fm, repoRoot);
+  const { buf: coverBuf, name: coverName } = await toWxImage(resolvedCover.buf, resolvedCover.name);
+  console.log(`[cover] uploading ${resolvedCover.src} to permanent material…`);
   const cover = await uploadPermanentImage(token, coverBuf, coverName);
   console.log(`[cover] media_id: ${cover.media_id}`);
 
