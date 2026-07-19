@@ -14,7 +14,6 @@ image:
   path: /assets/img/posts/reading-aloud/cover.jpg
   alt: 午后暖光里一本摊开的书，纸页上浮起淡淡的声音涟漪（AI 生成）
 wechat_source_url: https://maweis.com/posts/reading-aloud/
-wechat: false
 ---
 
 午后读木心。读着读着，出了声。
