@@ -129,6 +129,7 @@ exclude:
   - "*.gemspec"
   - docs
   - tools
+  - CLAUDE.md
   - README.md
   - README.textile
   - readme.txt
