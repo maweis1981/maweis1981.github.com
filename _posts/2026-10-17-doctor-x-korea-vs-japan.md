@@ -29,9 +29,15 @@ wechat_source_url: https://maweis.com/posts/doctor-x-korea-vs-japan/
 
 那个“ので”，我觉得是整部日版的魂。
 
+![日版：米仓凉子饰大门未知子](/assets/img/posts/doctor-x-korea-vs-japan/jp-still.jpg)
+*日版：米仓凉子饰大门未知子。剧照，版权归朝日电视台所有。*
+
 先把账算清楚，免得说我偏心。
 
 韩版三集，收视 11.4%，14.9%，15.1%，每集都是同时段第一。金智媛时隔两年回归，阵容不弱，李姃垠、孙贤周都在。这不是一部差剧。
+
+![韩版海报：金智媛饰桂水晶](/assets/img/posts/doctor-x-korea-vs-japan/kr-poster.jpg)
+*韩版：金智媛饰桂水晶。海报，版权归 SBS 所有。*
 
 日版从 2012 年播到 2021 年，七季。第一季平均 19.1%，第三季单集最高 27.4%。后来还拍了剧场版。
 
@@ -55,7 +61,13 @@ wechat_source_url: https://maweis.com/posts/doctor-x-korea-vs-japan/
 
 米仓凉子的表现力，我觉得强太多。一个眼神，一个转身，一句不带情绪的台词，都在往那个“信”字上添砖。金智媛是好演员，剪了短发，把孤傲演得很足。但她被拉去和一座已经立了九年的碑，逐帧比较，吃亏的是她，也是这部剧。
 
+![韩版剧照：金智媛](/assets/img/posts/doctor-x-korea-vs-japan/kr-still.jpg)
+*韩版剧照，版权归 SBS 所有。*
+
 我更想说的，是那一屋子人。
+
+![日版海报：大门未知子与一屋子配角](/assets/img/posts/doctor-x-korea-vs-japan/jp-banner.jpg)
+*日版第一季海报，版权归朝日电视台所有。*
 
 岸部一德的神原晶，内田有纪的城之内，七季都在的那个麻醉师。还有西田敏行，在剧里演院长，是她的对手之一。
 
