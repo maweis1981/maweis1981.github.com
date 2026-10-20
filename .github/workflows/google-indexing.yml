@@ -1,9 +1,10 @@
 name: "Google Indexing Ping"
 
 # When a new or updated post lands on master, notify Google's Indexing API so
-# it (re)crawls that URL sooner. Requires repo secret GOOGLE_INDEXING_SA_KEY
+# it (re)crawls that URL sooner. Requires repo secret GSC_SERVICE_ACCOUNT_JSON
 # (a service-account JSON; the account must be an OWNER of the Search Console
-# property). Without the secret the job no-ops, so it's safe to merge first.
+# property; the older name GOOGLE_INDEXING_SA_KEY still works). Without the
+# secret the job no-ops, so it's safe to merge first.
 on:
   push:
     branches: [master]
@@ -39,7 +40,7 @@ jobs:
 
       - name: Collect changed post URLs and ping Google
         env:
-          GOOGLE_INDEXING_SA_KEY: ${{ secrets.GOOGLE_INDEXING_SA_KEY }}
+          GOOGLE_INDEXING_SA_KEY: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON || secrets.GOOGLE_INDEXING_SA_KEY }}
           SITE: "https://maweis.com"
           BEFORE_SHA: ${{ github.event.before }}
           AFTER_SHA: ${{ github.event.after }}

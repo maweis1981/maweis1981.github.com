@@ -5,7 +5,8 @@
 //
 // Auth: a Google Cloud service account (with the Indexing API enabled, and
 // added as an OWNER of the Search Console property) whose JSON key is provided
-// in the GOOGLE_INDEXING_SA_KEY env var (a GitHub Actions secret).
+// in the GOOGLE_INDEXING_SA_KEY env var (the workflow fills it from the
+// GSC_SERVICE_ACCOUNT_JSON repo secret).
 //
 // No third-party deps: the JWT is signed with Node's built-in crypto.
 //
@@ -22,7 +23,7 @@ if (urls.length === 0) {
 
 const raw = process.env.GOOGLE_INDEXING_SA_KEY;
 if (!raw || !raw.trim()) {
-  console.warn('[indexing] GOOGLE_INDEXING_SA_KEY is not set — skipping (add the service-account JSON as a repo secret to enable).');
+  console.warn('[indexing] GOOGLE_INDEXING_SA_KEY is not set — skipping (add the service-account JSON as the GSC_SERVICE_ACCOUNT_JSON repo secret to enable).');
   process.exit(0); // don't fail the build before the secret exists
 }
 
@@ -72,8 +73,13 @@ for (const url of urls) {
     console.log(`[indexing] ✓ URL_UPDATED ${url}`);
   } else {
     failed++;
+    // Log only the one-line message: GitHub masks every line of a multi-line
+    // secret (even a lone "{"), which hides Google's multi-line JSON errors.
     const t = await res.text();
-    console.error(`[indexing] ✗ ${url} -> HTTP ${res.status} ${t.slice(0, 300)}`);
+    let msg;
+    try { const e = JSON.parse(t).error; msg = `${e.status || ''} ${e.message || ''}`; }
+    catch { msg = t; }
+    console.error(`[indexing] ✗ ${url} -> HTTP ${res.status} ${msg.replace(/\s+/g, ' ').trim().slice(0, 300)}`);
   }
 }
 if (failed) { console.error(`[indexing] ${failed}/${urls.length} failed.`); process.exit(1); }
